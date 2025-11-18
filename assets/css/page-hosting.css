@@ -1,3 +1,4 @@
+
 /*
   CSS RIÊNG CHO TRANG HOSTING (page-hosting.css)
   Chứa style cho bảng giá, tab, modal, và mindmap.
@@ -13,7 +14,7 @@ body {
 
 /* Container gốc */
 .hosting-container {
-    padding: 20px;
+    padding: 40px 20px;
 }
 
 body.overview-is-open {
@@ -25,43 +26,57 @@ h1, h2 {
   color: #d35400;
 }
 
+h1 {
+    margin-bottom: 0.5rem;
+}
+
 .tabs {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin: 20px 0;
+  gap: 15px;
+  margin: 30px 0;
   flex-wrap: wrap;
 }
 
 .tab {
-  padding: 12px 24px;
+  padding: 14px 28px;
   background: #e0e0e0;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 50px; /* Rounded pills */
   font-weight: bold;
-  transition: background 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #555;
 }
 
 .tab:hover {
-  background: #ccc;
+  background: #d1d5db;
+  transform: translateY(-2px);
 }
 
 .tab.active {
   background: #007BFF;
   color: white;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* Tab content animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .tab-content {
   display: none;
   background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  margin-bottom: 30px;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  margin-bottom: 40px;
 }
 
 .tab-content.active {
   display: block;
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
 /* Responsive Table Wrapper */
@@ -69,34 +84,45 @@ h1, h2 {
   overflow-x: auto;
   margin: 0 auto;
   max-width: 100%;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid #eee;
+  border-radius: 12px;
   background: white;
 }
 
 .price-table {
   width: max-content;
   min-width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
+  border-collapse: separate; 
+  border-spacing: 0;
+  font-size: 14px;
   table-layout: fixed;
 }
 
 .price-table th,
 .price-table td {
-  padding: 10px 8px;
-  border: 1px solid #ddd;
+  padding: 16px 12px;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
   text-align: center;
   vertical-align: middle;
   word-break: break-word;
   min-width: 180px;
+  transition: background-color 0.2s;
+}
+.price-table td:last-child { border-right: none; }
+.price-table tr:last-child td { border-bottom: none; }
+
+.price-table tr:hover td {
+    background-color: #f9fafb;
 }
 
 .header-cell {
   color: white;
-  font-weight: bold;
-  padding: 12px 8px;
+  font-weight: 800;
+  padding: 18px 12px;
   white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Màu nền gốc */
@@ -112,13 +138,15 @@ h1, h2 {
 .price-month {
   color: #27ae60;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .price-year {
   color: #c0392b;
-  font-weight: bold;
-  font-size: 14px;
+  font-weight: 800;
+  font-size: 16px;
+  display: block;
+  margin-top: 4px;
 }
 
 /* --- CSS CHO NÚT VÀ MODAL --- */
@@ -126,16 +154,19 @@ h1, h2 {
   background-color: #007BFF;
   color: white;
   border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
+  padding: 10px 18px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
-  margin-top: 10px;
-  transition: background-color 0.3s;
+  margin-top: 12px;
+  transition: all 0.3s;
+  font-size: 13px;
 }
 
 .service-btn:hover {
   background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .modal {
@@ -148,31 +179,36 @@ h1, h2 {
   height: 100%; 
   overflow: auto; 
   background-color: rgba(0,0,0,0.5); 
+  backdrop-filter: blur(4px);
 }
 
 .modal-content {
   background-color: #fefefe;
   margin: 10% auto;
-  padding: 25px;
-  border: 1px solid #888;
+  padding: 30px;
+  border: none;
   width: 80%;
-  max-width: 500px;
-  border-radius: 8px;
+  max-width: 550px;
+  border-radius: 12px;
   position: relative;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   animation-name: animatetop;
   animation-duration: 0.4s
 }
 
 @keyframes animatetop {
-  from {top: -300px; opacity: 0}
+  from {top: -50px; opacity: 0}
   to {top: 0; opacity: 1}
 }
 
 .modal-content h2 {
   margin-top: 0;
-  color: #d35400;
+  color: #111827;
   text-align: left;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #f3f4f6;
+  padding-bottom: 10px;
 }
 
 .modal-content ul {
@@ -181,33 +217,37 @@ h1, h2 {
 }
 
 .modal-content li {
-  margin-bottom: 10px;
-  font-size: 14px;
-  padding-left: 20px;
+  margin-bottom: 12px;
+  font-size: 15px;
+  padding-left: 28px;
   position: relative;
+  color: #4b5563;
+  line-height: 1.5;
 }
 
 .modal-content li::before {
     content: '✓';
-    color: #27ae60;
+    color: #10b981;
     font-weight: bold;
     position: absolute;
     left: 0;
+    font-size: 1.1em;
 }
 
 .close-btn {
-  color: #aaa;
+  color: #9ca3af;
   float: right;
   font-size: 28px;
   font-weight: bold;
   position: absolute;
-  top: 10px;
+  top: 15px;
   right: 20px;
+  transition: color 0.2s;
 }
 
 .close-btn:hover,
 .close-btn:focus {
-  color: black;
+  color: #111827;
   text-decoration: none;
   cursor: pointer;
 }
@@ -216,25 +256,26 @@ h1, h2 {
 /* --- CSS CHO NÚT TỔNG QUAN --- */
 .overview-btn-container {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 .overview-btn {
   background-color: #d35400; 
   color: white;
-  padding: 12px 25px;
+  padding: 14px 30px;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: bold;
   font-size: 16px;
-  transition: background-color 0.3s, box-shadow 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-block;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   cursor: pointer;
   border: none;
 }
 .overview-btn:hover {
   background-color: #a04000;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 /* --- HẾT CSS NÚT TỔNG QUAN --- */
 
@@ -251,7 +292,6 @@ h1, h2 {
   overflow: auto; 
   display: none; 
   text-align: left; 
-  /* BỎ: padding-top vì không dùng header chung */
 }
 
 .overview-container {
@@ -259,9 +299,9 @@ h1, h2 {
   min-width: 90%; 
   margin: 40px; 
   background-color: #ffffff;
-  padding: 25px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .back-btn {
@@ -389,13 +429,18 @@ h1, h2 {
 /* Text node */
 .mind-map-node {
     display: inline-block;
-    padding: 8px 12px;
+    padding: 10px 16px;
     border-radius: 8px;
     font-weight: 500;
     background: #f1f3f4;
     border: 1px solid #e0e0e0;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     margin-left: 10px;
+    transition: all 0.2s;
+}
+.mind-map-node:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .mind-map-node.note {
@@ -430,9 +475,9 @@ h1, h2 {
     color: white;
     font-size: 14px;
     display: inline-block;
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
     text-align: center;
     border-radius: 50%;
     background: #007BFF;
@@ -467,13 +512,16 @@ h1, h2 {
 @media (max-width: 768px) {
   .price-table th,
   .price-table td {
-    padding: 8px 6px;
+    padding: 12px 8px;
     font-size: 12px;
     min-width: 160px;
   }
   .header-cell {
-    padding: 10px 6px;
+    padding: 14px 8px;
     font-size: 13px;
+  }
+  .hosting-container {
+      padding: 20px 10px;
   }
 }
 
@@ -482,10 +530,10 @@ h1, h2 {
   .price-table td {
     min-width: 140px;
     font-size: 11px;
-    padding: 6px 4px;
+    padding: 8px 6px;
   } 
   .header-cell {
-    padding: 8px 4px;
+    padding: 10px 6px;
     font-size: 12px;
   }
   .tab {
@@ -495,16 +543,18 @@ h1, h2 {
   .modal-content {
     width: 90%;
     margin: 20% auto;
+    padding: 20px;
   }
 }
 
 .footer-note {
   text-align: center;
-  margin-top: 20px;
-  padding: 12px;
+  margin-top: 30px;
+  padding: 16px;
   background: #fff;
-  border-top: 2px solid #ffc107;
+  border-top: 3px solid #f39c12;
   font-weight: bold;
   color: #2c3e50;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
-
