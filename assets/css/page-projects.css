@@ -1,3 +1,4 @@
+
 /*
   CSS RIÊNG CHO TRANG PROJECTS (page-projects.css)
   Đã tách từ thẻ <style> inline của projects.html gốc.
@@ -14,53 +15,57 @@ body {
     /* Sử dụng Tailwind @apply nếu môi trường build hỗ trợ, nếu không thì viết CSS thuần */
     /* @apply bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 ease-in-out hover:shadow-xl; */
     background-color: white;
-    border-radius: 0.5rem; /* rounded-lg */
+    border-radius: 0.75rem; /* rounded-lg to rounded-xl for modern look */
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
     overflow: hidden;
-    transition-property: box-shadow;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
-    transition-duration: 300ms; /* duration-300 */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother ease */
+    transform: translateY(0);
 }
 .project-card:hover {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* hover:shadow-xl */
+    box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* hover:shadow-2xl */
+    transform: translateY(-8px); /* Enhanced lift */
 }
 
 .project-card img {
      /* @apply w-full h-48 object-cover group-hover:opacity-80 transition duration-300; */
      width: 100%;
-     height: 12rem; /* h-48 */
+     height: 14rem; /* slightly taller images */
      object-fit: cover;
-     transition-property: opacity;
-     transition-duration: 300ms;
+     transition: transform 0.5s ease, opacity 0.3s ease;
  }
  .project-card:hover img { /* group-hover:opacity-80 */
-    opacity: 0.8;
+    opacity: 0.9;
+    transform: scale(1.05); /* Subtle zoom */
  }
 
  .project-card .content {
      /* @apply p-6; */
-     padding: 1.5rem; /* p-6 */
+     padding: 1.75rem; /* increased padding */
  }
 
  .project-card .category {
     /* @apply text-sm text-indigo-600 font-medium mb-1 block; */
     font-size: 0.875rem; /* text-sm */
     color: #4f46e5; /* text-indigo-600 */
-    font-weight: 500; /* font-medium */
-    margin-bottom: 0.25rem; /* mb-1 */
+    font-weight: 600; /* font-medium */
+    margin-bottom: 0.5rem; /* mb-1 */
     display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
  }
 
   .project-card h3 {
      /* @apply text-xl font-bold text-gray-900 mb-2; */
-     font-size: 1.25rem; /* text-xl */
-     font-weight: 700; /* font-bold */
+     font-size: 1.35rem; /* text-xl */
+     font-weight: 800; /* font-bold */
      color: #111827; /* text-gray-900 */
-     margin-bottom: 0.5rem; /* mb-2 */
+     margin-bottom: 0.75rem; /* mb-2 */
+     line-height: 1.4;
  }
 
  .project-card p {
       /* @apply text-base text-gray-600; */
       font-size: 1rem; /* text-base */
       color: #4b5563; /* text-gray-600 */
+      line-height: 1.6;
  }
