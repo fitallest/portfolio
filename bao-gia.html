@@ -4,85 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Báo Giá Thiết Kế Website - Nasani.vn</title>
-    <!-- Thêm Description -->
     <meta name="description" content="Tính toán chi phí thiết kế website chuyên nghiệp theo gói, tùy chọn addon, hosting và tên miền. Yêu cầu báo giá nhanh chóng.">
 
-    <!-- Tailwind CSS (Giữ lại CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons CDN (JS chung sẽ kích hoạt) -->
     <script src="https://unpkg.com/lucide@latest"></script> 
-
-    <!-- BỎ Link Google Fonts (Đã có trong style.css) -->
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"> -->
     
-    <!-- THÊM Link CSS Chung -->
     <link rel="stylesheet" href="assets/css/style.css">
-    <!-- Liên kết đến CSS riêng -->
     <link rel="stylesheet" href="assets/css/page-baogia.css">
 </head>
-<body class="bg-gray-50"> <!-- THÊM class bg-gray-50 cho nhất quán -->
-
-    <!-- Header & Navbar (Menu đã được cập nhật link) -->
-    <header class="bg-white/90 sticky top-0 z-50 backdrop-blur-md border-b border-gray-200">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex-shrink-0 flex items-center">
-                    <a href="index.html" class="text-2xl font-bold text-indigo-600">
-                        Fi.tallest
-                    </a>
+<body class="bg-gray-50 overflow-hidden" id="body-content"> 
+    <!-- GATED ACCESS MODAL -->
+    <div id="gated-modal" class="fixed inset-0 z-[9999] bg-slate-900/95 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden relative">
+            <!-- Step 1: Phone Input -->
+            <div id="step-phone" class="p-8 text-center">
+                <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="lock" class="w-8 h-8 text-indigo-600"></i>
                 </div>
-                <div class="hidden md:flex md:items-center md:space-x-8">
-                    <a href="index.html" class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Trang chủ</a>
-                    <a href="index.html#about" class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Giới thiệu</a>
-                    <a href="index.html#services" class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Dịch vụ</a>
-                    <a href="projects.html" class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Dự án</a>
-                    <!-- SỬA LINK -->
-                    <a href="hosting.html" class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Hosting</a>
-                    <!-- SỬA LINK -->
-                    <a href="domain.html" class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Tên miền</a>
-                    <!-- Link Báo Giá (Active) -->
-                    <a href="bao-gia.html" class="text-indigo-600 font-semibold transition duration-150">Báo Giá</a> 
-                    <a href="index.html#contact" class="ml-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Liên hệ ngay
-                    </a>
-                </div>
-                <div class="-mr-2 flex items-center md:hidden">
-                    <button type="button" id="mobile-menu-button" class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-expanded="false">
-                        <span class="sr-only">Mở menu</span>
-                        <i data-lucide="menu" class="h-6 w-6"></i>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Tra cứu Báo giá Chi tiết</h2>
+                <p class="text-gray-600 mb-6 text-sm">Vui lòng nhập số điện thoại để nhận mã truy cập hệ thống báo giá tự động qua Zalo.</p>
+                
+                <form id="lead-form" class="space-y-4">
+                    <div class="relative">
+                        <input type="tel" id="lead-phone" required placeholder="Nhập số điện thoại của bạn" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition pl-10">
+                        <i data-lucide="phone" class="w-5 h-5 text-gray-400 absolute left-3 top-3.5"></i>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center">
+                        <span id="btn-text-phone">Yêu cầu gửi mã</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
                     </button>
-                </div>
+                </form>
+                <p class="text-xs text-gray-400 mt-4">Thông tin của bạn được bảo mật tuyệt đối.</p>
             </div>
-        </nav>
-        <div class="hidden md:hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="index.html" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Trang chủ</a>
-                <a href="index.html#about" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Giới thiệu</a>
-                <a href="index.html#services" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Dịch vụ</a>
-                <a href="projects.html" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Dự án</a>
-                 <!-- SỬA LINK -->
-                <a href="hosting.html" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Hosting</a>
-                 <!-- SỬA LINK -->
-                <a href="domain.html" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Tên miền</a>
-                <!-- Link Báo Giá (Active) -->
-                <a href="bao-gia.html" class="text-indigo-600 bg-indigo-50 block px-3 py-2 rounded-md text-base font-medium">Báo Giá</a>
-                <a href="index.html#contact" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">Liên hệ ngay</a>
+
+            <!-- Step 2: Code Input -->
+            <div id="step-code" class="p-8 text-center hidden">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="shield-check" class="w-8 h-8 text-green-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Xác thực truy cập</h2>
+                <p class="text-gray-600 mb-6 text-sm">Mã truy cập đã được gửi. Vui lòng kiểm tra và nhập mã bên dưới (Mã mặc định: <b>xembaogia.fi</b>).</p>
+                
+                <form id="code-form" class="space-y-4">
+                    <div class="relative">
+                        <input type="text" id="access-code" required placeholder="Nhập mã truy cập" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition text-center font-mono text-lg tracking-widest uppercase">
+                    </div>
+                    <p id="code-error" class="text-red-500 text-xs hidden text-left">Mã không chính xác.</p>
+                    <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition">
+                        Xác nhận & Xem Báo Giá
+                    </button>
+                </form>
+                <button id="back-to-phone" class="text-sm text-indigo-600 hover:underline mt-4">Nhập lại số điện thoại</button>
             </div>
         </div>
-    </header>
-    <!-- HẾT PHẦN HEADER -->
+    </div>
 
-    <!-- Toàn bộ nội dung <div class="max-w-7xl mx-auto ..."> ... </div> (GIỮ NGUYÊN) -->
-    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 blur-sm transition-all duration-500" id="main-container">
 
-        <!-- Header Section -->
         <header class="text-center mb-12 bg-white p-6 sm:p-10 rounded-xl shadow-lg">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-indigo-600 mb-2"> <!-- Đổi màu text-nasani-primary thành text-indigo-600 -->
-                BÁO GIÁ DỊCH VỤ THIẾT KẾ WEBSITE
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-indigo-600 mb-2"> BÁO GIÁ DỊCH VỤ THIẾT KẾ WEBSITE
             </h1>
-            <p class="text-lg sm:text-xl text-gray-700">Giải pháp chuyên nghiệp cho <span class="font-semibold text-cyan-600">Mọi Ngành Nghề</span></p> <!-- Đổi màu text-hospital-theme thành text-cyan-600 -->
-
-             <div class="mt-4 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg border border-gray-100">
+            <p class="text-lg sm:text-xl text-gray-700">Giải pháp chuyên nghiệp cho <span class="font-semibold text-cyan-600">Mọi Ngành Nghề</span></p> <div class="mt-4 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg border border-gray-100">
                  <p class="font-bold text-gray-800 mb-2 uppercase text-base">CÔNG TY TNHH CÔNG NGHỆ PHẦN MỀM NASANI</p>
                  <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-left pt-2 border-t border-gray-200 space-y-3 md:space-y-0">
                      <p class="flex items-start text-sm col-span-full md:col-span-1">
@@ -106,19 +90,16 @@
                          </p>
                          <p class="flex items-center text-gray-700 font-medium">
                              <svg class="w-4 h-4 mr-2 text-cyan-600 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zm-2-5H6v-2h12v2z"/></svg>
-                             TK: 1357668868 (Techcombank)
+                             TK: 2825456789 (MB bank)
                          </p>
                      </div>
                  </div>
             </div>
         </header>
 
-        <!-- II. CÁC GÓI THIẾT KẾ & TÍCH CHỌN -->
         <section id="package-section" class="mb-12">
-             <!-- Đổi màu border-nasani-primary thành border-indigo-600 -->
-            <h2 class="text-2xl font-bold text-gray-800 border-b-2 border-indigo-600 pb-2 mb-8">II. Chọn Gói Thiết Kế (Không áp dụng VAT cho phần này)</h2>
+             <h2 class="text-2xl font-bold text-gray-800 border-b-2 border-indigo-600 pb-2 mb-8">II. Chọn Gói Thiết Kế (Không áp dụng VAT cho phần này)</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Gói Cơ Bản -->
                 <label for="package_basic" class="cursor-pointer bg-white p-6 rounded-xl shadow-lg border-4 border-gray-400 has-[:checked]:border-gray-700 has-[:checked]:ring-4 has-[:checked]:ring-gray-300 transition duration-300 hover:shadow-xl flex flex-col">
                     <input type="radio" id="package_basic" name="package-option" value="7500000" class="hidden">
                     <h3 class="text-2xl font-extrabold text-gray-700 mb-2">1. Gói Cơ Bản</h3>
@@ -134,8 +115,6 @@
                     </ul>
                     <div class="mt-6 py-2 px-4 bg-gray-500 text-white font-bold rounded-lg text-center text-sm">CHỌN GÓI</div>
                 </label>
-                <!-- Gói Đa Giao Diện -->
-                 <!-- Đổi màu border-nasani-primary thành border-indigo-600, text-nasani-primary thành text-indigo-600, bg-nasani-primary thành bg-indigo-600 -->
                 <label for="package_multiple_interface" class="cursor-pointer bg-white p-6 rounded-xl shadow-lg border-4 border-indigo-600 has-[:checked]:border-indigo-600 has-[:checked]:ring-4 has-[:checked]:ring-indigo-300 transition duration-300 hover:shadow-xl flex flex-col">
                     <input type="radio" id="package_multiple_interface" name="package-option" value="10500000" class="hidden">
                     <h3 class="text-2xl font-extrabold text-indigo-600 mb-2">2. Đa Giao Diện</h3>
@@ -151,8 +130,6 @@
                     </ul>
                     <div class="mt-6 py-2 px-4 bg-indigo-600 text-white font-bold rounded-lg text-center text-sm">CHỌN GÓI (Phổ Biến)</div>
                 </label>
-                <!-- Gói Đầy Đủ -->
-                 <!-- Đổi màu border-hospital-theme thành border-cyan-600, text-hospital-theme thành text-cyan-600, bg-hospital-theme thành bg-cyan-600 -->
                 <label for="package_full" class="cursor-pointer bg-white p-6 rounded-xl shadow-lg border-4 border-cyan-600 has-[:checked]:border-cyan-600 has-[:checked]:ring-4 has-[:checked]:ring-cyan-300 transition duration-300 hover:shadow-xl flex flex-col">
                     <input type="radio" id="package_full" name="package-option" value="13500000" class="hidden">
                     <h3 class="text-2xl font-extrabold text-cyan-600 mb-2">3. Gói Đầy Đủ</h3>
@@ -171,137 +148,26 @@
             </div>
         </section>
 
-        <!-- III. Dịch Vụ Nâng Cao & Chi Phí Đi Kèm (Add-on) -->
-         <!-- Đổi màu bg-nasani-light thành bg-indigo-50 -->
-        <section class="mb-12 bg-indigo-50 p-4 sm:p-6 rounded-xl shadow-md">
-
-            <!-- III.A. CHỌN LĨNH VỰC KINH DOANH -->
-             <!-- Đổi màu border-nasani-primary thành border-indigo-600 -->
-            <h2 class="text-2xl font-bold text-gray-800 border-b-2 border-indigo-600 pb-2 mb-6">III.A. Chọn Lĩnh Vực Của Bạn</h2>
-             <!-- Đổi màu border-nasani-primary thành border-indigo-600, bg-nasani-light thành bg-indigo-50 khi checked -->
-            <div class="relative grid grid-cols-2 md:grid-cols-4 gap-4">
-                <input type="radio" id="industry-yte" name="industry-option" value="yte" checked>
-                <label for="industry-yte" class="industry-label p-4 rounded-lg text-center block bg-white shadow-sm hover:shadow-md">
-                    <span class="text-3xl">🩺</span>
-                    <span class="font-semibold text-gray-800 block mt-2 text-sm sm:text-base">Y Tế</span>
-                </label>
-                <input type="radio" id="industry-xaydung" name="industry-option" value="xaydung">
-                <label for="industry-xaydung" class="industry-label p-4 rounded-lg text-center block bg-white shadow-sm hover:shadow-md">
-                    <span class="text-3xl">🏗️</span>
-                    <span class="font-semibold text-gray-800 block mt-2 text-sm sm:text-base">Xây Dựng</span>
-                </label>
-                <input type="radio" id="industry-lamdep" name="industry-option" value="lamdep">
-                <label for="industry-lamdep" class="industry-label p-4 rounded-lg text-center block bg-white shadow-sm hover:shadow-md">
-                    <span class="text-3xl">💅</span>
-                    <span class="font-semibold text-gray-800 block mt-2 text-sm sm:text-base">Làm Đẹp</span>
-                </label>
-                <input type="radio" id="industry-thuongmai" name="industry-option" value="thuongmai">
-                <label for="industry-thuongmai" class="industry-label p-4 rounded-lg text-center block bg-white shadow-sm hover:shadow-md">
-                    <span class="text-3xl">🛒</span>
-                    <span class="font-semibold text-gray-800 block mt-2 text-sm sm:text-base">Thương Mại</span>
-                </label>
-            </div>
-
-            <!-- Container chứa các gói Add-on -->
-            <div id="addon-container" class="col-span-full mt-6">
-                 <!-- Đổi màu border-nasani-primary thành border-indigo-600 -->
-                <h3 class="text-xl sm:text-2xl font-bold text-gray-800 border-b-2 border-indigo-600 pb-2 mb-6">III.B. Tùy Chọn Tính Năng Nâng Cao (Add-on) <span class="text-sm text-gray-500">(Không áp dụng VAT)</span></h3>
-                 <!-- Đổi màu border-hospital-theme thành border-cyan-600 -->
-                 <!-- Đổi màu text-nasani-primary thành text-indigo-600, focus:ring-nasani-primary thành focus:ring-indigo-500 -->
-                <div class="p-4 sm:p-5 bg-white rounded-lg shadow-inner border-l-4 border-cyan-600">
-                    <p class="text-sm text-gray-700 italic mb-4">Tích chọn các tính năng dưới đây để cộng thêm vào tổng chi phí thiết kế:</p>
-
-                    <!-- Gói Add-on cho Y TẾ -->
-                    <div id="addons-yte" class="addon-group grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
-                        <label for="addon_doctor_lookup" class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 cursor-pointer hover:bg-gray-50 p-2 -m-2 rounded transition">
-                            <span class="flex items-center mb-1 sm:mb-0">
-                                <input type="checkbox" id="addon_doctor_lookup" name="addon-feature" value="2000000" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mr-3">
-                                Module Tra cứu Bác sĩ
-                            </span>
-                            <span class="font-bold text-red-600 text-sm sm:text-base ml-7 sm:ml-0">2.000.000 VNĐ</span>
-                        </label>
-                        <label for="addon_rating_system" class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 cursor-pointer hover:bg-gray-50 p-2 -m-2 rounded transition">
-                            <span class="flex items-center mb-1 sm:mb-0">
-                                <input type="checkbox" id="addon_rating_system" name="addon-feature" value="3500000" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mr-3">
-                                Hệ thống Đánh giá Dịch vụ
-                            </span>
-                            <span class="font-bold text-red-600 text-sm sm:text-base ml-7 sm:ml-0">3.500.000 VNĐ</span>
-                        </label>
-                        <label for="addon_bmi_calculator" class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 cursor-pointer hover:bg-gray-50 p-2 -m-2 rounded transition">
-                            <span class="flex items-center mb-1 sm:mb-0">
-                                <input type="checkbox" id="addon_bmi_calculator" name="addon-feature" value="2500000" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mr-3">
-                                Công cụ Tính BMI/Dinh dưỡng
-                            </span>
-                            <span class="font-bold text-red-600 text-sm sm:text-base ml-7 sm:ml-0">2.500.000 VNĐ</span>
-                        </label>
-                        <label for="addon_advanced_api" class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 cursor-pointer hover:bg-gray-50 p-2 -m-2 rounded transition">
-                            <span class="flex items-center mb-1 sm:mb-0">
-                                <input type="checkbox" id="addon_advanced_api" name="addon-feature" value="5000000" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mr-3">
-                                Tích hợp API Đặt lịch (CRM/HIS)
-                            </span>
-                            <span class="font-bold text-red-600 text-sm sm:text-base ml-7 sm:ml-0">5.000.000 VNĐ</span>
-                        </label>
-                    </div>
-
-                    <!-- Gói Add-on cho XÂY DỰNG -->
-                    <div id="addons-xaydung" class="addon-group grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
-                         <label for="addon_project_portfolio" class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 cursor-pointer hover:bg-gray-50 p-2 -m-2 rounded transition">
-                            <span class="flex items-center mb-1 sm:mb-0">
-                                <input type="checkbox" id="addon_project_portfolio" name="addon-feature" value="4000000" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mr-3">
-                                Module Portfolio Dự án
-                            </span>
-                            <span class="font-bold text-red-600 text-sm sm:text-base ml-7 sm:ml-0">4.000.000 VNĐ</span>
-                        </label>
-                         <label for="addon_estimation_tool" class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 cursor-pointer hover:bg-gray-50 p-2 -m-2 rounded transition">
-                            <span class="flex items-center mb-1 sm:mb-0">
-                                <input type="checkbox" id="addon_estimation_tool" name="addon-feature" value="6000000" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mr-3">
-                                Công cụ Ước tính Chi phí
-                            </span>
-                            <span class="font-bold text-red-600 text-sm sm:text-base ml-7 sm:ml-0">6.000.000 VNĐ</span>
-                        </label>
-                    </div>
-
-                    <!-- Gói Add-on cho LÀM ĐẸP -->
-                    <div id="addons-lamdep" class="addon-group grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
-                         <label for="addon_booking_spa" class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 cursor-pointer hover:bg-gray-50 p-2 -m-2 rounded transition">
-                            <span class="flex items-center mb-1 sm:mb-0">
-                                <input type="checkbox" id="addon_booking_spa" name="addon-feature" value="4500000" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mr-3">
-                                Hệ thống Đặt lịch Spa
-                            </span>
-                            <span class="font-bold text-red-600 text-sm sm:text-base ml-7 sm:ml-0">4.500.000 VNĐ</span>
-                        </label>
-                         <label for="addon_gallery_before_after" class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 cursor-pointer hover:bg-gray-50 p-2 -m-2 rounded transition">
-                            <span class="flex items-center mb-1 sm:mb-0">
-                                <input type="checkbox" id="addon_gallery_before_after" name="addon-feature" value="3000000" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mr-3">
-                                Thư viện ảnh Trước & Sau
-                            </span>
-                            <span class="font-bold text-red-600 text-sm sm:text-base ml-7 sm:ml-0">3.000.000 VNĐ</span>
-                        </label>
-                    </div>
-
-                    <!-- Gói Add-on cho THƯƠNG MẠI -->
-                    <div id="addons-thuongmai" class="addon-group grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
-                         <label for="addon_ecommerce" class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 cursor-pointer hover:bg-gray-50 p-2 -m-2 rounded transition">
-                            <span class="flex items-center mb-1 sm:mb-0">
-                                <input type="checkbox" id="addon_ecommerce" name="addon-feature" value="8000000" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mr-3">
-                                Giỏ hàng & Thanh toán
-                            </span>
-                            <span class="font-bold text-red-600 text-sm sm:text-base ml-7 sm:ml-0">8.000.000 VNĐ</span>
-                        </label>
-                         <label for="addon_inventory_management" class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-2 cursor-pointer hover:bg-gray-50 p-2 -m-2 rounded transition">
-                            <span class="flex items-center mb-1 sm:mb-0">
-                                <input type="checkbox" id="addon_inventory_management" name="addon-feature" value="5000000" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 mr-3">
-                                Quản lý Tồn kho cơ bản
-                            </span>
-                            <span class="font-bold text-red-600 text-sm sm:text-base ml-7 sm:ml-0">5.000.000 VNĐ</span>
-                        </label>
-                    </div>
+        <!-- === UPDATED ADD-ON SECTION === -->
+        <section class="mb-12 bg-white p-4 sm:p-6 rounded-xl shadow-md">
+            <div class="flex flex-col md:flex-row justify-between items-center border-b-2 border-indigo-600 pb-4 mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">III.A. Tùy Chọn Tính Năng (Add-on)</h2>
+                <div class="mt-4 md:mt-0 w-full md:w-auto relative">
+                    <input type="text" id="feature-search" placeholder="Tìm kiếm tính năng..." 
+                        class="pl-10 pr-4 py-2 border border-gray-300 rounded-full text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent w-full md:w-64 transition">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-gray-400"></i>
                 </div>
             </div>
+            
+            <div id="features-container" class="space-y-4">
+                <!-- Các nhóm tính năng sẽ được JS render vào đây -->
+                <p class="text-center text-gray-500 italic">Đang tải danh sách tính năng...</p>
+            </div>
+        </section>
 
-            <!-- III.C. Chi Phí Tên miền & Hosting -->
-             <!-- Đổi màu border-nasani-primary thành border-indigo-600 -->
-            <h3 class="text-xl sm:text-2xl font-bold text-gray-800 border-b-2 border-indigo-600 pb-2 mb-6 mt-10">III.C. Chọn Gói Hosting & Tên miền (Tính theo năm)</h3>
+        <!-- Phần III.C Hosting và Tên miền (Giữ nguyên) -->
+        <section class="mb-12">
+            <h3 class="text-xl sm:text-2xl font-bold text-gray-800 border-b-2 border-indigo-600 pb-2 mb-6 mt-10">III.B. Chọn Gói Hosting & Tên miền (Tính theo năm)</h3>
             <div class="p-4 sm:p-5 bg-white rounded-lg shadow-inner">
                 <p class="text-base sm:text-lg font-semibold text-gray-800 mb-4">1. Chọn Gói Hosting (Giá Đã VAT - Click lần 2 để bỏ chọn)</p>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-4">
@@ -426,13 +292,10 @@
             </div>
         </section>
 
-        <!-- IV. Quy Trình Triển Khai & Thanh Toán -->
         <section class="mb-12">
-             <!-- Đổi màu border-nasani-primary thành border-indigo-600 -->
-            <h2 class="text-2xl font-bold text-gray-800 border-b-2 border-indigo-600 pb-2 mb-6">IV. Quy Trình Triển Khai & Thanh Toán</h2>
-            <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg mb-8">
-                 <!-- Đổi màu text-nasani-primary thành text-indigo-600, bg-nasani-light thành bg-indigo-50, bg-nasani-primary thành bg-indigo-600 -->
-                <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 mb-4">1. Quy trình Triển khai (4 - 6 tuần)</h3>
+             <h2 class="text-2xl font-bold text-gray-800 border-b-2 border-indigo-600 pb-2 mb-6">IV. Quy Trình Triển Khai & Thanh Toán</h2>
+            <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg">
+                 <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 mb-4">1. Quy trình Triển khai (4 - 6 tuần)</h3>
                 <ol class="relative border-l border-gray-200 ml-3">
                     <li class="mb-4 ml-6">
                         <span class="absolute flex items-center justify-center w-6 h-6 bg-indigo-50 rounded-full -left-3 ring-8 ring-white text-xs font-bold">1</span>
@@ -462,9 +325,7 @@
                 </ol>
             </div>
 
-             <!-- Đổi màu border-hospital-theme thành border-cyan-600, text-hospital-theme thành text-cyan-600 -->
-             <!-- Đổi màu bg-nasani-light thành bg-indigo-50, border-nasani-primary thành border-indigo-600, text-nasani-primary thành text-indigo-600 -->
-            <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border-l-4 border-cyan-600">
+             <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg border-l-4 border-cyan-600">
                 <h3 class="text-lg sm:text-xl font-semibold text-cyan-600 mb-4">2. Quy trình Thanh toán</h3>
                 <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 text-center">
                     <div class="flex-1 p-3 sm:p-4 border rounded-lg bg-indigo-50 border-indigo-600">
@@ -493,12 +354,9 @@
             </div>
         </section>
 
-        <!-- V. Dịch Vụ Chăm Sóc & Bảo Trì Hậu Mãi -->
         <section class="mb-12">
-             <!-- Đổi màu border-nasani-primary thành border-indigo-600 -->
-            <h2 class="text-2xl font-bold text-gray-800 border-b-2 border-indigo-600 pb-2 mb-6">V. Dịch Vụ Chăm Sóc & Bảo Trì Hậu Mãi</h2>
-             <!-- Đổi màu text-nasani-primary thành text-indigo-600, text-hospital-theme thành text-cyan-600 -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+             <h2 class="text-2xl font-bold text-gray-800 border-b-2 border-indigo-600 pb-2 mb-6">V. Dịch Vụ Chăm Sóc & Bảo Trì Hậu Mãi</h2>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                 <div class="bg-white p-6 rounded-xl shadow-md transition duration-300 hover:shadow-lg">
                     <svg class="w-10 h-10 mx-auto mb-3 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
@@ -523,15 +381,12 @@
             </div>
         </section>
 
-        <!-- Footer (GIỮ NGUYÊN) -->
         <footer class="text-center p-4 text-gray-500 text-sm">
             &copy; 2025 Báo giá được thiết kế và cung cấp bởi Nasani.vn - Developed by Cao Nhất Phi.
         </footer>
     </div>
 
-    <!-- THANH TRƯỢT BÁO GIÁ (Đã đổi màu border-nasani-primary thành border-indigo-600) -->
     <div id="quote-summary-footer" class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t-4 border-indigo-600 shadow-[0_-8px_20px_rgba(0,0,0,0.1)] transition-all duration-500 ease-in-out">
-        <!-- Trigger -->
         <div id="quote-summary-trigger" onclick="toggleQuotePanel()" class="max-w-7xl mx-auto pt-3 pb-4 px-4 cursor-pointer group transition-colors hover:bg-gray-50">
             <div class="w-10 h-1.5 bg-gray-300 rounded-full mx-auto mb-2 transition-colors group-hover:bg-gray-400"></div>
             <div class="flex justify-between items-center">
@@ -546,7 +401,6 @@
                 </div>
             </div>
         </div>
-        <!-- Panel chi tiết (Đã đổi màu text-nasani-primary thành text-indigo-600, text-hospital-theme thành text-cyan-600, focus:ring-nasani-primary thành focus:ring-indigo-500, bg-nasani-primary thành bg-indigo-600) -->
         <div id="quote-details-panel" class="max-w-7xl mx-auto">
              <div class="px-4 pb-4">
                 <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
@@ -599,8 +453,8 @@
                                 <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.28-.28.67-.36 1.02-.23 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1v3c0 .55-.45 1-1 1C10.74 21 3 13.26 3 4c0-.55.45-1 1-1h3c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.13.35.05.74-.23 1.02l-2.2 2.2z"/></svg>
                                 GỌI TƯ VẤN
                             </a>
-                            <button onclick="finalizeQuote()" class="flex-1 py-2 sm:py-3 px-4 bg-indigo-600 text-white font-bold rounded-full text-sm sm:text-base shadow-xl hover:bg-indigo-700 transition duration-300"> <!-- Sửa hover:bg-indigo-600 thành hover:bg-indigo-700 -->
-                                YÊU CẦU BÁO GIÁ
+                            <!-- UPDATED: Removed onclick handler and added ID -->
+                            <button id="btn-finalize-quote" class="flex-1 py-2 sm:py-3 px-4 bg-indigo-600 text-white font-bold rounded-full text-sm sm:text-base shadow-xl hover:bg-indigo-700 transition duration-300"> YÊU CẦU BÁO GIÁ
                             </button>
                         </div>
                     </div>
@@ -609,7 +463,6 @@
         </div>
     </div>
 
-    <!-- MODAL ALERT (Đã đổi màu bg-nasani-primary thành bg-indigo-600, hover:bg-indigo-600 thành hover:bg-indigo-700 khi success) -->
     <div id="alert-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onclick="hideAlert()">
         <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-lg w-full border border-gray-700" onclick="event.stopPropagation()">
             <h2 id="alert-title" class="text-xl sm:text-2xl font-bold text-emerald-400 mb-4">Thông báo</h2>
@@ -618,9 +471,7 @@
         </div>
     </div>
 
-    <!-- THÊM Link JS Chung -->
     <script src="assets/js/main.js"></script>
-    <!-- Liên kết đến JS riêng -->
     <script src="assets/js/page-baogia.js"></script>
 </body>
 </html>
