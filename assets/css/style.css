@@ -1,75 +1,185 @@
+
 /* CSS CHUNG (style.css)
   Bao gồm font 'Inter' và các style cơ bản dùng cho MỌI trang.
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
+:root {
+    --primary-glow: 79, 70, 229; /* Indigo */
+    --secondary-glow: 236, 72, 153; /* Pink */
+    --bg-grid-color: rgba(99, 102, 241, 0.05);
+}
+
 body {
     font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+    background-color: #f8fafc;
+    color: #0f172a;
 }
 
+/* --- MODERN TECH BACKGROUNDS --- */
+.tech-bg {
+    background-color: #ffffff;
+    background-image: linear-gradient(var(--bg-grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-grid-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+    position: relative;
+}
 
+.tech-bg::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 100px;
+    background: linear-gradient(to bottom, #ffffff, transparent);
+    z-index: 1;
+    pointer-events: none;
+}
 
-/* Style chung cho thông báo thành công (dùng ở index.html, domain.html) 
-*/
+/* --- GLOBAL ANIMATIONS & TRANSITIONS --- */
+
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Refined Button Gradient Hover & Shine Effect */
+.btn-gradient {
+    position: relative;
+    background-image: linear-gradient(to right, #4f46e5 0%, #7c3aed 100%);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background-size: 200% auto;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+    z-index: -1;
+}
+
+.btn-gradient:hover::before {
+    left: 100%;
+}
+
+.btn-gradient:hover {
+    background-position: right center;
+    box-shadow: 0 0 20px rgba(79, 70, 229, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-gradient:active {
+    transform: translateY(0);
+}
+
+/* MODERN CARD STYLES (Services, etc.) */
+.tech-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.tech-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255,255,255,0), rgba(99, 102, 241, 0.3), rgba(255,255,255,0));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.tech-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.15);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.tech-card-icon-wrapper {
+    background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+    border-radius: 12px;
+    display: inline-flex;
+    padding: 12px;
+    transition: transform 0.4s ease;
+}
+
+.tech-card:hover .tech-card-icon-wrapper {
+    transform: scale(1.1) rotate(5deg);
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
+
+.tech-card:hover .tech-card-icon-wrapper i {
+    color: white !important;
+}
+
+/* Style chung cho thông báo thành công */
 #success-message {
     position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #28a745; /* Màu xanh lá cây */
+    background-color: #10b981; 
     color: white;
-    padding: 15px 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    padding: 16px 32px;
+    border-radius: 50px;
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
     z-index: 2000;
-    display: none; /* Ẩn ban đầu */
+    display: none; 
     opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+    transform: translateX(-50%) translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
 }
 
 #success-message.show {
     display: block;
     opacity: 1;
-}
-/* Style chung cho thông báo thành công (dùng ở index.html, domain.html) 
-*/
-#success-message {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #28a745; /* Màu xanh lá cây */
-    color: white;
-    padding: 15px 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    z-index: 2000;
-    display: none; /* Ẩn ban đầu */
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-#success-message.show {
-    display: block;
-    opacity: 1;
+    transform: translateX(-50%) translateY(0);
 }
 
 /* === PHOTO COLLAGE SECTION STYLES === */
 #achievements {
     position: relative;
-    background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #4f46e5 100%);
+    background: radial-gradient(circle at center, #2e1065 0%, #0f172a 100%);
 }
 
 .photo-card {
     position: relative;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.4s ease;
     cursor: pointer;
+    filter: brightness(0.9);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 .photo-card:hover {
-    z-index: 10;
+    z-index: 20;
     filter: brightness(1.1);
+    transform: scale(1.05) rotate(0deg) !important; 
+    box-shadow: 0 0 30px rgba(124, 58, 237, 0.5); /* Neon purple glow */
+    border: 2px solid rgba(255,255,255,0.2);
 }
 
 .photo-card img {
@@ -79,500 +189,99 @@ body {
     object-fit: cover;
 }
 
-/* Animation cho các decorative elements */
+/* Counter Animation Styles */
+.counter-value {
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+}
+
+/* Animation cho các decorative elements (Smoother Float) */
 @keyframes float {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-20px);
-    }
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
 }
 
 .animate-float {
-    animation: float 3s ease-in-out infinite;
+    animation: float 5s ease-in-out infinite;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .photo-card {
-        transform: rotate(0deg) !important;
-    }
-    
-    #achievements h2 {
-        font-size: 3rem;
-    }
-    
-    #achievements .grid {
-        gap: 0.5rem;
-    }
-	/* === CẢI THIỆN BỐ CỤC KHU VỰC "HOẠT ĐỘNG" (#achievements) === */
-
-/* 1. Điều chỉnh tiêu đề và văn bản */
-#achievements .text-center {
-    text-align: center !important; 
+    .photo-card { transform: rotate(0deg) !important; }
+    #achievements h2 { font-size: 2.5rem; }
+    #achievements .grid { gap: 0.5rem; }
+    #achievements .text-center { text-align: center !important; }
+    #achievements h2.text-5xl, #achievements h2.text-6xl { font-size: 2.5rem !important; line-height: 1.2 !important; }
+    #achievements p.text-2xl, #achievements p.text-3xl { font-size: 1.25rem !important; }
+    #achievements .grid-cols-12 { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+    #achievements .col-span-3, #achievements .col-span-3.mt-8, #achievements .col-span-3.flex, #achievements .col-span-3.mt-12 { width: 100% !important; margin-top: 0 !important; display: block !important; }
+    .photo-card:hover { transform: none !important; filter: none !important; z-index: 1; }
+    .photo-card .absolute { position: relative !important; bottom: auto; right: auto; top: auto; left: auto; margin: 5px 0; }
 }
 
-/* Điều chỉnh kích thước font cho tiêu đề chính */
-#achievements h2.text-5xl, 
-#achievements h2.text-6xl {
-    font-size: 2.5rem !important; /* Ví dụ: Giảm từ 5xl/6xl xuống 2.5rem */
-    line-height: 1.2 !important;
-}
-
-/* Giảm kích thước font cho văn bản nhỏ */
-#achievements p.text-2xl,
-#achievements p.text-3xl {
-    font-size: 1.25rem !important;
-}
-
-/* 2. Điều chỉnh bố cục ảnh (Chuyển từ 4 cột sang 1 cột) */
-
-/* Ghi đè bố cục grid 12 cột thành 1 cột */
-#achievements .grid-cols-12 {
-    grid-template-columns: 1fr !important; /* 1 cột duy nhất */
-    gap: 1.5rem !important; /* Tăng khoảng cách giữa các mục */
-}
-
-/* Đảm bảo mỗi cột ảnh chiếm toàn bộ chiều ngang */
-#achievements .col-span-3,
-#achievements .col-span-3.mt-8,
-#achievements .col-span-3.flex,
-#achievements .col-span-3.mt-12 {
-    /* Đặt lại thuộc tính liên quan đến cột */
-    width: 100% !important;
-    margin-top: 0 !important; /* Xóa margin-top không cần thiết */
-    display: block !important; 
-}
-
-/* 3. Loại bỏ hiệu ứng xoay và phóng to trên mobile */
-.photo-card,
-.photo-card.transform.rotate-\[-2deg\],
-.photo-card.transform.rotate\[3deg\],
-.photo-card.transform.rotate\[2deg\] {
-    transform: rotate(0deg) !important; /* Loại bỏ tất cả các hiệu ứng xoay */
-    transition: none !important; /* Loại bỏ hiệu ứng chuyển đổi */
-}
-
-.photo-card:hover {
-    transform: none !important; /* Ngăn hover phóng to */
-    filter: none !important;
-    z-index: 1; /* Đặt z-index bình thường */
-}
-
-/* Điều chỉnh vị trí các văn bản chú thích trên ảnh */
-.photo-card .absolute {
-    position: relative !important; /* Chuyển từ absolute sang relative nếu cần */
-    bottom: auto;
-    right: auto;
-    top: auto;
-    left: auto;
-    margin: 5px 0;
-}
-}
-/* ảnh tiêu chí*/
 /* === SOFTWARE PRODUCTS SECTION STYLES === */
-
-/* Keyframes cho hiệu ứng */
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0px) rotate(var(--rotate-start, 0deg));
-    }
-    50% {
-        transform: translateY(-20px) rotate(var(--rotate-end, 0deg));
-    }
-}
-
-@keyframes person-float {
-    0%, 100% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-15px);
-    }
-}
-
-@keyframes stars-blink {
-    0%, 100% {
-        opacity: 0.2;
-        transform: scale(0.8);
-    }
-    50% {
-        opacity: 0.8;
-        transform: scale(1);
-    }
-}
-
-/* Hiệu ứng gợn sóng */
-.wave-path {
-    animation: wave-move 10s linear infinite alternate;
-}
-
-/* Hiệu ứng ngôi sao lấp lánh */
-.stars-container {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-}
-
-.star {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background-color: white;
-    border-radius: 50%;
-    opacity: 0.2;
-    animation: stars-blink 3s ease-in-out infinite;
-}
-.star:before {
-    content: '';
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    background-color: white;
-    border-radius: 50%;
-    left: 1px;
-    top: 1px;
-    opacity: 0.5;
-    box-shadow: 0 0 4px 1px white;
-}
-
-/* Hiệu ứng lơ lửng của nhân vật và sản phẩm */
-.person-float {
-    animation: person-float 4s ease-in-out infinite;
-}
-
-.animate-float {
-    animation: float 3s ease-in-out infinite;
-}
-
-/* Style cho các card sản phẩm */
-.product-card {
-    position: absolute;
-    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
-    transition: all 0.3s ease-in-out;
-}
-.product-card:hover {
-    filter: drop-shadow(0 20px 30px rgba(0,0,0,0.4));
-    transform: scale(1.05) !important; /* Ghi đè animation */
-}
-
-/* Ghi đè lại một số hiệu ứng rotate từ HTML để CSS quản lý */
-.product-card img {
-    --rotate-start: 0deg;
-    --rotate-end: 0deg;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
+@keyframes float { 0%, 100% { transform: translateY(0px) rotate(var(--rotate-start, 0deg)); } 50% { transform: translateY(-20px) rotate(var(--rotate-end, 0deg)); } }
+@keyframes stars-blink { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 0.8; transform: scale(1); } }
+.wave-path { animation: wave-move 15s linear infinite alternate; }
+.stars-container { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.star { position: absolute; width: 3px; height: 3px; background-color: white; border-radius: 50%; opacity: 0.2; animation: stars-blink 4s ease-in-out infinite; }
+.star:before { content: ''; position: absolute; width: 1px; height: 1px; background-color: white; border-radius: 50%; left: 1px; top: 1px; opacity: 0.5; box-shadow: 0 0 4px 1px white; }
+.product-card { position: absolute; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s; }
+.product-card:hover { filter: drop-shadow(0 0 25px rgba(99, 102, 241, 0.6)); transform: scale(1.1) rotate(0deg) !important; z-index: 50; }
+.product-card img { --rotate-start: 0deg; --rotate-end: 0deg; transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .product-card[style*="animation-delay: 0s"] img { --rotate-start: -8deg; --rotate-end: -6deg; }
 .product-card[style*="animation-delay: 1s"] img { --rotate-start: 5deg; --rotate-end: 7deg; }
 .product-card[style*="animation-delay: 2s"] img { --rotate-start: -6deg; --rotate-end: -8deg; }
 .product-card[style*="animation-delay: 1.2s"] img { --rotate-start: 8deg; --rotate-end: 6deg; }
 
-/* Thêm vào file assets/css/style.css */
+/* Carousel & Grid */
+#projects-carousel-container { position: relative; overflow: visible; padding: 0 60px; }
+.projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.project-card { transition: opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+.project-card.opacity-0 { opacity: 0; transform: scale(0.95); }
+.project-card.opacity-100 { opacity: 1; transform: scale(1); }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+@keyframes slideLeft { 0% { transform: translateX(0); opacity: 0.5; } 100% { transform: translateX(-100%); opacity: 0; } }
+@keyframes slideRight { 0% { transform: translateX(0); opacity: 0.5; } 100% { transform: translateX(100%); opacity: 0; } }
+.projects-grid.slide-left { animation: slideLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.projects-grid.slide-right { animation: slideRight 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(255,255,255,0.5); border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s ease; color: #4f46e5; backdrop-filter: blur(8px); }
+.carousel-btn:hover { background: #4f46e5; color: white; transform: translateY(-50%) scale(1.15); box-shadow: 0 0 20px rgba(79, 70, 229, 0.4); border-color: transparent; }
+.carousel-btn:active { transform: translateY(-50%) scale(0.95); }
+.carousel-btn-prev { left: -60px; }
+.carousel-btn-next { right: -60px; }
+.carousel-btn svg { width: 24px; height: 24px; }
+#projects-carousel-container:hover .carousel-btn { opacity: 1; }
+.carousel-btn { opacity: 0.6; transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s; }
 
-/* Carousel Container */
-#projects-carousel-container {
-    position: relative;
-    overflow: visible;
-    padding: 0 60px; /* Tạo khoảng trống cho nút */
-}
-
+/* Mobile Adjustments */
+@media (max-width: 1024px) { .carousel-btn-prev { left: -50px; } .carousel-btn-next { right: -50px; } }
 @media (max-width: 768px) {
-    #projects-carousel-container {
-        padding: 0 50px;
-    }
-}
-
-/* Grid Layout */
-.projects-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    transition: transform 0.5s ease-in-out;
-}
-
-/* Project Card Transitions */
-.project-card {
-    transition: opacity 0.3s ease-in-out;
-}
-
-.project-card.opacity-0 {
-    opacity: 0;
-}
-
-.project-card.opacity-100 {
-    opacity: 1;
-}
-
-/* Line Clamp for Description */
-.line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* Slide Animations */
-/* Ghi đè keyframe cho Mobile (1 cột) */
-@keyframes slideLeft {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-100%); /* Trượt 100% khi chỉ có 1 cột */
-    }
-}
-
-@keyframes slideRight {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(100%); /* Trượt 100% khi chỉ có 1 cột */
-    }
-}
-
-.projects-grid.slide-left {
-    animation: slideLeft 0.5s ease-in-out;
-}
-
-.projects-grid.slide-right {
-    animation: slideRight 0.5s ease-in-out;
-}
-
-/* Carousel Navigation Buttons */
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    background: rgba(255, 255, 255, 0.95);
-    border: none;
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s ease;
-    color: #4f46e5;
-}
-
-.carousel-btn:hover {
-    background: #4f46e5;
-    color: white;
-    transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.carousel-btn:active {
-    transform: translateY(-50%) scale(0.95);
-}
-
-.carousel-btn-prev {
-    left: -60px;
-}
-
-.carousel-btn-next {
-    right: -60px;
-}
-
-.carousel-btn svg {
-    width: 24px;
-    height: 24px;
-}
-
-/* Hover Effect on Container */
-#projects-carousel-container:hover .carousel-btn {
-    opacity: 1;
-}
-
-.carousel-btn {
-    opacity: 0.7;
-    transition: opacity 0.3s ease;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .carousel-btn-prev {
-        left: -50px;
-    }
-    
-    .carousel-btn-next {
-        right: -50px;
-    }
-}
-
-/* === KHỐI MEDIA QUERY MOBILE ĐÃ CHỈNH SỬA === */
-@media (max-width: 768px) {
-    /* === CẢI THIỆN ICON CỐ ĐỊNH (FIXED) === */
-    .fixed.right-4.top-1/2 {
-        right: 16px;           /* Giữ right-4 */
-        top: auto;             /* Xóa top-1/2 */
-        bottom: 20px;          /* Đẩy xuống dưới (bottom-5) */
-        transform: translateY(0); /* Xóa -translate-y-1/2 */
-        gap: 0.75rem;          /* Giảm khoảng cách gap-3 */
-    }
-
-    /* === CẢI THIỆN CAROUSEL DỰ ÁN === */
-    .carousel-btn {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .carousel-btn-prev {
-        left: 0px; /* Đưa nút vào gần mép hơn */
-    }
-    
-    .carousel-btn-next {
-        right: 0px; /* Đưa nút vào gần mép hơn */
-    }
-    
-    .carousel-btn svg {
-        width: 20px;
-        height: 20px;
-    }
-
-    .projects-grid {
-        grid-template-columns: 1fr; /* CHUYỂN VỀ 1 CỘT */
-        gap: 1.5rem; 
-    }
-    
-    #projects-carousel-container {
-        padding: 0 10px; /* Giảm padding ngang để card rộng hơn */
-    }
-    
-    /* Tăng kích thước phông chữ trong card dự án cho mobile */
-    .project-card .text-xl.font-bold {
-        font-size: 1.5rem; /* Tăng tiêu đề dự án */
-    }
-    .project-card .text-base {
-        font-size: 1rem; /* Tăng mô tả */
-    }
-
-    /* === CẢI THIỆN BỐ CỤC KHU VỰC "GIẢI PHÁP PHẦN MỀM" (#software-products) === */
-    
-    /* 1. Giảm chiều cao tổng thể và kích thước chữ tiêu đề */
-    #software-products .min-h-\[700px\] {
-        /* GIẢM MẠNH CHIỀU CAO TỐI THIỂU CHO GỌN NHẤT */
-        min-height: 370px !important; 
-    }
-    
-    /* Thu nhỏ tiêu đề chính (H2) */
-    #software-products h2.text-4xl,
-    #software-products h2.text-5xl,
-    #software-products h2.text-6xl {
-        font-size: 2rem !important; /* Giảm xuống 2rem */
-        line-height: 1.15 !important; /* Giảm line-height */
-        margin-bottom: 0.5rem !important; /* Giảm khoảng cách dưới tiêu đề */
-    }
-    
-    /* Thu nhỏ tiêu đề phụ (P) */
-    #software-products p.text-xl,
-    #software-products p.text-2xl {
-        font-size: 1rem !important; /* Giảm xuống 1rem */
-        padding-top: 0.5rem !important; /* Giảm khoảng cách trên mô tả */
-        margin-top: 0 !important;
-    }
-
-    /* 2. Điều chỉnh vị trí hình ảnh trung tâm (fi.png) */
-    .absolute.bottom-0.inset-x-0.z-10 img {
-        max-width: 90%; /* Thu nhỏ ảnh nhân vật chính */
-    }
-    
-    /* 3. Điều chỉnh các Product Card (các hộp sản phẩm) */
-    .product-card {
-        width: 100px !important; /* Đặt kích thước cố định nhỏ hơn cho các sản phẩm lớn */
-    }
-    .product-card img {
-        max-width: 100%;
-        height: auto;
-    }
-    
-    /* ĐIỀU CHỈNH VỊ TRÍ CỦA CÁC SẢN PHẨM LỚN */
-    /* 1. Fi.tallest HOUSE (Top Left) */
-    .product-card.absolute.top-\[8\%\]:nth-child(1) { /* Top Left - FB */
-        top: 15% !important;
-        left: 5% !important;
-        width: 120px !important; 
-        transform: rotate(-10deg);
-    }
-    /* 2. Fi.tallest EDUTECH (Mid Left) */
-    .product-card.absolute.top-\[38\%\]:nth-child(2) { /* Mid Left - EDU */
-        top: 40% !important;
-        left: 5% !important;
-        width: 130px !important;
-        transform: rotate(10deg);
-    }
-    /* 3. Fi.tallest JEWELRY (Top Right) */
-    .product-card.absolute.top-\[18\%\]:nth-child(3) { /* Top Right - KC */
-        top: 10% !important;
-        right: 0% !important;
-        width: 80px !important;
-        transform: rotate(15deg);
-    }
-    /* 4. QUẢN LÝ TOÀN HỒ SƠ (Mid Right) */
-    .product-card.absolute.top-\[32\%\]:nth-child(4) { /* Mid Right - QL */
-        top: 35% !important;
-        right: 0% !important;
-        width: 90px !important;
-        transform: rotate(-15deg);
-    }
-    /* 5. Fi.tallest'S ECOMMERCE (Bottom Center) - Vẫn để ở giữa dưới */
-    .product-card.absolute.bottom-\[10\%\] { /* Bottom Center - ECOM */
-        bottom: 5% !important;
-        width: 150px !important; 
-    }
-
-    /* ĐIỀU CHỈNH VỊ TRÍ CỦA CÁC ICON NHỎ (5 icon) */
-    /* Icon 1: Clock */
-    .absolute.top-\[20\%\]:nth-child(6) {
-        top: 25% !important;
-        left: 15% !important;
-        width: 40px !important;
-        height: 40px !important;
-    }
-    /* Icon 2: Cart */
-    .absolute.top-\[45\%\]:nth-child(7) {
-        top: 50% !important;
-        left: 10% !important;
-        width: 40px !important;
-        height: 40px !important;
-    }
-    /* Icon 3: Chart */
-    .absolute.top-\[25\%\]:nth-child(8) {
-        top: 20% !important;
-        right: 15% !important;
-        width: 40px !important;
-        height: 40px !important;
-    }
-    /* Icon 4: Price Tag */
-    .absolute.top-\[32\%\]:nth-child(9) {
-        top: 45% !important;
-        right: 10% !important;
-        width: 35px !important;
-        height: 35px !important;
-    }
-    /* Icon 5: Globe */
-    .absolute.top-\[55\%\]:nth-child(10) {
-        top: 55% !important;
-        right: 5% !important;
-        width: 40px !important;
-        height: 40px !important;
-    }
-
-    /* ẨN 4 THẺ SVG CŨ THÊM LẠI nếu chúng không còn phù hợp */
-    /* Nút mũi tên dưới cùng (thẻ SVG vàng) */
-    .absolute.-bottom-8 {
-        display: none !important;
-    }
-    /* 3 thẻ vuông: Settings, Terminal, Heart */
-    .product-card.absolute.top-\[85\%\]:nth-child(12),
-    .product-card.absolute.top-\[8\%\]:nth-child(13),
-    .product-card.absolute.top-\[40\%\]:nth-child(14) {
-        display: none !important;
-    }
+    .fixed.right-4.top-1/2 { right: 16px; top: auto; bottom: 20px; transform: translateY(0); gap: 0.75rem; }
+    .carousel-btn { width: 40px; height: 40px; }
+    .carousel-btn-prev { left: 0px; }
+    .carousel-btn-next { right: 0px; }
+    .carousel-btn svg { width: 20px; height: 20px; }
+    .projects-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    #projects-carousel-container { padding: 0 10px; }
+    .project-card .text-xl.font-bold { font-size: 1.5rem; }
+    .project-card .text-base { font-size: 1rem; }
+    #software-products .min-h-\[700px\] { min-height: 370px !important; }
+    #software-products h2.text-4xl, #software-products h2.text-5xl, #software-products h2.text-6xl { font-size: 2rem !important; line-height: 1.15 !important; margin-bottom: 0.5rem !important; }
+    #software-products p.text-xl, #software-products p.text-2xl { font-size: 1rem !important; padding-top: 0.5rem !important; margin-top: 0 !important; }
+    .absolute.bottom-0.inset-x-0.z-10 img { max-width: 90%; }
+    .product-card { width: 100px !important; }
+    .product-card img { max-width: 100%; height: auto; }
+    .product-card.absolute.top-\[8\%\]:nth-child(1) { top: 15% !important; left: 5% !important; width: 120px !important; transform: rotate(-10deg); }
+    .product-card.absolute.top-\[38\%\]:nth-child(2) { top: 40% !important; left: 5% !important; width: 130px !important; transform: rotate(10deg); }
+    .product-card.absolute.top-\[18\%\]:nth-child(3) { top: 10% !important; right: 0% !important; width: 80px !important; transform: rotate(15deg); }
+    .product-card.absolute.top-\[32\%\]:nth-child(4) { top: 35% !important; right: 0% !important; width: 90px !important; transform: rotate(-15deg); }
+    .product-card.absolute.bottom-\[10\%\] { bottom: 5% !important; width: 150px !important; }
+    .absolute.top-\[20\%\]:nth-child(6) { top: 25% !important; left: 15% !important; width: 40px !important; height: 40px !important; }
+    .absolute.top-\[45\%\]:nth-child(7) { top: 50% !important; left: 10% !important; width: 40px !important; height: 40px !important; }
+    .absolute.top-\[25\%\]:nth-child(8) { top: 20% !important; right: 15% !important; width: 40px !important; height: 40px !important; }
+    .absolute.top-\[32\%\]:nth-child(9) { top: 45% !important; right: 10% !important; width: 35px !important; height: 35px !important; }
+    .absolute.top-\[55\%\]:nth-child(10) { top: 55% !important; right: 5% !important; width: 40px !important; height: 40px !important; }
+    .absolute.-bottom-8 { display: none !important; }
+    .product-card.absolute.top-\[85\%\]:nth-child(12), .product-card.absolute.top-\[8\%\]:nth-child(13), .product-card.absolute.top-\[40\%\]:nth-child(14) { display: none !important; }
 }
