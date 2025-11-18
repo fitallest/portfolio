@@ -1,3 +1,4 @@
+
 /*
   CSS RIÊNG CHO TRANG DOMAIN (page-domain.css)
   Đã tách từ thẻ <style> inline của domain.html gốc.
@@ -110,6 +111,11 @@ body {
     background-color: #5a6fe0;
     transform: translateY(-2px);
 }
+.domain-search-button:disabled {
+    background-color: #a5b4fc;
+    cursor: not-allowed;
+    transform: none;
+}
 
 /* Suggestion Area */
 .suggestion-results-area {
@@ -158,6 +164,16 @@ body {
     word-break: break-all; /* Ngăn tên miền dài làm vỡ layout */
     margin-right: 10px;
 }
+.suggestion-item .domain-name .ai-badge {
+    font-size: 0.7rem;
+    background: linear-gradient(to right, #6366f1, #a855f7);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 6px;
+    vertical-align: middle;
+    display: inline-block;
+}
 .suggestion-item .register-suggestion-btn {
     background-color: transparent;
     color: #667eea;
@@ -174,6 +190,34 @@ body {
     background-color: #667eea;
     color: white;
 }
+
+/* AI Loading Animation */
+.ai-loading-container {
+    text-align: center;
+    padding: 20px;
+}
+.ai-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.ai-dots > div {
+    width: 8px;
+    height: 8px;
+    background-color: #667eea;
+    border-radius: 100%;
+    display: inline-block;
+    margin: 0 3px;
+    animation: bounce-delay 1.4s infinite ease-in-out both;
+}
+.ai-dots > div:nth-child(1) { animation-delay: -0.32s; }
+.ai-dots > div:nth-child(2) { animation-delay: -0.16s; }
+@keyframes bounce-delay {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1.0); }
+}
+
 
 /* Tabs cho cột gợi ý */
 .tabs-container {
