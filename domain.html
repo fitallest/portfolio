@@ -1,280 +1,452 @@
-<!DOCTYPE html>
-<html lang="vi" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng Ký Tên Miền Giá Rẻ & Gợi Ý Tên Miền - Fi.tallest</title>
+
+/*
+  JAVASCRIPT RIÊNG CHO TRANG DOMAIN (page-domain.js)
+  Đã tách từ thẻ <script> inline của domain.html gốc.
+  Chứa logic cho:
+  - Kích hoạt Lucide Icons
+  - Gợi ý tên miền (Domain Suggestion) - TÍCH HỢP AI GEMINI
+  - Mở/ĐÓng Modal
+  - Xử lý Formspree (Form submission) và Confetti
+*/
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Kích hoạt icon Lucide
+    lucide.createIcons(); 
+
+    // API Key Gemini (Dùng chung với main.js)
+    const GEMINI_API_KEY = "AIzaSyC0sOmXY9FsVM-LrX-1qndfeDn4-waeDTQ";
+
+    // === SCRIPT GỢI Ý TÊN MIỀN ===
+    const domainInput = document.getElementById('domainInput');
+    const industryInput = document.getElementById('industryInput'); 
+    const searchDomainButton = document.getElementById('searchDomainButton');
+    const suggestionResultsArea = document.getElementById('suggestionResultsArea');
+    const col1ResultsDiv = document.getElementById('column1Results').querySelector('.suggestion-list');
+    const col2TabsDiv = document.getElementById('suggestionTabs');
+    const col2ContentDiv = document.getElementById('suggestionTabContent');
+    const modalMessageTextarea = document.getElementById('modal_message'); 
+
+    // Hàm xóa dấu tiếng Việt
+    function removeAccents(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D");
+    }
+
+    // Hàm xử lý từ khóa: xóa dấu, thay khoảng trắng/ký tự đặc biệt bằng '-', xóa dấu '-' thừa
+    function processKeyword(input) {
+        if (!input) return '';
+        let processed = removeAccents(input.trim().toLowerCase());
+        processed = processed.replace(/[^a-z0-9\-]+/g, '-'); 
+        processed = processed.replace(/-+/g, '-');
+        processed = processed.replace(/^-+|-+$/g, '');
+        return processed;
+    }
     
-    <!-- Tailwind CSS (Giữ lại CDN) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    function processKeywordForCombine(input) {
+        if (!input) return '';
+        let processed = removeAccents(input.trim().toLowerCase());
+        processed = processed.replace(/[^a-z0-9]+/g, ''); 
+        return processed;
+    }
+
+    // Danh sách đuôi tên miền phổ biến
+    const commonTLDs = ['.com', '.vn', '.net', '.com.vn', '.info', '.org', '.store', '.online', '.shop', '.xyz', '.site'];
+    const vnTLDs = ['.vn', '.com.vn', '.net.vn', '.info.vn', '.edu.vn', '.gov.vn'];
+
+    const industryKeywords = {
+        'nhua': ['plastic', 'poly', 'plas'],
+        'thoi trang': ['fashion', 'style', 'boutique', 'shop', 'store', 'mode'],
+        'du lich': ['travel', 'tour', 'booking', 'trip', 'holiday'],
+        'xay dung': ['construction', 'build', 'decor', 'home', 'solution', 'group', 'cons'],
+        'giao duc': ['edu', 'school', 'academy', 'learn', 'study'],
+        'bat dong san': ['real', 'land', 'property', 'bds', 'homes', 'realty'],
+        'noi that': ['interior', 'decor', 'furniture', 'design'],
+        'thuc pham': ['food', 'kitchen', 'mart', 'deli'],
+        'my pham': ['beauty', 'cosmetic', 'spa', 'skin'],
+        'cong nghe': ['tech', 'solution', 'soft', 'data', 'it'],
+        'van tai': ['logistics', 'trans', 'ship', 'cargo']
+    };
+
+    // Hàm thuật toán cũ (Fallback)
+    function generateSmartSuggestions(keyword, industry) {
+        const suggestions = new Set(); 
+        const keywordProcessedHyphen = processKeyword(keyword);
+        const keywordProcessedCombine = processKeywordForCombine(keyword);
+        const industryProcessedHyphen = processKeyword(industry);
+        const industryProcessedCombine = processKeywordForCombine(industry);
+
+        if (industryProcessedCombine) {
+            const industryENKeywords = industryKeywords[industryProcessedHyphen] || [industryProcessedCombine]; 
+            industryENKeywords.forEach(indKey => {
+                commonTLDs.forEach(tld => {
+                    suggestions.add(keywordProcessedCombine + indKey + tld); 
+                });
+                 if (keywordProcessedHyphen && indKey) {
+                    commonTLDs.slice(0, 4).forEach(tld => {
+                        suggestions.add(keywordProcessedHyphen + '-' + indKey + tld);
+                    });
+                 }
+            });
+        }
+
+         const commonSuffixes = ['vn', 'sg', 'hcm', 'hanoi', 'group', 'global', 'tech', 'solution', 'shop', 'store', 'pro', 'plus'];
+         commonSuffixes.forEach(suffix => {
+             commonTLDs.forEach(tld => suggestions.add(keywordProcessedCombine + suffix + tld));
+         });
+         const commonPrefixes = ['the', 'my', 'best', 'top', 'go', 'get'];
+         commonPrefixes.forEach(prefix => {
+             commonTLDs.forEach(tld => suggestions.add(prefix + keywordProcessedCombine + tld));
+         });
+        
+         ['group', 'global', 'tech', 'solution'].forEach(suffix => {
+            if(keywordProcessedHyphen){
+                commonTLDs.slice(0, 2).forEach(tld => suggestions.add(keywordProcessedHyphen + '-' + suffix + tld));
+            }
+         });
+
+        const validSuggestions = Array.from(suggestions).filter(domain => {
+            if (domain.includes('--')) return false; 
+            const parts = domain.split('.');
+            return parts.length >= 2 && parts[0] !== '' && parts[parts.length -1] !== ''; 
+        });
+        return validSuggestions.slice(0, 50);
+    }
+
+    // --- HÀM GỌI AI GEMINI ---
+    async function fetchGeminiSuggestions(keyword, industry) {
+        const prompt = `
+        Đóng vai một chuyên gia thương hiệu và đặt tên miền (Naming Expert).
+        Tôi đang cần tìm tên miền cho từ khóa: "${keyword}" hoạt động trong lĩnh vực: "${industry || 'Tổng hợp'}".
+        Hãy gợi ý 15 tên miền sáng tạo, ngắn gọn, dễ nhớ, ưu tiên đuôi .vn, .com.vn, .com, .net.
+        Tên miền có thể dùng tiếng Anh hoặc tiếng Việt không dấu, có thể ghép từ, chơi chữ.
+        
+        Yêu cầu quan trọng:
+        1. Chỉ trả về một mảng JSON chứa các chuỗi tên miền (ví dụ: ["tenmien1.com", "tenmien2.vn"]).
+        2. Không thêm bất kỳ văn bản, giải thích hay định dạng markdown nào khác (không dùng \`\`\`json).
+        3. Đảm bảo tên miền hợp lệ (không chứa ký tự đặc biệt ngoài dấu gạch ngang và dấu chấm).
+        `;
+
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
+
+            if (!response.ok) throw new Error('Lỗi API Gemini');
+
+            const data = await response.json();
+            let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            
+            if (!text) throw new Error('Phản hồi rỗng');
+
+            // Làm sạch chuỗi JSON
+            text = text.replace(/```json|```/g, '').trim();
+            const aiSuggestions = JSON.parse(text);
+            
+            if (Array.isArray(aiSuggestions)) {
+                return aiSuggestions;
+            } else {
+                throw new Error('Định dạng không phải mảng');
+            }
+
+        } catch (error) {
+            console.warn('AI Error, falling back to algorithm:', error);
+            return null; // Trả về null để kích hoạt fallback
+        }
+    }
+
+    // Hàm hiển thị kết quả (Cập nhật để nhận dữ liệu AI)
+    function displayResults(keyword, industry, userTLD, aiResults = null) {
+        // --- Xử lý Cột 1: Kết quả trực tiếp (Luôn chạy ngay) ---
+        if (!aiResults) { // Chỉ chạy lần đầu, không chạy lại khi AI trả về để tránh flash
+            col1ResultsDiv.innerHTML = ''; 
+            let col1Domains = new Set(); 
+            if (userTLD) {
+                 const userDomain = keyword + userTLD;
+                 if (!userDomain.includes('--')) col1Domains.add(userDomain);
+            }
+            commonTLDs.forEach(tld => {
+                const domain = keyword + tld;
+                if (!domain.endsWith(tld + tld) && !domain.includes('--')) col1Domains.add(domain);
+            });
+            
+            if (col1Domains.size > 0) {
+                 col1Domains.forEach(domain => {
+                     const div = document.createElement('div');
+                     div.className = 'suggestion-item';
+                     div.innerHTML = `<span class="domain-name">${domain}</span><button data-domain="${domain}" class="register-suggestion-btn open-register-modal">Đăng ký</button>`;
+                     col1ResultsDiv.appendChild(div);
+                 });
+             } else {
+                 col1ResultsDiv.innerHTML = '<p class="text-center text-gray-500 p-4">Không có kết quả trực tiếp hợp lệ.</p>';
+             }
+             
+             // Hiển thị Loading bên cột 2
+             col2ContentDiv.innerHTML = `
+                <div class="ai-loading-container">
+                    <div class="ai-dots"><div></div><div></div><div></div></div>
+                    <p class="text-sm text-indigo-600 font-medium">AI đang phân tích và tìm ý tưởng...</p>
+                </div>
+             `;
+             col2TabsDiv.innerHTML = ''; // Xóa tab cũ
+             return; // Dừng ở đây, đợi AI
+        }
+
+        // --- Xử lý Cột 2: Kết quả AI hoặc Fallback ---
+        col2TabsDiv.innerHTML = ''; 
+        col2ContentDiv.innerHTML = ''; 
+
+        // Nếu AI trả về null, dùng thuật toán cũ
+        const suggestionsSource = aiResults || generateSmartSuggestions(keyword, industry);
+        
+        const suggestionsByTLD = {};
+        const existingCol1Domains = Array.from(col1ResultsDiv.querySelectorAll('.domain-name')).map(span => span.textContent);
+
+        suggestionsSource.forEach(domain => {
+            if(existingCol1Domains.includes(domain)) return;
+            let tldGroup = 'Gợi ý'; // Gom chung nếu là AI
+            
+            // Nếu là thuật toán cũ thì chia tab, nếu là AI thì ưu tiên hiển thị dạng danh sách đẹp
+            if (!aiResults) {
+                const sortedTLDs = [...commonTLDs, ...vnTLDs].sort((a, b) => b.length - a.length); 
+                for (const tld of sortedTLDs) { 
+                    if (domain.endsWith(tld)) {
+                        tldGroup = tld.toUpperCase();
+                        break;
+                    }
+                }
+            } else {
+                tldGroup = 'AI Đề Xuất';
+            }
+
+            if (!suggestionsByTLD[tldGroup]) suggestionsByTLD[tldGroup] = [];
+            if (!suggestionsByTLD[tldGroup].includes(domain)) {
+                suggestionsByTLD[tldGroup].push(domain);
+            }
+        });
+
+         // Hiển thị Tabs và Content
+         const groupKeys = Object.keys(suggestionsByTLD);
+         
+         if(groupKeys.length > 0) {
+            groupKeys.forEach((tldGroup, index) => {
+                 // Tạo Tab Button
+                 const tabButton = document.createElement('button');
+                 tabButton.className = `tab-btn ${index === 0 ? 'active' : ''}`;
+                 tabButton.dataset.tab = `tab-${index}`; 
+                 tabButton.textContent = tldGroup;
+                 col2TabsDiv.appendChild(tabButton);
+
+                 // Tạo Tab Content Div
+                 const tabContent = document.createElement('div');
+                 tabContent.id = `tab-${index}`;
+                 tabContent.className = `tab-content ${index === 0 ? 'active' : ''}`;
+                 
+                 suggestionsByTLD[tldGroup].forEach(domain => {
+                     const div = document.createElement('div');
+                     div.className = 'suggestion-item';
+                     // Thêm badge AI nếu là kết quả từ AI
+                     const aiBadge = aiResults ? `<span class="ai-badge">✨ AI</span>` : '';
+                     
+                     div.innerHTML = `
+                        <span class="domain-name">${aiBadge}${domain}</span>
+                        <button data-domain="${domain}" class="register-suggestion-btn open-register-modal">Đăng ký</button>
+                     `;
+                     tabContent.appendChild(div);
+                 });
+                 col2ContentDiv.appendChild(tabContent);
+            });
+
+            // Sự kiện chuyển tab
+            col2TabsDiv.querySelectorAll('.tab-btn').forEach(button => {
+                 button.addEventListener('click', () => {
+                     col2TabsDiv.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                     col2ContentDiv.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                     button.classList.add('active');
+                     const targetContent = document.getElementById(button.dataset.tab);
+                     if (targetContent) targetContent.classList.add('active');
+                 });
+             });
+         } else {
+             col2ContentDiv.innerHTML = '<p class="text-center text-gray-500 p-4">Không có gợi ý phù hợp.</p>';
+         }
+
+        // Gắn lại sự kiện mở modal
+        attachModalOpenListeners();
+    }
+
+
+    if(searchDomainButton && domainInput && suggestionResultsArea) {
+        searchDomainButton.addEventListener('click', async () => {
+            const rawInput = domainInput.value;
+            const industry = industryInput.value;
+            
+            if (!rawInput.trim()) {
+                alert("Vui lòng nhập tên miền hoặc từ khóa!");
+                return;
+            }
+
+            // Tách tên miền và TLD
+            let baseKeywordRaw = rawInput;
+            let userTLD = null;
+            const lastDotIndex = rawInput.lastIndexOf('.');
+            if (lastDotIndex > 0 && lastDotIndex < rawInput.length - 1) { 
+                 const potentialTLD = rawInput.substring(lastDotIndex).toLowerCase();
+                 const isValidTLD = commonTLDs.includes(potentialTLD) || vnTLDs.includes(potentialTLD) || /^\.[a-z]{2,}(\.[a-z]{2})?$/.test(potentialTLD);
+                 if (isValidTLD) {
+                    const potentialBase = rawInput.substring(0, lastDotIndex);
+                    if (potentialBase && !potentialBase.endsWith('.')) { 
+                        userTLD = potentialTLD;
+                        baseKeywordRaw = potentialBase;
+                    }
+                 }
+            }
+
+            const processedKeyword = processKeyword(baseKeywordRaw);
+            if (!processedKeyword) {
+                alert("Từ khóa không hợp lệ.");
+                return;
+            }
+            
+            // 1. Hiển thị UI + Kết quả trực tiếp ngay lập tức
+            suggestionResultsArea.classList.remove('hidden'); 
+            displayResults(processedKeyword, industry, userTLD, null); 
+
+            // 2. Vô hiệu hóa nút tìm kiếm để tránh spam
+            searchDomainButton.disabled = true;
+            searchDomainButton.textContent = "Đang tìm...";
+
+            // 3. Gọi AI (bất đồng bộ)
+            const aiResults = await fetchGeminiSuggestions(rawInput, industry);
+
+            // 4. Cập nhật UI với kết quả AI (hoặc fallback)
+            displayResults(processedKeyword, industry, userTLD, aiResults || generateSmartSuggestions(processedKeyword, industry));
+
+            // 5. Mở lại nút
+            searchDomainButton.disabled = false;
+            searchDomainButton.textContent = "Tìm kiếm & Gợi ý";
+        });
+    }
+    // === HẾT SCRIPT GỢI Ý TÊN MIỀN ===
+
+    // === SCRIPT MỞ/ĐÓNG MODAL ĐĂNG KÝ ===
+    const registerModal = document.getElementById('registerModal');
+    const closeModalButtons = document.querySelectorAll('.close-register-modal');
+    const successMessage = document.getElementById('success-message');
+
+    function openModal(domainToRegister = null) {
+        if (registerModal) {
+            if (domainToRegister && modalMessageTextarea) {
+                modalMessageTextarea.value = `Tôi muốn đăng ký tên miền: ${domainToRegister}`;
+            } else if (modalMessageTextarea) {
+                modalMessageTextarea.value = ''; 
+                modalMessageTextarea.placeholder = 'Bạn cần tư vấn thêm về tên miền nào?';
+            }
+            registerModal.style.display = 'block';
+            lucide.createIcons(); 
+        }
+    }
+
+    function closeModal() {
+         if (registerModal) {
+            registerModal.style.display = 'none';
+            if (modalMessageTextarea) {
+                modalMessageTextarea.value = '';
+                modalMessageTextarea.placeholder = 'Ví dụ: Tôi muốn đăng ký tên miền abc.com'; 
+            }
+        }
+    }
     
-    <!-- Google Fonts (Giữ lại link gốc) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    
-    <!-- Liên kết đến CSS riêng (Sẽ tạo file này sau) -->
-    <link rel="stylesheet" href="assets/css/page-domain.css"> 
-</head>
-<body class="bg-gray-50">
-    <!-- Bỏ Header/Footer/Nút liên hệ theo yêu cầu giữ nguyên -->
-	    <!-- Header & Navbar (Menu đã được cập nhật link) -->
-    <header class="bg-white/90 sticky top-0 z-50 backdrop-blur-md border-b border-gray-200">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex-shrink-0 flex items-center">
-                    <a href="index.html" class="text-2xl font-bold text-indigo-600">
-                        Fi.tallest
-                    </a>
-                </div>
-                <div class="hidden md:flex md:items-center md:space-x-8">
-                    <a href="index.html" class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Trang chủ</a>
-                    <a href="index.html#about" class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Giới thiệu</a>
-                    <a href="index.html#services" class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Dịch vụ</a>
-                    <a href="projects.html" class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Dự án</a>
-                    <!-- SỬA LINK -->
-                    <a href="hosting.html" class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Hosting</a>
-                    <!-- SỬA LINK -->
-                    <a href="domain.html" class="text-indigo-600 font-semibold transition duration-150">Tên miền</a>
-                    <!-- Link Báo Giá (Active) -->
-                    <a href="bao-gia.html"  class="text-gray-500 font-medium hover:text-indigo-600 transition duration-150">Báo Giá</a> 
-                    <a href="index.html#contact" class="ml-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Liên hệ ngay
-                    </a>
-                </div>
-                <div class="-mr-2 flex items-center md:hidden">
-                    <button type="button" id="mobile-menu-button" class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-expanded="false">
-                        <span class="sr-only">Mở menu</span>
-                        <i data-lucide="menu" class="h-6 w-6"></i>
-                    </button>
-                </div>
-            </div>
-        </nav>
-        <div class="hidden md:hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="index.html" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Trang chủ</a>
-                <a href="index.html#about" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Giới thiệu</a>
-                <a href="index.html#services" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Dịch vụ</a>
-                <a href="projects.html" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Dự án</a>
-                 <!-- SỬA LINK -->
-                <a href="hosting.html" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Hosting</a>
-                 <!-- SỬA LINK -->
-                <a href="domain.html" class="text-gray-500 hover:bg-gray-50 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Tên miền</a>
-                <!-- Link Báo Giá (Active) -->
-                <a href="bao-gia.html" class="text-indigo-600 bg-indigo-50 block px-3 py-2 rounded-md text-base font-medium">Báo Giá</a>
-                <a href="index.html#contact" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">Liên hệ ngay</a>
-            </div>
-        </div>
-    </header>
-    <!-- HẾT PHẦN HEADER -->
+    function attachModalOpenListeners() {
+         const resultsArea = document.getElementById('suggestionResultsArea');
+         const priceTables = document.querySelectorAll('.price-table-container'); 
 
-    <main>
-        <!-- Hero Section -->
-        <section class="hero-section">
-            <div class="max-w-7xl mx-auto relative z-1">
-                <h1>Đăng Ký Tên Miền Giá Rẻ & Gợi Ý Tên Miền</h1>
-                <p>Tìm kiếm tên miền hoàn hảo cho doanh nghiệp hoặc dự án cá nhân của bạn. Nhập từ khóa và ngành nghề để nhận gợi ý độc đáo!</p>
-            </div>
-        </section>
+         const handleOpenClick = (event) => {
+             if (event.target.classList.contains('open-register-modal')) {
+                 const domain = event.target.dataset.domain || null; 
+                 openModal(domain);
+             }
+         };
 
-        <!-- Domain Search & Suggestion Section -->
-        <section class="domain-search-container">
-            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Tìm kiếm & Gợi ý tên miền</h2>
-            <div class="search-input-group">
-                 <div>
-                    <label for="domainInput" class="block text-sm font-medium text-gray-700 mb-1">Tên miền mong muốn</label>
-                    <input type="text" id="domainInput" class="search-input" placeholder="Nhập tên miền hoặc từ khóa (ví dụ: công ty abc)" />
-                 </div>
-                 <div>
-                    <label for="industryInput" class="block text-sm font-medium text-gray-700 mb-1">Ngành nghề (Tùy chọn)</label>
-                    <input type="text" id="industryInput" class="search-input" placeholder="Ví dụ: nhựa, thời trang, du lịch..." />
-                 </div>
-                <button id="searchDomainButton" class="domain-search-button">
-                    Tìm kiếm & Gợi ý
-                </button>
-            </div>
-            <div id="suggestionResultsArea" class="suggestion-results-area hidden"> 
-                <div class="suggestion-columns">
-                    <!-- Column 1: Direct Results -->
-                    <div id="column1Results">
-                        <h3>Kết quả trực tiếp</h3>
-                        <div class="suggestion-list">
-                            <p class="text-center text-gray-500 p-4">Nhập tên miền và nhấn nút để xem kết quả.</p>
-                        </div>
-                    </div>
-                    <!-- Column 2: Smart Suggestions -->
-                    <div id="column2Results">
-                        <h3>Gợi ý khác</h3>
-                        <div class="tabs-container" id="suggestionTabs">
-                            <!-- Tab buttons will be added by JS -->
-                        </div>
-                        <div class="tab-content-container suggestion-list" id="suggestionTabContent">
-                             <!-- Tab content will be added by JS -->
-                             <p class="text-center text-gray-500 p-4">Nhập thêm ngành nghề để có gợi ý tốt hơn.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+         if (resultsArea) {
+             resultsArea.removeEventListener('click', handleOpenClick); 
+             resultsArea.addEventListener('click', handleOpenClick); 
+         }
+         priceTables.forEach(table => {
+             table.removeEventListener('click', handleOpenClick); 
+             table.addEventListener('click', handleOpenClick); 
+         });
+    }
 
-        <!-- Benefits Section -->
-        <section class="py-12 bg-gray-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="section-title">NHỮNG LỢI ÍCH KHI ĐĂNG KÝ TÊN MIỀN TẠI Nasani</h2>
-                <p class="text-center text-gray-600 mb-10 max-w-3xl mx-auto">
-                    Chúng tôi chuẩn hóa toàn bộ quy trình quản lý tên miền bằng công nghệ để mang đến sự thuận tiện và trải nghiệm tối đa cho khách hàng.
-                </p>
-                <div class="benefits-grid">
-                    <div class="benefit-card">
-                        <div class="icon-wrapper"><i data-lucide="settings" class="w-8 h-8"></i></div>
-                        <h3>Quản Lý Tên Miền</h3>
-                        <p>Bạn hoàn toàn chủ động trong việc quản lý và gia hạn dịch vụ tên miền...</p> <!-- Rút gọn nội dung -->
-                    </div>
-                    <div class="benefit-card">
-                        <div class="icon-wrapper"><i data-lucide="globe" class="w-8 h-8"></i></div>
-                        <h3>Quản Lý DNS</h3>
-                        <p>Tính năng DNS trung gian được tích hợp sẵn...</p> <!-- Rút gọn nội dung -->
-                    </div>
-                    <div class="benefit-card">
-                        <div class="icon-wrapper"><i data-lucide="shield-check" class="w-8 h-8"></i></div>
-                        <h3>An Toàn Pháp Lý</h3>
-                        <p>Đăng ký tên miền tại nhà đăng ký Việt Nam giúp hạn chế...</p> <!-- Rút gọn nội dung -->
-                    </div>
-                    <div class="benefit-card">
-                        <div class="icon-wrapper"><i data-lucide="line-chart" class="w-8 h-8"></i></div>
-                        <h3>Tốt Cho SEO</h3>
-                        <p>Theo Google chia sẻ, các doanh nghiệp nên đăng ký tên miền .VN...</p> <!-- Rút gọn nội dung -->
-                    </div>
-                    <div class="benefit-card">
-                        <div class="icon-wrapper"><i data-lucide="award" class="w-8 h-8"></i></div>
-                        <h3>Uy Tín Thương Hiệu</h3>
-                        <p>Việc sở hữu tên miền .VN giúp tăng tính nhận diện thương hiệu...</p> <!-- Rút gọn nội dung -->
-                    </div>
-                    <div class="benefit-card">
-                        <div class="icon-wrapper"><i data-lucide="lock" class="w-8 h-8"></i></div>
-                        <h3>Ẩn Thông Tin Tên Miền</h3>
-                        <p>Với dịch vụ ID Protection này giúp bạn ẩn các thông tin tên miền...</p> <!-- Rút gọn nội dung -->
-                    </div>
-                </div>
-            </div>
-        </section>
+    attachModalOpenListeners(); 
 
-        <!-- Vietnam Domain Price Section -->
-        <section class="py-12">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="section-title">BẢNG GIÁ TÊN MIỀN VIỆT NAM (.VN)</h2>
-                <div class="price-table-container">
-                    <table class="price-table">
-                        <thead>
-                            <tr>
-                                <th>Tên miền</th>
-                                <th>ĐĂNG KÝ MỚI<br><small>(đã bao gồm VAT)</small></th>
-                                <th>GIA HẠN<br><small>(đã bao gồm VAT)</small></th>
-                                <th>CHUYỂN VỀ NASANI<br><small>(đã bao gồm VAT)</small></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>.VN</td><td class="price-value">820.000đ</td><td class="price-value">479.000đ</td><td rowspan="6" class="free-text">Miễn phí</td></tr>
-                            <tr><td>.COM.VN</td><td class="price-value">691.000đ</td><td class="price-value">349.000đ</td></tr>
-                            <tr><td>.EDU.VN</td><td class="price-value">397.000đ</td><td class="price-value">199.000đ</td></tr>
-                            <tr><td>.GOV.VN</td><td class="price-value">397.000đ</td><td class="price-value">199.000đ</td></tr>
-                            <tr><td>.NET.VN</td><td class="price-value">691.000đ</td><td class="price-value">349.000đ</td></tr>
-                            <tr><td>.INFO.VN</td><td class="price-value">397.000đ</td><td class="price-value">199.000đ</td></tr>
-                            <tr><td colspan="4"><button class="register-button open-register-modal">ĐĂNG KÝ</button></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p class="note">Giá trên đã bao gồm VAT 8%.</p>
-            </div>
-        </section>
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', closeModal);
+    });
 
-        <!-- International Domain Price Section -->
-        <section class="py-12 bg-gray-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="section-title">BẢNG GIÁ TÊN MIỀN QUỐC TẾ</h2>
-                <div class="price-table-container">
-                    <table class="price-table">
-                         <thead>
-                            <tr>
-                                <th>Tên miền</th>
-                                <th>ĐĂNG KÝ MỚI<br><small>(đã bao gồm VAT)</small></th>
-                                <th>GIA HẠN<br><small>(đã bao gồm VAT)</small></th>
-                                <th>CHUYỂN VỀ NASANI<br><small>(đã bao gồm VAT)</small></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>.COM</td><td class="price-value">366.120đ</td><td class="price-value">366.120đ</td><td class="price-value">366.120đ</td></tr>
-                            <tr><td>.NET</td><td class="price-value">415.800đ</td><td class="price-value">415.800đ</td><td class="price-value">415.800đ</td></tr>
-                            <tr><td>.INFO</td><td class="price-value">680.400đ</td><td class="price-value">680.400đ</td><td class="price-value">680.400đ</td></tr>
-                            <tr><td>.ORG</td><td class="price-value">405.000đ</td><td class="price-value">405.000đ</td><td class="price-value">405.000đ</td></tr>
-                            <tr><td>.BIZ</td><td class="price-value">583.200đ</td><td class="price-value">583.200đ</td><td class="price-value">583.200đ</td></tr>
-                            <tr><td>.ME</td><td class="price-value">691.200đ</td><td class="price-value">691.200đ</td><td class="price-value">691.200đ</td></tr>
-                            <tr><td colspan="4"><button class="register-button open-register-modal">ĐĂNG KÝ</button></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p class="note">Giá trên đã bao gồm VAT 8%.</p>
-            </div>
-        </section>
-    </main>
+    window.addEventListener('click', (event) => {
+        if (event.target == registerModal) {
+            closeModal();
+        }
+    });
+    // === HẾT SCRIPT MODAL ===
 
-    <!-- Modal Đăng Ký Tư Vấn -->
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn close-register-modal">&times;</span>
-            <h2>Đăng ký tư vấn tên miền</h2> 
-            <form id="registrationForm" action="https://formspree.io/f/xldojlkn" method="POST" class="mt-6 space-y-6">
-                <input type="hidden" name="_gotcha"> 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="modal_name" class="block text-sm font-medium text-gray-700">Họ và tên</label>
-                        <div class="mt-1">
-                            <input type="text" name="Họ tên" id="modal_name" autocomplete="name" class="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md">
-                        </div>
-                    </div>
-                    <div>
-                        <label for="modal_phone" class="block text-sm font-medium text-gray-700">Số điện thoại <span class="text-red-500">(Bắt buộc)</span></label>
-                        <div class="mt-1">
-                            <input type="tel" name="Số điện thoại" id="modal_phone" autocomplete="tel" required class="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md">
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <label for="modal_message" class="block text-sm font-medium text-gray-700">Nội dung yêu cầu</label>
-                    <div class="mt-1">
-                        <textarea id="modal_message" name="Nội dung thêm" rows="4" class="py-3 px-4 block w-full shadow-sm text-gray-900 focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md" placeholder="Ví dụ: Tôi muốn đăng ký tên miền abc.com"></textarea>
-                    </div>
-                </div>
-                <div id="form-status" class="text-center text-sm"></div>
-                <div class="text-right">
-                    <button type="submit" id="submitButton" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50">
-                        <i data-lucide="send" class="mr-2 -ml-1 h-5 w-5"></i>
-                        Gửi yêu cầu đăng ký
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Success Message Div -->
-    <div id="success-message">
-        Yêu cầu đã được gửi! Chúng tôi sẽ liên hệ lại sớm.
-    </div>
+    // === SCRIPT XỬ LÝ FORM SUBMISSION VÀ PHÁO HOA ===
+    const form = document.getElementById('registrationForm');
+    const formStatus = document.getElementById('form-status');
+    const submitButton = document.getElementById('submitButton');
 
-    <!-- Scripts -->
-    <!-- Thư viện Lucide Icons (Giữ lại CDN) -->
-    <script src="https://unpkg.com/lucide@latest"></script> 
-    <!-- Thư viện Confetti (Giữ lại CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-    <!-- Liên kết đến JS riêng (Sẽ tạo file này sau) -->
-    <script src="assets/js/page-domain.js"></script> 
-	<!-- ... existing code ... -->
-    <!-- Thư viện Confetti (Giữ lại CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-    
-    <!-- === THÊM SCRIPT MENU MOBILE (ĐÃ BỊ THIẾU) === -->
-    <script src="assets/js/main.js"></script>
-    
-    <!-- Liên kết đến JS riêng (Sẽ tạo file này sau) -->
-    <script src="assets/js/page-domain.js"></script> 
+    if (form && formStatus && submitButton) {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            
+            const formData = new FormData(form);
+            submitButton.disabled = true; 
+            formStatus.textContent = 'Đang gửi...';
+            formStatus.className = 'text-center text-sm text-gray-500';
 
-</body>
-</html>
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    formStatus.textContent = 'Gửi thành công!';
+                    formStatus.className = 'text-center text-sm text-green-600';
+                    form.reset(); 
+                    closeModal(); 
+
+                    if (successMessage)	 {
+                        successMessage.classList.add('show');
+                        setTimeout(() => { successMessage.classList.remove('show'); }, 3000); 
+                    }
+
+                    if (typeof confetti === 'function') {
+                        confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+                    }
+                    
+                } else {
+                    response.json().then(data => {
+                        formStatus.textContent = (data && data.errors) ? data.errors.map(e => e.message).join(", ") : 'Oops! Có lỗi xảy ra.';
+                        formStatus.className = 'text-center text-sm text-red-600';
+                    }).catch(() => {
+                        formStatus.textContent = 'Oops! Lỗi xử lý phản hồi.';
+                        formStatus.className = 'text-center text-sm text-red-600';
+                    });
+                }
+            }).catch(error => {
+                console.error('Form submission fetch error:', error); 
+                formStatus.textContent = 'Oops! Lỗi mạng khi gửi form.';
+                formStatus.className = 'text-center text-sm text-red-600';
+            }).finally(() => {
+                submitButton.disabled = false; 
+                setTimeout(() => { if (formStatus) formStatus.textContent = ''; }, 5000); 
+               if (modalMessageTextarea) modalMessageTextarea.value = ''; 
+            });
+        });
+    } else {
+        console.error("Không tìm thấy các thành phần form cần thiết."); 
+    }
+}); 
