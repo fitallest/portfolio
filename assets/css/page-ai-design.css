@@ -1,0 +1,34 @@
+
+/* CSS RIÊNG CHO TRANG AI DESIGN */
+
+.color-btn {
+    transition: transform 0.2s;
+}
+.color-btn:hover {
+    transform: scale(1.1);
+}
+.color-btn.selected {
+    border-color: #4f46e5 !important; /* Indigo-600 */
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #4f46e5;
+}
+
+.chip-btn {
+    cursor: pointer;
+    user-select: none;
+}
+.chip-btn.active {
+    background-color: #eef2ff; /* Indigo-50 */
+    border-color: #6366f1; /* Indigo-500 */
+    color: #4f46e5; /* Indigo-600 */
+    font-weight: 600;
+}
+
+/* Loading animation extensions */
+@keyframes pulse-text {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+.animate-pulse-text {
+    animation: pulse-text 2s infinite;
+}
