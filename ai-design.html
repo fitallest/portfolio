@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Website Generator - Fi.tallest</title>
+    <meta name="description" content="Tự động tạo bản thảo thiết kế website bằng trí tuệ nhân tạo Gemini. Nhập ý tưởng, nhận giao diện ngay lập tức.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/page-ai-design.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    
+    <main>
+        <!-- Hero Section -->
+        <section class="relative bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 pt-24 pb-32 overflow-hidden">
+             <div class="absolute inset-0">
+                <div class="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+                <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s"></div>
+            </div>
+            <div class="max-w-7xl mx-auto px-4 relative z-10 text-center">
+                <span class="inline-block py-1 px-3 rounded-full bg-white/10 border border-white/20 text-indigo-200 text-sm font-bold mb-6 backdrop-blur-md">
+                    ✨ Beta Feature
+                </span>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+                    Biến ý tưởng thành <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-400">Bản Vẽ Website Trong 30s</span>
+                </h1>
+                <p class="text-lg text-indigo-100/80 max-w-2xl mx-auto mb-10">
+                    Không cần biết code, không cần thuê designer. Chỉ cần mô tả ý tưởng, AI của Fi.tallest sẽ phác thảo giao diện website hoàn chỉnh cho bạn.
+                </p>
+            </div>
+        </section>
+
+        <!-- Main Interface -->
+        <section class="max-w-7xl mx-auto px-4 -mt-20 mb-20 relative z-20">
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 grid grid-cols-1 lg:grid-cols-12">
+                
+                <!-- Left Panel: Controls -->
+                <div class="lg:col-span-4 bg-gray-50 border-r border-gray-200 p-6 md:p-8 overflow-y-auto max-h-[90vh]">
+                    <form id="ai-design-form" class="space-y-8">
+                        
+                        <!-- Step 1: Style & Industry -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold mr-3">1</span>
+                                Định hình phong cách
+                            </h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Ngành nghề</label>
+                                    <input type="text" id="industry" placeholder="VD: Bất động sản, Spa, Cafe..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Phong cách chủ đạo</label>
+                                    <select id="style" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                                        <option value="Modern">Hiện đại & Sạch sẽ (Modern)</option>
+                                        <option value="Minimalist">Tối giản (Minimalist)</option>
+                                        <option value="Luxury">Sang trọng & Cao cấp</option>
+                                        <option value="Playful">Vui tươi & Sáng tạo</option>
+                                        <option value="Corporate">Doanh nghiệp & Tin cậy</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Màu sắc chủ đạo</label>
+                                    <div class="flex gap-2 flex-wrap">
+                                        <button type="button" class="color-btn w-8 h-8 rounded-full border-2 border-transparent focus:ring-2 ring-offset-2 ring-indigo-500 bg-blue-600" data-color="Blue"></button>
+                                        <button type="button" class="color-btn w-8 h-8 rounded-full border-2 border-transparent focus:ring-2 ring-offset-2 ring-indigo-500 bg-red-600" data-color="Red"></button>
+                                        <button type="button" class="color-btn w-8 h-8 rounded-full border-2 border-transparent focus:ring-2 ring-offset-2 ring-indigo-500 bg-green-600" data-color="Green"></button>
+                                        <button type="button" class="color-btn w-8 h-8 rounded-full border-2 border-transparent focus:ring-2 ring-offset-2 ring-indigo-500 bg-yellow-500" data-color="Yellow"></button>
+                                        <button type="button" class="color-btn w-8 h-8 rounded-full border-2 border-transparent focus:ring-2 ring-offset-2 ring-indigo-500 bg-gray-900" data-color="Black/Dark"></button>
+                                        <button type="button" class="color-btn w-8 h-8 rounded-full border-2 border-gray-300 focus:ring-2 ring-offset-2 ring-indigo-500 bg-white" data-color="White/Light"></button>
+                                    </div>
+                                    <input type="hidden" id="selectedColor" value="Blue">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-200">
+
+                        <!-- Step 2: Content -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold mr-3">2</span>
+                                Nội dung chi tiết
+                            </h3>
+                            
+                            <div class="mb-3">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Website mẫu (nếu có)</label>
+                                <input type="url" id="refWeb" placeholder="https://..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
+                            </div>
+
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mô tả ý tưởng (Càng chi tiết càng tốt)</label>
+                            <textarea id="description" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm" placeholder="VD: Tôi muốn làm trang landing page bán mỹ phẩm thiên nhiên, có phần giới thiệu thành phần, feedback khách hàng..."></textarea>
+                            
+                            <!-- Suggestion Chips -->
+                            <div class="mt-3">
+                                <p class="text-xs text-gray-500 mb-2">Thêm nhanh các phần cần có:</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <button type="button" class="chip-btn text-xs border border-gray-300 rounded-full px-3 py-1 hover:bg-indigo-50 hover:border-indigo-200 transition" data-add="Có phần Giới thiệu về chúng tôi (About Us).">Giới thiệu</button>
+                                    <button type="button" class="chip-btn text-xs border border-gray-300 rounded-full px-3 py-1 hover:bg-indigo-50 hover:border-indigo-200 transition" data-add="Có phần Bảng giá dịch vụ (Pricing).">Bảng giá</button>
+                                    <button type="button" class="chip-btn text-xs border border-gray-300 rounded-full px-3 py-1 hover:bg-indigo-50 hover:border-indigo-200 transition" data-add="Có phần Khách hàng nhận xét (Testimonials).">Review</button>
+                                    <button type="button" class="chip-btn text-xs border border-gray-300 rounded-full px-3 py-1 hover:bg-indigo-50 hover:border-indigo-200 transition" data-add="Có Form liên hệ và bản đồ.">Liên hệ</button>
+                                    <button type="button" class="chip-btn text-xs border border-gray-300 rounded-full px-3 py-1 hover:bg-indigo-50 hover:border-indigo-200 transition" data-add="Có Thư viện hình ảnh dự án (Gallery).">Thư viện ảnh</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-200">
+
+                        <!-- Step 3: Contact Info (Hidden Lead Gen) -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                                <span class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold mr-3">3</span>
+                                Thông tin hiển thị trên Web
+                            </h3>
+                            <div class="space-y-3 bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                <p class="text-xs text-blue-600 mb-2 font-medium"><i data-lucide="info" class="w-3 h-3 inline mr-1"></i>Thông tin này sẽ được AI điền vào bản vẽ.</p>
+                                
+                                <input type="text" id="brandName" placeholder="Tên Thương Hiệu (Bắt buộc)" class="w-full px-3 py-2 border border-gray-300 rounded bg-white text-sm focus:outline-none focus:border-indigo-500">
+                                <input type="tel" id="contactPhone" placeholder="Số điện thoại (Bắt buộc)" class="w-full px-3 py-2 border border-gray-300 rounded bg-white text-sm focus:outline-none focus:border-indigo-500">
+                                <input type="email" id="contactEmail" placeholder="Email liên hệ (Tuỳ chọn)" class="w-full px-3 py-2 border border-gray-300 rounded bg-white text-sm focus:outline-none focus:border-indigo-500">
+                                <input type="text" id="contactHours" placeholder="Giờ làm việc (Tuỳ chọn)" class="w-full px-3 py-2 border border-gray-300 rounded bg-white text-sm focus:outline-none focus:border-indigo-500">
+                            </div>
+                        </div>
+
+                        <button type="submit" id="generateBtn" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-1 transition-all duration-200 flex items-center justify-center">
+                            <i data-lucide="paintbrush" class="w-5 h-5 mr-2"></i>
+                            TẠO BẢN VẼ NGAY
+                        </button>
+
+                    </form>
+                </div>
+
+                <!-- Right Panel: Preview -->
+                <div class="lg:col-span-8 bg-gray-100 relative min-h-[600px] lg:min-h-0">
+                    
+                    <!-- Empty State -->
+                    <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+                        <div class="w-24 h-24 bg-white rounded-full shadow-sm flex items-center justify-center mb-6">
+                            <i data-lucide="monitor" class="w-10 h-10 text-gray-300"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Chưa có bản vẽ nào</h3>
+                        <p class="text-gray-500 max-w-md">Điền thông tin bên trái và nhấn nút "Tạo bản vẽ" để AI bắt đầu thiết kế giao diện cho bạn.</p>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="loading-state" class="hidden absolute inset-0 bg-white/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center text-center p-8">
+                        <div class="relative w-24 h-24 mb-8">
+                            <div class="absolute inset-0 border-4 border-indigo-100 rounded-full"></div>
+                            <div class="absolute inset-0 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
+                            <i data-lucide="cpu" class="w-8 h-8 text-indigo-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2 animate-pulse">Gemini đang vẽ...</h3>
+                        <p class="text-gray-600 max-w-sm" id="loading-text">Đang phân tích yêu cầu ngành nghề...</p>
+                    </div>
+
+                    <!-- Preview Iframe Container -->
+                    <div id="preview-container" class="hidden absolute inset-4 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col">
+                        <!-- Browser Toolbar Mockup -->
+                        <div class="bg-gray-100 border-b border-gray-200 px-4 py-3 flex items-center gap-4">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                            </div>
+                            <div class="flex-1 bg-white h-8 rounded-md border border-gray-200 flex items-center px-3 text-xs text-gray-400">
+                                <i data-lucide="lock" class="w-3 h-3 mr-2"></i> fitallest-ai-preview.com
+                            </div>
+                            <div class="flex gap-2 text-gray-500">
+                                <button title="Desktop View" onclick="resizePreview('100%')"><i data-lucide="monitor" class="w-4 h-4"></i></button>
+                                <button title="Mobile View" onclick="resizePreview('375px')"><i data-lucide="smartphone" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                        <!-- Iframe -->
+                        <div class="flex-1 bg-gray-50 overflow-hidden flex justify-center relative">
+                            <iframe id="preview-frame" class="w-full h-full border-0 bg-white shadow-lg transition-all duration-500" title="AI Generated Website"></iframe>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/page-ai-design.js"></script>
+</body>
+</html>
