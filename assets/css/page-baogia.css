@@ -51,7 +51,7 @@ label:has(input:checked) {
     z-index: 10;
 }
 
-/* ĐÃ LOẠI BỎ DẤU TÍCH ::after ĐỂ TRÁNH TRÙNG LẶP */
+/* --- REMOVED DUPLICATE CHECKMARK BADGE (::after) --- */
 
 /* --- FEATURE CARD STYLES (ADDONS) --- */
 .feature-card {
