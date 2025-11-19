@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewContainer = document.getElementById('preview-container');
     const loadingText = document.getElementById('loading-text');
     const selectedColorInput = document.getElementById('selectedColor');
+    const iframeWrapper = document.getElementById('iframe-wrapper');
 
     // API Key Gemini (Dùng chung key của bạn)
     const GEMINI_API_KEY = "AIzaSyC0sOmXY9FsVM-LrX-1qndfeDn4-waeDTQ";
@@ -192,15 +193,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hàm resize preview toàn cục
     window.resizePreview = (width) => {
-        const frame = document.getElementById('preview-frame');
-        frame.style.maxWidth = width;
-        if (width === '100%') {
-            frame.style.borderLeft = 'none';
-            frame.style.borderRight = 'none';
-        } else {
-            frame.style.borderLeft = '1px solid #e5e7eb';
-            frame.style.borderRight = '1px solid #e5e7eb';
-            frame.style.margin = '0 auto';
+        if (iframeWrapper && previewFrame) {
+            if (width === '100%') {
+                previewFrame.style.width = '100%';
+                previewFrame.style.borderRight = 'none';
+                previewFrame.style.borderLeft = 'none';
+            } else {
+                // Chế độ Mobile
+                previewFrame.style.width = width;
+                // Thêm border nhẹ để tách biệt màn hình mobile trên nền trắng laptop
+                previewFrame.style.borderRight = '1px solid #e5e7eb';
+                previewFrame.style.borderLeft = '1px solid #e5e7eb';
+            }
         }
     };
 });
