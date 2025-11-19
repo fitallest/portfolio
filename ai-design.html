@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi" class="scroll-smooth">
 <head>
@@ -38,10 +39,10 @@
 
         <!-- Main Interface -->
         <section class="max-w-7xl mx-auto px-4 -mt-20 mb-20 relative z-20">
-            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 grid grid-cols-1 lg:grid-cols-12">
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 grid grid-cols-1 lg:grid-cols-12 min-h-[800px]">
                 
                 <!-- Left Panel: Controls -->
-                <div class="lg:col-span-4 bg-gray-50 border-r border-gray-200 p-6 md:p-8 overflow-y-auto max-h-[90vh]">
+                <div class="lg:col-span-4 bg-gray-50 border-r border-gray-200 p-6 md:p-8 overflow-y-auto h-full custom-scrollbar max-h-[800px]">
                     <form id="ai-design-form" class="space-y-8">
                         
                         <!-- Step 1: Style & Industry -->
@@ -139,12 +140,22 @@
                     </form>
                 </div>
 
-                <!-- Right Panel: Preview -->
-                <div class="lg:col-span-8 bg-gray-100 relative min-h-[600px] lg:min-h-0">
+                <!-- Right Panel: Preview with Laptop Mockup -->
+                <div class="lg:col-span-8 bg-gray-200 relative flex flex-col items-center justify-center p-4 lg:p-10 overflow-hidden">
                     
+                    <!-- View Controls -->
+                    <div class="absolute top-4 right-4 z-30 flex bg-white rounded-lg shadow-sm p-1 border border-gray-200">
+                        <button class="p-2 rounded-md hover:bg-gray-100 text-gray-600 hover:text-indigo-600 transition" title="Desktop View" onclick="resizePreview('100%')">
+                            <i data-lucide="monitor" class="w-5 h-5"></i>
+                        </button>
+                        <button class="p-2 rounded-md hover:bg-gray-100 text-gray-600 hover:text-indigo-600 transition" title="Mobile View" onclick="resizePreview('375px')">
+                            <i data-lucide="smartphone" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
                     <!-- Empty State -->
-                    <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
-                        <div class="w-24 h-24 bg-white rounded-full shadow-sm flex items-center justify-center mb-6">
+                    <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-10">
+                        <div class="w-24 h-24 bg-white rounded-full shadow-sm flex items-center justify-center mb-6 animate-float">
                             <i data-lucide="monitor" class="w-10 h-10 text-gray-300"></i>
                         </div>
                         <h3 class="text-xl font-bold text-gray-800 mb-2">Chưa có bản vẽ nào</h3>
@@ -152,36 +163,37 @@
                     </div>
 
                     <!-- Loading State -->
-                    <div id="loading-state" class="hidden absolute inset-0 bg-white/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center text-center p-8">
+                    <div id="loading-state" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center text-center p-8">
                         <div class="relative w-24 h-24 mb-8">
                             <div class="absolute inset-0 border-4 border-indigo-100 rounded-full"></div>
                             <div class="absolute inset-0 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
                             <i data-lucide="cpu" class="w-8 h-8 text-indigo-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2 animate-pulse">Gemini đang vẽ...</h3>
-                        <p class="text-gray-600 max-w-sm" id="loading-text">Đang phân tích yêu cầu ngành nghề...</p>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2 animate-pulse-text">Gemini đang vẽ...</h3>
+                        <p class="text-gray-600 max-w-sm font-medium" id="loading-text">Đang phân tích yêu cầu ngành nghề...</p>
                     </div>
 
-                    <!-- Preview Iframe Container -->
-                    <div id="preview-container" class="hidden absolute inset-4 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col">
-                        <!-- Browser Toolbar Mockup -->
-                        <div class="bg-gray-100 border-b border-gray-200 px-4 py-3 flex items-center gap-4">
-                            <div class="flex gap-2">
-                                <div class="w-3 h-3 rounded-full bg-red-400"></div>
-                                <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
-                                <div class="w-3 h-3 rounded-full bg-green-400"></div>
-                            </div>
-                            <div class="flex-1 bg-white h-8 rounded-md border border-gray-200 flex items-center px-3 text-xs text-gray-400">
-                                <i data-lucide="lock" class="w-3 h-3 mr-2"></i> fitallest-ai-preview.com
-                            </div>
-                            <div class="flex gap-2 text-gray-500">
-                                <button title="Desktop View" onclick="resizePreview('100%')"><i data-lucide="monitor" class="w-4 h-4"></i></button>
-                                <button title="Mobile View" onclick="resizePreview('375px')"><i data-lucide="smartphone" class="w-4 h-4"></i></button>
+                    <!-- LAPTOP MOCKUP CONTAINER -->
+                    <div id="preview-container" class="hidden w-full max-w-[900px] relative z-20 transition-all duration-500 scale-95 hover:scale-100">
+                        <!-- Laptop Top (Lid) -->
+                        <div class="laptop-lid relative bg-gray-800 rounded-t-2xl p-3 pb-0 shadow-2xl border-t border-x border-gray-700">
+                            <!-- Camera -->
+                            <div class="absolute top-2 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-gray-600 rounded-full z-20"></div>
+                            
+                            <!-- Screen Bezel -->
+                            <div class="bg-black rounded-t-lg overflow-hidden border-4 border-black relative aspect-[16/10]">
+                                <!-- Iframe Wrapper for resizing -->
+                                <div id="iframe-wrapper" class="w-full h-full bg-white flex justify-center transition-all duration-500">
+                                    <iframe id="preview-frame" class="w-full h-full border-0 bg-white" title="AI Generated Website"></iframe>
+                                </div>
+                                <!-- Screen Glare/Reflection -->
+                                <div class="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none"></div>
                             </div>
                         </div>
-                        <!-- Iframe -->
-                        <div class="flex-1 bg-gray-50 overflow-hidden flex justify-center relative">
-                            <iframe id="preview-frame" class="w-full h-full border-0 bg-white shadow-lg transition-all duration-500" title="AI Generated Website"></iframe>
+                        
+                        <!-- Laptop Bottom (Base) -->
+                        <div class="laptop-base relative h-4 bg-gray-300 rounded-b-xl shadow-xl border-t border-gray-400">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-gray-400 rounded-b-lg"></div> <!-- Notch -->
                         </div>
                     </div>
 
