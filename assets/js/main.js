@@ -1,9 +1,9 @@
 
-
 	/*
 	  JAVASCRIPT CHUNG (main.js)
 	  Bao gồm logic menu mobile, kích hoạt icon, và logic chèn Header/Navbar (dùng cho MỌI trang).
 	  Hợp nhất thêm logic Carousel cho trang chủ.
+      Thêm Typewriter, Konami Code, 3D Tilt.
 	*/
 
 	// CHÚ Ý: ĐÂY LÀ NỘI DUNG MỚI ĐƯỢC DÙNG ĐỂ TỰ ĐỘNG CHÈN HEADER
@@ -377,6 +377,88 @@
 		});
 	}
 
+    // --- TYPEWRITER EFFECT ---
+    function initTypewriter() {
+        const el = document.getElementById('typewriter-text');
+        if (!el) return;
+
+        const phrases = ["Tinh Tế & Đột Phá", "Sáng Tạo & Khác Biệt", "Uy Tín & Bảo Mật", "Tốc Độ & Hiệu Quả"];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        
+        const type = () => {
+            const currentPhrase = phrases[phraseIndex];
+            if (isDeleting) {
+                el.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                el.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                setTimeout(() => isDeleting = true, 2000); // Pause at end
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+            }
+
+            const speed = isDeleting ? 50 : 100;
+            setTimeout(type, speed);
+        };
+        
+        type();
+    }
+
+    // --- 3D TILT EFFECT ---
+    function initTiltEffect() {
+        const cards = document.querySelectorAll('.tilt-card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Calculate rotation (max 10deg)
+                const rotateX = ((y - centerY) / centerY) * -10;
+                const rotateY = ((x - centerX) / centerX) * 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            });
+        });
+    }
+
+    // --- KONAMI CODE EASTER EGG ---
+    function initKonamiCode() {
+        const code = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let index = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === code[index]) {
+                index++;
+                if (index === code.length) {
+                    // Trigger Confetti
+                    if (typeof confetti === 'function') {
+                        confetti({ particleCount: 300, spread: 180, origin: { y: 0.6 } });
+                        alert("🎉 Bạn đã tìm thấy Trứng Phục Sinh! Nhận ngay giảm giá 10% với mã: KONAMI10");
+                    }
+                    index = 0;
+                }
+            } else {
+                index = 0;
+            }
+        });
+    }
+
 
 	document.addEventListener('DOMContentLoaded', () => {
 		
@@ -388,8 +470,13 @@
 
 		// 3. Khởi tạo Scroll Animations
 		initScrollAnimations();
+        
+        // 4. Hiệu ứng thú vị
+        initTypewriter();
+        initTiltEffect();
+        initKonamiCode();
 
-		// 4. Kích hoạt icon Lucide
+		// 5. Kích hoạt icon Lucide
 		if (typeof lucide !== 'undefined') {
 			lucide.createIcons();
 		} else {
