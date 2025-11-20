@@ -1,8 +1,5 @@
 
 
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
 
@@ -19,12 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const conversionBar = document.getElementById('conversion-bar');
     const designIdDisplay = document.getElementById('design-id-display');
     const btnRealize = document.getElementById('btn-realize');
+    const btnFullscreen = document.getElementById('btn-fullscreen'); 
+    const btnExitFullscreen = document.getElementById('btn-exit-fullscreen'); // New exit button
     
-    // Elements for Mockup Switching
+    // Elements for Mockup
     const laptopWrapper = document.getElementById('laptop-wrapper');
-    const phoneWrapper = document.getElementById('phone-wrapper');
-    const laptopScreen = laptopWrapper.querySelector('.bg-black > div'); // Div inside laptop screen
-    const phoneScreen = phoneWrapper.querySelector('.bg-white'); // Div inside phone screen
+    const laptopScreen = document.getElementById('laptop-screen'); 
 
     // Download Modal Elements
     const btnDownload = document.getElementById('btn-download');
@@ -41,244 +38,332 @@ document.addEventListener('DOMContentLoaded', () => {
     function generateDesignId() { return `#AI-${Math.floor(Math.random() * 9000) + 1000}`; }
 
     // --- INITIAL SETUP ---
-    // Default view: Desktop
-    if (laptopScreen) laptopScreen.appendChild(previewFrame);
+    // IMPORTANT: Move iframe to laptop screen initially if elements exist
+    if (laptopScreen && previewFrame) {
+        laptopScreen.appendChild(previewFrame);
+    }
 
-    // --- UI HANDLERS ---
-    colorBtns.forEach(btn => btn.addEventListener('click', () => {
-        colorBtns.forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedColorInput.value = btn.dataset.color;
-    }));
-    if(colorBtns.length > 0) colorBtns[0].click();
-
-    // --- CHIP BUTTONS LOGIC (FIXED & SIMPLIFIED) ---
-    if (chipBtns.length > 0 && descriptionArea) {
-        
-        // Hàm đồng bộ trạng thái nút với nội dung trong textarea
-        function syncChipsState() {
-            const content = descriptionArea.value;
-            chipBtns.forEach(btn => {
-                const phrase = btn.getAttribute('data-add');
-                if (content.includes(phrase)) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-        }
-
-        // Gắn sự kiện click cho từng nút
-        chipBtns.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault(); // Ngăn hành vi mặc định nếu có
-                
-                const phrase = this.getAttribute('data-add');
-                let content = descriptionArea.value;
-
-                if (content.includes(phrase)) {
-                    // Nếu đã có -> Xóa đi
-                    content = content.replace(phrase, '');
-                    // Xóa các dòng trống dư thừa do việc xóa để lại
-                    content = content.replace(/\n\s*\n/g, '\n'); 
-                } else {
-                    // Nếu chưa có -> Thêm vào
-                    if (content.trim().length > 0) {
-                        content = content.trim() + '\n' + phrase;
-                    } else {
-                        content = phrase;
-                    }
-                }
-
-                // Cập nhật lại textarea
-                descriptionArea.value = content.trim();
-                
-                // Đồng bộ lại màu sắc nút
-                syncChipsState();
-                
-                // Focus vào textarea để người dùng thấy thay đổi
-                descriptionArea.focus();
-            });
+    // --- 1. HANDLE COLOR SELECTION ---
+    colorBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            colorBtns.forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedColorInput.value = btn.dataset.color;
         });
+    });
 
-        // Lắng nghe sự kiện nhập tay để đồng bộ ngược lại
-        descriptionArea.addEventListener('input', syncChipsState);
+    // --- 2. HANDLE SUGGESTION CHIPS ---
+    chipBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const textToAdd = btn.getAttribute('data-add');
+            const currentText = descriptionArea.value;
+
+            if (btn.classList.contains('active')) {
+                // Remove text
+                btn.classList.remove('active');
+                // Simple remove: replace text and trim cleanup
+                if (currentText.includes(textToAdd)) {
+                    descriptionArea.value = currentText.replace(textToAdd, '').replace(/\n\s*\n/g, '\n').trim();
+                }
+            } else {
+                // Add text
+                btn.classList.add('active');
+                if (currentText.trim() === "") {
+                    descriptionArea.value = textToAdd;
+                } else if (!currentText.includes(textToAdd)) {
+                    descriptionArea.value = currentText + "\n" + textToAdd;
+                }
+            }
+        });
+    });
+
+    // --- 3. CONFIG DISCOUNT DISPLAY ---
+    function applyAIConfig() {
+        if (typeof AI_CONFIG === 'undefined') return;
         
-        // Chạy lần đầu
-        syncChipsState();
-    }
+        const discountDisplay = document.getElementById('discount-display');
+        const discountBadge = document.getElementById('discount-badge');
+        const originalPrice = document.getElementById('original-price');
 
-    // --- MOCKUP SWITCHING LOGIC ---
-    window.resizePreview = (mode) => {
-        if (mode === 'mobile') {
-            laptopWrapper.classList.add('hidden');
-            phoneWrapper.classList.remove('hidden');
-            phoneScreen.appendChild(previewFrame); // Move iframe to phone
-        } else {
-            phoneWrapper.classList.add('hidden');
-            laptopWrapper.classList.remove('hidden');
-            laptopScreen.appendChild(previewFrame); // Move iframe to laptop
+        if (discountDisplay) {
+            if (AI_CONFIG.discountType === 'percent') {
+                discountDisplay.textContent = `Giảm ngay ${AI_CONFIG.discountValue}%`;
+            } else {
+                const val = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(AI_CONFIG.discountValue);
+                discountDisplay.textContent = `Giảm ngay ${val}`;
+            }
         }
-    };
 
-    // --- GENERATION LOGIC ---
-    let loadingInterval;
-    const msgs = ["Đang phân tích yêu cầu...", "Đang phác thảo bố cục...", "Đang chọn bảng màu...", "Đang viết nội dung...", "Đang hoàn thiện CSS...", "Đang kiểm tra mobile..."];
-    
-    function startLoading() {
-        emptyState.classList.add('hidden');
-        previewContainer.classList.remove('visible');
-        setTimeout(() => previewContainer.classList.add('hidden'), 300);
-        loadingState.classList.remove('hidden');
-        conversionBar.classList.remove('visible');
-        let i = 0; loadingText.textContent = msgs[0];
-        loadingInterval = setInterval(() => { i = (i + 1) % msgs.length; loadingText.textContent = msgs[i]; }, 2000);
-    }
-
-    function stopLoading() {
-        clearInterval(loadingInterval);
-        loadingState.classList.add('hidden');
-        previewContainer.classList.remove('hidden');
-        setTimeout(() => previewContainer.classList.add('visible'), 100);
-        setTimeout(triggerSuccess, 1500);
-    }
-
-    function triggerSuccess() {
-        if (typeof confetti === 'function') {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        if (discountBadge && AI_CONFIG.discountLabel) {
+            discountBadge.textContent = AI_CONFIG.discountLabel;
         }
-        currentDesignId = generateDesignId();
-        designIdDisplay.textContent = currentDesignId;
-        
-        // Update Discount Info based on Config
-        if (typeof AI_CONFIG !== 'undefined') {
-            const discountDisplay = document.getElementById('discount-display');
-            const originalPrice = document.getElementById('original-price');
-            const badge = document.getElementById('discount-badge');
 
-            badge.textContent = AI_CONFIG.discountLabel || "Ưu đãi";
-            
+        if (originalPrice) {
             if (AI_CONFIG.showOriginalPrice) {
                 originalPrice.classList.remove('hidden');
             } else {
                 originalPrice.classList.add('hidden');
             }
-
-            if (AI_CONFIG.discountType === 'percent') {
-                 discountDisplay.textContent = `Giảm ngay ${AI_CONFIG.discountValue}%`;
-            } else {
-                 const val = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(AI_CONFIG.discountValue);
-                 discountDisplay.textContent = `Giảm ngay ${val.replace('₫', '')}đ`;
-            }
         }
-
-        conversionBar.classList.add('visible');
     }
+    applyAIConfig();
 
+    // --- 4. MAIN GENERATE FUNCTION ---
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const brand = document.getElementById('brandName').value.trim();
-        const phone = document.getElementById('contactPhone').value.trim();
-        const industry = document.getElementById('industry').value || "Chung";
-        const style = document.getElementById('style').value;
-        const color = selectedColorInput.value;
-        const refWeb = document.getElementById('refWeb').value;
-        const desc = descriptionArea.value;
-        const email = document.getElementById('contactEmail').value;
+        
+        // Validate Phone
+        const phone = document.getElementById('contactPhone').value;
+        if (!/^\d{10,11}$/.test(phone)) {
+            alert("Bạn ơi doanh nghiệp không có thông tin làm sao khách hàng tìm được đây anh/chị ơi!!! (Vui lòng nhập SĐT đúng)");
+            return;
+        }
+        const brand = document.getElementById('brandName').value;
+        if (!brand.trim()) {
+             alert("Bạn ơi doanh nghiệp không có thông tin làm sao khách hàng tìm được đây anh/chị ơi!!! (Thiếu tên thương hiệu)");
+             return;
+        }
 
-        if (!brand || !phone) return alert("Vui lòng nhập Tên thương hiệu & SĐT để AI tạo bản vẽ chính xác.");
-        if (!/(84|0[3|5|7|8|9])+([0-9]{8})\b/.test(phone)) return alert("Số điện thoại không hợp lệ.");
-
-        // Store params for owner notification
+        // UI Updates
+        emptyState.classList.add('hidden');
+        previewContainer.classList.add('hidden'); // Hide container while loading
+        loadingState.classList.remove('hidden');
+        conversionBar.classList.remove('visible');
+        if(btnFullscreen) btnFullscreen.classList.add('hidden'); // Hide fullscreen btn while loading
+        
+        currentDesignId = generateDesignId();
+        
+        // Silent Submit Data
         currentPromptParams = {
-            brand, phone, industry, style, color, refWeb, desc, email
+            industry: document.getElementById('industry').value,
+            style: document.getElementById('style').value,
+            color: selectedColorInput.value,
+            description: descriptionArea.value,
+            brand: brand,
+            phone: phone,
+            email: document.getElementById('contactEmail').value,
+            ref: document.getElementById('refWeb').value
         };
+        
+        // Gửi form ẩn (Silent)
+        const fd = new FormData();
+        for (const key in currentPromptParams) {
+            fd.append(key, currentPromptParams[key]);
+        }
+        fd.append('source', 'AI_Design_Generator');
+        fetch("https://formspree.io/f/xldojlkn", { method: "POST", body: fd, headers: {'Accept': 'application/json'} });
 
-        startLoading();
-        const prompt = `Tạo mã HTML trọn vẹn cho Landing Page tỷ lệ chuyển đổi cao.
-            Brand: ${brand}. Ngành: ${industry}. Style: ${style}. Màu: ${color}. SĐT: ${phone}.
-            Yêu cầu: ${desc}. ${refWeb ? `Tham khảo: ${refWeb}` : ''}.
-            Kỹ thuật: HTML5, Tailwind CSS (CDN), Font Inter, Ảnh placehold.co, Icon Lucide.
-            Copywriting: Hấp dẫn, tiếng Việt, CTA mạnh mẽ. Trả về duy nhất mã HTML.`;
+        // Gemini API Call
+        const prompt = `
+            Đóng vai Senior Frontend Developer & UI/UX Designer. 
+            Nhiệm vụ: Tạo mã nguồn HTML5 trọn vẹn cho một trang Landing Page (Single Page) theo phong cách Desktop chuyên nghiệp.
+
+            THÔNG TIN DỰ ÁN:
+            - Ngành nghề: ${currentPromptParams.industry}
+            - Phong cách: ${currentPromptParams.style}
+            - Màu chủ đạo: ${currentPromptParams.color} (Hãy tự chọn mã HEX đẹp, phối màu hài hòa)
+            - Thương hiệu: ${currentPromptParams.brand}
+            - SĐT: ${currentPromptParams.phone}
+            - Email: ${currentPromptParams.email}
+            - Yêu cầu chi tiết: ${currentPromptParams.description}
+            
+            YÊU CẦU KỸ THUẬT NGHIÊM NGẶT:
+            1. OUTPUT: Chỉ trả về duy nhất mã code HTML. Không giải thích, không markdown (\`\`\`).
+            2. THƯ VIỆN: Sử dụng TailwindCSS (CDN) để style. Sử dụng Font Awesome hoặc Lucide (CDN) cho icon.
+            
+            3. GIAO DIỆN DESKTOP (QUAN TRỌNG):
+               - Thiết kế bố cục rộng (container max-w-screen-xl), thoáng đãng.
+               - Header: Logo bên trái, Menu ở giữa/phải, Nút CTA nổi bật.
+               - Hero Section: Banner lớn, Full-width, ảnh nền ấn tượng, Text to rõ.
+               - Grid System: Sử dụng grid-cols-3 hoặc grid-cols-4 cho các phần Dịch vụ/Sản phẩm (Không xếp chồng dọc như mobile).
+               - Footer: Đầy đủ 4 cột thông tin.
+
+            4. HÌNH ẢNH (BẮT BUỘC ẢNH ONLINE):
+               - TUYỆT ĐỐI KHÔNG sử dụng đường dẫn cục bộ (ví dụ: ./assets/img.jpg).
+               - PHẢI DÙNG link ảnh online thực tế từ LoremFlickr hoặc Placehold.co.
+               - Cấu trúc link ảnh: 'https://loremflickr.com/800/600/${currentPromptParams.industry.replace(/ /g, ',')},website/all' hoặc 'https://placehold.co/600x400/png?text=Image'.
+               - Đảm bảo ảnh Hero Banner có kích thước lớn (ví dụ: 1920x1080).
+
+            5. CẤU TRÚC NỘI DUNG:
+               - Header (Logo ${currentPromptParams.brand})
+               - Hero Section (Headline hấp dẫn)
+               - About Us (Về chúng tôi)
+               - Services/Products (Lưới 3-4 cột)
+               - Testimonials (Đánh giá khách hàng)
+               - CTA Section (Kêu gọi hành động)
+               - Contact Form & Footer
+        `;
+
+        loadingText.textContent = "Đang phác thảo cấu trúc Desktop...";
+        setTimeout(() => loadingText.textContent = "Đang tìm kiếm hình ảnh phù hợp...", 2000);
+        setTimeout(() => loadingText.textContent = "Đang hoàn thiện giao diện...", 4500);
 
         try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
-            const data = await res.json();
-            let html = data.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (!html) throw new Error('No code');
-            html = html.replace(/```html|```/g, '').trim();
+
+            const data = await response.json();
+            let htmlCode = data.candidates?.[0]?.content?.parts?.[0]?.text;
             
-            currentGeneratedHTML = html; // Save for download
-            
-            previewFrame.src = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
-            stopLoading();
-        } catch (err) {
-            stopLoading(); alert("Hệ thống bận, vui lòng thử lại."); console.error(err);
+            if (htmlCode) {
+                // Cleanup
+                htmlCode = htmlCode.replace(/```html|```/g, '').trim();
+                currentGeneratedHTML = htmlCode; // Save for download
+
+                // Inject to iframe
+                const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+                doc.open();
+                doc.write(htmlCode);
+                doc.close();
+
+                // Show Result
+                loadingState.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+                // Ensure laptop wrapper is visible
+                if(laptopWrapper) laptopWrapper.classList.remove('hidden');
+
+                setTimeout(() => {
+                     previewContainer.classList.add('visible'); // Fade in
+                     conversionBar.classList.add('visible'); // Slide up bar
+                     if(btnFullscreen) btnFullscreen.classList.remove('hidden'); // Show fullscreen btn
+                     designIdDisplay.textContent = currentDesignId;
+                     
+                     if (typeof confetti === 'function') {
+                        confetti({ particleCount: 150, spread: 100, origin: { y: 0.8 } });
+                     }
+                }, 500);
+
+            } else {
+                throw new Error("No code generated");
+            }
+
+        } catch (error) {
+            console.error(error);
+            loadingState.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            alert("Hệ thống đang quá tải, vui lòng thử lại sau ít phút!");
         }
     });
 
-    // --- DOWNLOAD & MODAL LOGIC ---
+    // --- 5. CONVERSION ACTIONS ---
+    btnRealize.addEventListener('click', () => {
+        // Zalo Link with pre-filled message
+        const msg = encodeURIComponent(`Chào Fi.tallest, tôi muốn hiện thực hóa bản vẽ mã số ${currentDesignId}. Tôi đã có ý tưởng cụ thể.`);
+        window.open(`https://zalo.me/0909876817?text=${msg}`, '_blank');
+    });
+    
+    // --- FULLSCREEN LOGIC (Request on Container) ---
+    if (btnFullscreen) {
+        btnFullscreen.addEventListener('click', () => {
+            if (!currentGeneratedHTML) {
+                alert("Chưa có bản vẽ nào để xem!");
+                return;
+            }
+            // Request Fullscreen on the laptop screen container (to show exit btn)
+            if (laptopScreen.requestFullscreen) {
+                laptopScreen.requestFullscreen();
+            } else if (laptopScreen.webkitRequestFullscreen) { /* Safari */
+                laptopScreen.webkitRequestFullscreen();
+            } else if (laptopScreen.msRequestFullscreen) { /* IE11 */
+                laptopScreen.msRequestFullscreen();
+            }
+        });
+    }
+
+    // --- EXIT FULLSCREEN LOGIC ---
+    if (btnExitFullscreen) {
+        btnExitFullscreen.addEventListener('click', () => {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { /* Safari */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE11 */
+                document.msExitFullscreen();
+            }
+        });
+    }
+
+    // Listen for fullscreen changes to toggle button visibility
+    document.addEventListener('fullscreenchange', () => {
+        // If we are in fullscreen mode AND the element is our laptop screen
+        if (document.fullscreenElement === laptopScreen) {
+            btnExitFullscreen.classList.remove('hidden');
+        } else {
+            btnExitFullscreen.classList.add('hidden');
+        }
+    });
+
+    // --- 6. DOWNLOAD LOGIC ---
     if (btnDownload) {
-        btnDownload.onclick = () => {
-            downloadModal.style.display = 'block';
-        };
+        btnDownload.addEventListener('click', () => {
+            downloadModal.style.display = 'flex';
+        });
     }
+    
     if (closeDownloadModal) {
-        closeDownloadModal.onclick = () => {
+        closeDownloadModal.addEventListener('click', () => {
             downloadModal.style.display = 'none';
-        };
+        });
     }
-    window.onclick = (e) => {
-        if (e.target == downloadModal) downloadModal.style.display = 'none';
-    };
+    
+    // Close modal on click outside
+    window.addEventListener('click', (e) => {
+        if (e.target === downloadModal) downloadModal.style.display = 'none';
+    });
 
     if (downloadForm) {
         downloadForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const dlName = document.getElementById('dl-name').value;
-            const dlPhone = document.getElementById('dl-phone').value;
-            const dlEmail = document.getElementById('dl-email').value;
+            if (!currentGeneratedHTML) {
+                alert("Chưa có bản vẽ nào để tải!"); 
+                return;
+            }
 
             dlStatus.textContent = "Đang xử lý...";
             dlStatus.className = "text-center text-xs mt-3 h-4 text-indigo-600";
 
-            // 1. Download File to User
-            const blob = new Blob([currentGeneratedHTML], { type: 'text/html' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `Thiet_Ke_Web_${currentDesignId.replace('#', '')}.html`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            // 2. Send Info to Owner (Silent)
+            // 1. Send Info to Formspree
             const fd = new FormData();
-            fd.append('Request', 'Tải xuống bản vẽ AI');
-            fd.append('DesignID', currentDesignId);
-            fd.append('Customer_Name', dlName);
-            fd.append('Customer_Phone', dlPhone);
-            fd.append('Customer_Email', dlEmail);
-            // Design Specs so owner can recreate
-            fd.append('Design_Specs', JSON.stringify(currentPromptParams));
-
-            fetch("https://formspree.io/f/xldojlkn", { method: "POST", body: fd })
-                .then(() => {
-                    dlStatus.textContent = "Đã tải xuống thành công!";
+            fd.append('name', document.getElementById('dl-name').value);
+            fd.append('phone', document.getElementById('dl-phone').value);
+            fd.append('email', document.getElementById('dl-email').value);
+            fd.append('design_id', currentDesignId);
+            fd.append('action', 'DOWNLOAD_SOURCE_CODE');
+            
+            fetch("https://formspree.io/f/xldojlkn", { method: "POST", body: fd, headers: {'Accept': 'application/json'} })
+            .then(r => {
+                if(r.ok) {
+                    dlStatus.textContent = "Thành công! Đang tải xuống...";
                     dlStatus.className = "text-center text-xs mt-3 h-4 text-green-600";
+                    
+                    // 2. Download File
+                    const blob = new Blob([currentGeneratedHTML], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Ban_ve_${currentDesignId.replace('#','')}.html`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
                     setTimeout(() => {
-                         downloadModal.style.display = 'none';
-                         dlStatus.textContent = "";
+                        downloadModal.style.display = 'none';
+                        dlStatus.textContent = "";
+                        document.getElementById('dl-name').value = ""; // Reset form
                     }, 2000);
-                })
-                .catch(err => {
-                    console.error(err);
-                    dlStatus.textContent = "Đã tải file (Lỗi gửi mail thông báo).";
-                });
+                } else {
+                    throw new Error("Form submission failed");
+                }
+            })
+            .catch(() => {
+                dlStatus.textContent = "Lỗi kết nối. Vui lòng thử lại.";
+                dlStatus.className = "text-center text-xs mt-3 h-4 text-red-600";
+            });
         });
     }
 
-    const openZalo = (msg) => window.open(`https://zalo.me/0909876817?text=${encodeURIComponent(msg)}`, '_blank');
-    if(btnRealize) btnRealize.onclick = () => openZalo(`Tôi muốn hiện thực hóa bản vẽ ${currentDesignId} với ưu đãi giảm giá đặc biệt.`);
 });
