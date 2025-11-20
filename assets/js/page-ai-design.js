@@ -1,6 +1,8 @@
 
 
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
 
@@ -40,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- INITIAL SETUP ---
     // Default view: Desktop
-    laptopScreen.appendChild(previewFrame);
+    if (laptopScreen) laptopScreen.appendChild(previewFrame);
 
     // --- UI HANDLERS ---
     colorBtns.forEach(btn => btn.addEventListener('click', () => {
@@ -50,45 +52,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
     if(colorBtns.length > 0) colorBtns[0].click();
 
-    // --- CHIP BUTTONS LOGIC (SMART SYNC) ---
+    // --- CHIP BUTTONS LOGIC (FIXED & SIMPLIFIED) ---
     if (chipBtns.length > 0 && descriptionArea) {
-        const updateButtonStates = () => {
-            const currentText = descriptionArea.value;
+        
+        // Hàm đồng bộ trạng thái nút với nội dung trong textarea
+        function syncChipsState() {
+            const content = descriptionArea.value;
             chipBtns.forEach(btn => {
-                // Check if the dataset text is inside the textarea
-                if (currentText.includes(btn.dataset.add)) {
+                const phrase = btn.getAttribute('data-add');
+                if (content.includes(phrase)) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
                 }
             });
-        };
+        }
 
-        chipBtns.forEach(btn => btn.addEventListener('click', () => {
-            const textToAdd = btn.dataset.add;
-            let currentText = descriptionArea.value;
+        // Gắn sự kiện click cho từng nút
+        chipBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault(); // Ngăn hành vi mặc định nếu có
+                
+                const phrase = this.getAttribute('data-add');
+                let content = descriptionArea.value;
 
-            if (btn.classList.contains('active')) {
-                // Remove text
-                // Handle potential leading space
-                currentText = currentText.replace(" " + textToAdd, ""); 
-                currentText = currentText.replace(textToAdd, "");
-                // Clean up double spaces just in case
-                descriptionArea.value = currentText.replace(/\s\s+/g, ' ').trim();
-            } else {
-                // Add text
-                if (currentText.length > 0 && !currentText.endsWith(' ')) {
-                    descriptionArea.value += " " + textToAdd;
+                if (content.includes(phrase)) {
+                    // Nếu đã có -> Xóa đi
+                    content = content.replace(phrase, '');
+                    // Xóa các dòng trống dư thừa do việc xóa để lại
+                    content = content.replace(/\n\s*\n/g, '\n'); 
                 } else {
-                    descriptionArea.value += textToAdd;
+                    // Nếu chưa có -> Thêm vào
+                    if (content.trim().length > 0) {
+                        content = content.trim() + '\n' + phrase;
+                    } else {
+                        content = phrase;
+                    }
                 }
-            }
-            // Sync visual state immediately
-            updateButtonStates();
-        }));
 
-        // Also sync when user types manually
-        descriptionArea.addEventListener('input', updateButtonStates);
+                // Cập nhật lại textarea
+                descriptionArea.value = content.trim();
+                
+                // Đồng bộ lại màu sắc nút
+                syncChipsState();
+                
+                // Focus vào textarea để người dùng thấy thay đổi
+                descriptionArea.focus();
+            });
+        });
+
+        // Lắng nghe sự kiện nhập tay để đồng bộ ngược lại
+        descriptionArea.addEventListener('input', syncChipsState);
+        
+        // Chạy lần đầu
+        syncChipsState();
     }
 
     // --- MOCKUP SWITCHING LOGIC ---
