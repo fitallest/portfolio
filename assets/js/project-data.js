@@ -1,10 +1,16 @@
 // assets/js/project-data.js
-// Chứa danh sách các dự án. Mỗi dự án là một object.
-// QUAN TRỌNG: KHÔNG XÓA DÒNG `const projectsData = ` VÀ DẤU `];` Ở CUỐI.
-// Chỉ chỉnh sửa nội dung bên trong dấu ngoặc vuông [...].
-// Copy toàn bộ nội dung từ trang admin và dán ĐÈ LÊN toàn bộ nội dung cũ của file này.
+// File này được tạo tự động từ trang Admin.
+// Dán đè nội dung này vào file gốc.
 
 const projectsData = [
+  {
+    "id": 1763977178926,
+    "title": "Website Công ty TNHH TMKT Đồng Nai",
+    "category": "Máy móc thiết bị",
+    "description": "DOTEC - đối tác uy tín cung cấp phụ tùng máy bơm bê tông, cáp thép và các giải pháp kỹ thuật công nghiệp, cơ khí xây dựng nhập khẩu chính hãng từ EU, G7.",
+    "imageUrl": "assets/images/da/dotec.png",
+    "link": "http://dotec.com.vn/"
+  },
   {
     "id": 1,
     "title": "Website Kiến Trúc Phong Thủy",
