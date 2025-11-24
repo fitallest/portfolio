@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Writer Pro - Fitallest A.I </title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/page-seo.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        sidebar: '#0f172a', /* Deep Slate */
+                        sidebarHover: '#1e293b',
+                        inputBg: '#1e293b',
+                        accent: '#6366f1',
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-screen w-full flex flex-col bg-gray-50 text-slate-800 overflow-hidden">
+    
+    <!-- WRAPPER CHO APP (SIDEBAR + MAIN) -->
+    <div class="flex flex-1 overflow-hidden w-full relative">
+        
+        <!-- LEFT SIDEBAR: CONFIG -->
+        <aside class="w-[340px] bg-sidebar text-slate-300 flex flex-col h-full shrink-0 z-30 shadow-xl border-r border-slate-800">
+            <!-- Header -->
+            <div class="p-5 border-b border-slate-700/50 flex items-center gap-3 shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-feather-pointed text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg text-white leading-tight tracking-tight">SEO Writer <span class="text-[10px] align-top opacity-70 font-normal">PRO</span></h1>
+                    <p class="text-[10px] text-slate-400 font-medium">Powered by Fitallest A.I</p>
+                </div>
+            </div>
+
+            <!-- Inputs Form -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-5">
+                
+                <!-- 1. KEYWORD -->
+                <div>
+                    <label class="text-[11px] font-bold text-indigo-400 uppercase tracking-wider mb-2 block">
+                        <i class="fa-solid fa-key mr-1"></i> Từ khóa chính
+                    </label>
+                    <div class="relative group">
+                        <input type="text" id="keywordInput" placeholder="VD: Thiết kế nội thất..." 
+                            class="w-full p-3.5 pl-10 pr-10 rounded-xl bg-inputBg border border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-sm font-medium transition-all group-hover:border-slate-600">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-500 group-focus-within:text-indigo-500 transition-colors"></i>
+                        
+                        <!-- Voice Input Button -->
+                        <button id="voiceBtn" class="absolute right-2 top-2 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700 transition-all" title="Nhập bằng giọng nói">
+                            <i class="fa-solid fa-microphone"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. BUSINESS INFO (Collapsible) -->
+                <details class="group bg-slate-800/40 rounded-xl border border-slate-700/50 overflow-hidden transition-all duration-300">
+                    <summary class="flex items-center justify-between p-3 cursor-pointer hover:bg-slate-800 transition-colors">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider cursor-pointer flex items-center">
+                            <i class="fa-solid fa-building mr-2"></i> Thông tin doanh nghiệp
+                        </div>
+                        <span class="text-slate-500 text-xs group-open:rotate-180 transition-transform duration-300"><i class="fa-solid fa-chevron-down"></i></span>
+                    </summary>
+                    <div class="p-3 pt-0 border-t border-slate-700/50 space-y-3 mt-2">
+                        <div>
+                            <label class="text-[9px] text-slate-500 uppercase font-bold mb-1 block">Tên Thương hiệu</label>
+                            <input type="text" id="brandNameInput" placeholder="VD: Nội Thất Xinh..." class="w-full p-2 rounded bg-slate-900 border border-slate-700 text-xs text-white focus:border-indigo-500 outline-none">
+                        </div>
+                        
+                        <div class="flex items-center gap-3">
+                            <div class="flex-1">
+                                <label class="text-[9px] text-slate-500 uppercase font-bold mb-1 block">Màu chủ đạo</label>
+                                <div class="flex items-center gap-2">
+                                     <input type="color" id="brandColorInput" value="#6366f1" class="w-8 h-8 rounded cursor-pointer border-none bg-transparent p-0">
+                                     <input type="text" id="brandColorText" value="#6366F1" class="w-full p-1.5 rounded bg-slate-900 border border-slate-700 text-[10px] text-white font-mono uppercase focus:outline-none" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div>
+                            <label class="text-[9px] text-slate-500 uppercase font-bold mb-1 block">Thông tin Footer</label>
+                            <textarea id="footerInput" rows="2" placeholder="Hotline, Địa chỉ, Website..." class="w-full p-2 rounded bg-slate-900 border border-slate-700 text-xs text-white focus:border-indigo-500 outline-none"></textarea>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- 3. ADVANCED SEO CONFIG -->
+                <div class="bg-slate-800/40 rounded-xl border border-slate-700/50 overflow-hidden">
+                    <div class="flex items-center justify-between p-3 bg-slate-800/20 border-b border-slate-700/50">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                <i class="fa-solid fa-sliders mr-1"></i> Cấu hình SEO
+                            </span>
+                            <span class="text-[8px] bg-indigo-500/20 text-indigo-400 px-1.5 py-0.5 rounded border border-indigo-500/30">AI Auto</span>
+                        </div>
+                    </div>
+                    <div class="p-3 space-y-3">
+                        <!-- Title -->
+                        <div class="relative group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-[9px] text-slate-500 uppercase font-bold">SEO Title</label>
+                                <button onclick="copyInput('seoTitleInput')" class="text-[10px] text-slate-500 hover:text-indigo-400" title="Copy"><i class="fa-regular fa-copy"></i></button>
+                            </div>
+                            <input type="text" id="seoTitleInput" placeholder="Nhập bản nháp hoặc để trống..." class="w-full p-2 pr-8 rounded bg-slate-900 border border-slate-700 text-xs text-indigo-300 placeholder-slate-600 transition-colors focus:border-indigo-500">
+                        </div>
+                        <!-- Desc -->
+                        <div class="relative group">
+                            <div class="flex justify-between mb-1">
+                                <label class="text-[9px] text-slate-500 uppercase font-bold">Meta Description</label>
+                                 <button onclick="copyInput('seoDescInput')" class="text-[10px] text-slate-500 hover:text-indigo-400" title="Copy"><i class="fa-regular fa-copy"></i></button>
+                            </div>
+                            <textarea id="seoDescInput" rows="2" placeholder="Nhập bản nháp hoặc để trống..." class="w-full p-2 pr-8 rounded bg-slate-900 border border-slate-700 text-xs text-indigo-300 placeholder-slate-600 transition-colors focus:border-indigo-500"></textarea>
+                        </div>
+                        <!-- Keywords -->
+                        <div class="relative group">
+                             <div class="flex justify-between mb-1">
+                                <label class="text-[9px] text-slate-500 uppercase font-bold">SEO Keywords</label>
+                                <button onclick="copyInput('seoKeywordsInput')" class="text-[10px] text-slate-500 hover:text-indigo-400" title="Copy"><i class="fa-regular fa-copy"></i></button>
+                            </div>
+                            <input type="text" id="seoKeywordsInput" placeholder="Từ khóa 1, Từ khóa 2..." class="w-full p-2 pr-8 rounded bg-slate-900 border border-slate-700 text-xs text-indigo-300 placeholder-slate-600 transition-colors focus:border-indigo-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. LOCATION & LANG -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Khu vực</label>
+                        <input list="locations" id="locationInput" placeholder="Toàn Quốc" class="w-full p-2 rounded-lg bg-inputBg border border-slate-700 text-xs text-white focus:border-indigo-500 outline-none">
+                        <datalist id="locations"><option value="Toàn Quốc"><option value="Hà Nội"><option value="TP.HCM"></datalist>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase mb-1 block">Ngôn ngữ</label>
+                        <select id="langSelect" class="w-full p-2 rounded-lg bg-inputBg border border-slate-700 text-xs text-white focus:border-indigo-500 outline-none" onchange="toggleLang(this.value)">
+                            <option value="vi">Tiếng Việt</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 5. LENGTH -->
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase mb-2 block">Độ dài bài viết</label>
+                    <div class="space-y-2">
+                        <label class="cursor-pointer block select-none">
+                            <input type="radio" name="wordCount" value="800 từ" class="sr-only peer" checked>
+                            <div class="flex items-center justify-between p-3 rounded-xl border border-slate-700 bg-slate-800/30 text-slate-400 transition-all hover:bg-slate-800 peer-checked:bg-indigo-500/10 peer-checked:border-indigo-500 peer-checked:text-indigo-400">
+                                <span class="text-xs font-bold">Cơ bản</span>
+                                <span class="text-[10px] bg-slate-700 px-1.5 py-0.5 rounded text-slate-300">~800 từ</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer block select-none">
+                            <input type="radio" name="wordCount" value="1500 từ" class="sr-only peer">
+                            <div class="flex items-center justify-between p-3 rounded-xl border border-slate-700 bg-slate-800/30 text-slate-400 transition-all hover:bg-slate-800 peer-checked:bg-indigo-500/10 peer-checked:border-indigo-500 peer-checked:text-indigo-400">
+                                <span class="text-xs font-bold">Chuyên sâu</span>
+                                <span class="text-[10px] bg-slate-700 px-1.5 py-0.5 rounded text-slate-300">1500+ từ</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 6. IMAGE SOURCE -->
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 block">
+                        Nguồn ảnh minh họa
+                    </label>
+                    <div class="grid grid-cols-4 gap-2 mb-3">
+                        <button type="button" onclick="selectImageSource('unsplash')" id="btn-unsplash" class="source-btn active flex flex-col items-center justify-center gap-1 p-2 rounded-lg bg-slate-800 transition-all hover:bg-slate-700">
+                            <i class="fa-brands fa-unsplash text-lg"></i><span class="text-[9px] font-medium">Unsplash</span>
+                        </button>
+                        <button type="button" onclick="selectImageSource('pinterest')" id="btn-pinterest" class="source-btn flex flex-col items-center justify-center gap-1 p-2 rounded-lg bg-slate-800 text-slate-400 transition-all hover:bg-slate-700">
+                            <i class="fa-brands fa-pinterest text-lg"></i><span class="text-[9px] font-medium">Pinterest</span>
+                        </button>
+                        <button type="button" onclick="selectImageSource('facebook')" id="btn-facebook" class="source-btn flex flex-col items-center justify-center gap-1 p-2 rounded-lg bg-slate-800 text-slate-400 transition-all hover:bg-slate-700">
+                            <i class="fa-brands fa-facebook text-lg"></i><span class="text-[9px] font-medium">Facebook</span>
+                        </button>
+                        <button type="button" onclick="selectImageSource('ai')" id="btn-ai" class="source-btn flex flex-col items-center justify-center gap-1 p-2 rounded-lg bg-slate-800 text-slate-400 transition-all hover:bg-slate-700">
+                            <i class="fa-solid fa-sparkles text-lg text-fuchsia-400"></i><span class="text-[9px] font-medium">AI Tạo</span>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <input type="text" id="imageSourceInput" placeholder="Nhập từ khóa ảnh..." 
+                            class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-500 focus:border-indigo-500 outline-none">
+                    </div>
+                    <p id="imageSourceHelper" class="text-[9px] text-slate-500 mt-2 italic h-4">Sử dụng từ khóa để tìm ảnh Unsplash.</p>
+                    
+                    <!-- NEW: Checkbox auto AI image per H2 -->
+                    <div class="mt-3 pt-3 border-t border-slate-700/50">
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <div class="relative">
+                                <input type="checkbox" id="autoH2Image" class="peer sr-only">
+                                <div class="w-8 h-4 bg-slate-700 rounded-full peer peer-focus:ring-2 peer-focus:ring-indigo-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-medium group-hover:text-white transition-colors">Tự động tạo ảnh AI cho mỗi H2</span>
+                        </label>
+                    </div>
+
+                    <div id="aiImagePreview" class="mt-4 hidden border border-slate-700 rounded-xl overflow-hidden bg-slate-900 p-2">
+                        <img id="aiImageTag" class="w-full rounded-lg shadow-inner max-h-40 object-cover" alt="AI Generated Image Preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTION BUTTON -->
+            <div class="p-5 border-t border-slate-700/50 bg-slate-900 shrink-0">
+                <button onclick="startGenerating()" id="btnWrite" class="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm shadow-lg shadow-indigo-900/50 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2 group">
+                    <i class="fa-solid fa-pen-nib group-hover:rotate-12 transition-transform"></i>
+                    <span id="btnText">Viết bài ngay</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- CENTER: MAIN CONTENT -->
+        <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-[#f8fafc]">
+            <!-- Top Navigation -->
+            <header class="h-16 border-b border-slate-200 flex items-center justify-between px-8 shrink-0 bg-white/80 backdrop-blur z-20">
+                <div class="flex items-center gap-3">
+                    <span class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse"></span>
+                    <span class="text-sm font-semibold text-slate-600">Gemini Flash Ready</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="resetEditor()" class="w-9 h-9 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-400 transition-colors" title="Làm mới">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- EMPTY STATE -->
+            <div id="emptyState" class="flex-1 flex flex-col items-center justify-center p-10 text-center animate-slide-up">
+                <div class="w-28 h-28 mb-8 rounded-full bg-indigo-50 flex items-center justify-center relative">
+                    <i class="fa-solid fa-wand-magic-sparkles text-4xl text-indigo-500 absolute z-10 animate-pulse-slow"></i>
+                    <div class="absolute inset-0 border-2 border-indigo-100 rounded-full animate-ping opacity-20"></div>
+                </div>
+                <h2 class="text-3xl font-extrabold text-slate-800 mb-3 tracking-tight">Sáng tạo nội dung với Gemini AI</h2>
+                <p class="text-slate-500 max-w-lg text-sm leading-relaxed">
+                    Nhập từ khóa, thông tin doanh nghiệp và bản nháp (nếu có).<br>
+                    AI sẽ tối ưu hóa và phát triển nội dung chuyên sâu cho bạn.
+                </p>
+            </div>
+
+            <!-- LOADING STATE -->
+            <div id="loadingState" class="hidden absolute inset-0 z-50 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center">
+                <div class="loader-circle mb-5 scale-125"></div>
+                <p id="loadingText" class="text-indigo-600 font-bold text-xl tracking-tight">Đang phân tích từ khóa...</p>
+                <p class="text-slate-400 text-sm mt-2 font-medium">Đang tìm ý tưởng & cấu trúc bài viết...</p>
+            </div>
+
+            <!-- RESULT AREA -->
+            <div id="resultArea" class="hidden flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10 relative">
+                <div class="max-w-4xl mx-auto pb-20 space-y-8 animate-slide-up">
+                    
+                    <!-- 1. HEADER CARD (GRADIENT DYNAMIC) -->
+                    <div id="headerCard" class="rounded-3xl p-8 md:p-10 text-white shadow-2xl shadow-indigo-200 relative overflow-hidden group">
+                        <!-- Dynamic Gradient Background will be set here -->
+                        <div class="absolute top-0 right-0 p-10 opacity-10 transform rotate-12 group-hover:rotate-0 transition-transform duration-700">
+                            <i class="fa-solid fa-feather text-9xl"></i>
+                        </div>
+                        
+                        <div class="relative z-10">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm border border-white/20 text-[10px] font-bold uppercase tracking-widest mb-4">
+                                <i class="fa-solid fa-check-circle"></i> SEO Optimized
+                            </div>
+                            <h1 id="resTitle" class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">Tiêu đề bài viết...</h1>
+                            <p id="resDesc" class="text-white/90 text-sm md:text-base font-medium leading-relaxed max-w-2xl">Meta description...</p>
+                            
+                            <div class="flex gap-3 mt-6">
+                                <button onclick="copyContent('resTitle')" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 text-xs font-bold transition-all flex items-center gap-2">
+                                    <i class="fa-regular fa-copy"></i> Copy Title
+                                </button>
+                                <button onclick="copyContent('resDesc')" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 text-xs font-bold transition-all flex items-center gap-2">
+                                    <i class="fa-regular fa-copy"></i> Copy Meta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. FEATURED SNIPPET -->
+                    <div class="bg-white rounded-2xl border border-amber-100 shadow-lg shadow-amber-50/50 p-6 relative overflow-hidden">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center">
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Featured Snippet (Top 0)</span>
+                        </div>
+                        <div id="resSnippet" class="text-slate-700 italic text-sm leading-7 border-l-4 border-amber-300 pl-4 bg-amber-50/30 py-2 rounded-r-lg">
+                            Nội dung đoạn trích...
+                        </div>
+                    </div>
+
+                    <!-- 3. MAIN CONTENT (CONTENT CARD) -->
+                    <div class="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+                        <!-- Toolbar -->
+                        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-file-lines text-indigo-500"></i> Nội dung bài viết
+                            </span>
+                            <div class="flex gap-2">
+                                <button onclick="copyContent('resContentHtml')" class="text-xs px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-white hover:text-indigo-600 text-slate-500 transition-all font-medium">
+                                    <i class="fa-solid fa-code mr-1"></i> HTML
+                                </button>
+                                <button onclick="copyContent('resContentText')" class="text-xs px-3 py-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 font-bold transition-all">
+                                    <i class="fa-regular fa-copy mr-1"></i> Copy Text
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div id="resContentHtml" class="prose prose-slate max-w-none p-8 md:p-10" style="font-family: Tahoma, sans-serif;">
+                            <!-- Content goes here -->
+                        </div>
+                        <div id="resContentText" class="hidden"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Toast -->
+            <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-32 transition-transform duration-300">
+                <div class="bg-slate-800 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-medium border border-slate-700">
+                    <i class="fa-solid fa-circle-check text-green-400 text-lg"></i>
+                    <span id="toastMsg">Thành công!</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- RIGHT SIDEBAR: AUDIT & SUGGESTIONS -->
+        <aside class="w-[280px] bg-white border-l border-slate-100 flex flex-col h-full shrink-0 z-20">
+            <!-- Tab Header -->
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50">
+                 <span class="font-bold text-slate-700 text-xs uppercase tracking-wide flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie text-indigo-500"></i> SEO & Dàn ý
+                 </span>
+            </div>
+
+            <!-- 1. SCORE -->
+            <div class="p-6 flex flex-col items-center justify-center border-b border-slate-100">
+                <div class="relative w-28 h-28 flex items-center justify-center">
+                    <svg class="w-full h-full transform -rotate-90">
+                        <circle cx="56" cy="56" r="48" stroke="#f1f5f9" stroke-width="8" fill="none"/>
+                        <circle id="scoreCircle" cx="56" cy="56" r="48" stroke="#10b981" stroke-width="8" fill="none" 
+                            stroke-dasharray="301" stroke-dashoffset="301" stroke-linecap="round" class="transition-all duration-1000 ease-out"/>
+                    </svg>
+                    <div class="absolute flex flex-col items-center">
+                        <span id="seoScore" class="text-4xl font-extrabold text-slate-800 tracking-tighter">0</span>
+                        <span class="text-[9px] text-slate-400 font-bold uppercase mt-1">Điểm SEO</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. OUTLINE SUGGESTIONS (NEW FEATURE) -->
+            <div id="outlineArea" class="hidden border-b border-slate-100 flex-1 flex flex-col overflow-hidden">
+                <div class="px-4 py-3 bg-indigo-50/50 flex justify-between items-center border-b border-indigo-100">
+                    <span class="text-xs font-bold text-indigo-700">Gợi ý mở rộng</span>
+                    <span class="text-[9px] bg-white text-indigo-600 px-2 py-0.5 rounded-full border border-indigo-200">AI Ideas</span>
+                </div>
+                <div class="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2" id="suggestionList">
+                    <!-- Items injected here -->
+                </div>
+                <div class="p-3 bg-white border-t border-slate-100">
+                    <button onclick="addSelectedIdeas()" id="btnAddIdeas" class="w-full py-2 rounded-lg bg-indigo-600 text-white text-xs font-bold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Viết thêm ý đã chọn
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. CHECKLIST -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-3" id="checklistArea">
+                 <h3 class="text-[10px] font-bold text-slate-400 uppercase mb-2">Checklist cơ bản</h3>
+                <div class="checklist-item p-2.5 rounded-lg border border-slate-100 bg-slate-50/50 flex gap-2 items-start" id="chk-keyword">
+                    <i class="fa-solid fa-circle mt-1 text-slate-300 text-[8px] check-icon"></i>
+                    <span class="text-[11px] text-slate-600 font-medium">Từ khóa trong Title & H1</span>
+                </div>
+                <div class="checklist-item p-2.5 rounded-lg border border-slate-100 bg-slate-50/50 flex gap-2 items-start" id="chk-length">
+                    <i class="fa-solid fa-circle mt-1 text-slate-300 text-[8px] check-icon"></i>
+                    <span class="text-[11px] text-slate-600 font-medium">Độ dài nội dung chuẩn</span>
+                </div>
+                <div class="checklist-item p-2.5 rounded-lg border border-slate-100 bg-slate-50/50 flex gap-2 items-start" id="chk-headings">
+                    <i class="fa-solid fa-circle mt-1 text-slate-300 text-[8px] check-icon"></i>
+                    <span class="text-[11px] text-slate-600 font-medium">Phân bổ Heading (H2, H3)</span>
+                </div>
+                <div class="checklist-item p-2.5 rounded-lg border border-slate-100 bg-slate-50/50 flex gap-2 items-start" id="chk-meta">
+                    <i class="fa-solid fa-circle mt-1 text-slate-300 text-[8px] check-icon"></i>
+                    <span class="text-[11px] text-slate-600 font-medium">Meta Desc có từ khóa</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Script Links -->
+    <script src="https://unpkg.com/lucide@latest"></script> <!-- Icon cho Menu -->
+    <script src="assets/js/main.js"></script> <!-- Main JS để load Header Menu -->
+    <script src="assets/js/page-seo.js"></script> <!-- JS riêng của trang SEO -->
+</body>
+</html>
