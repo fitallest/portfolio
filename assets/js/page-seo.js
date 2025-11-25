@@ -1,12 +1,9 @@
 
-
-
-
-
 // assets/js/page-seo.js
 
 // CONFIG & STATE
-const apiKey = "AIzaSyCFM865Yhu2wLW0P7YsIodWxq4lfOltatU"; // Runtime Environment Key
+// --- LẤY API KEY TỪ ENV.JS ---
+const apiKey = (typeof CONFIG !== 'undefined') ? CONFIG.GEMINI_API_KEY : "";
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
 let currentSource = 'unsplash';
@@ -169,7 +166,11 @@ window.addSelectedIdeas = async function() {
 // --- GEMINI AI LOGIC (TEXT) ---
 async function callGemini(prompt, isRaw = false) {
     try {
-        const response = await fetch(GEMINI_API_URL, {
+        // Re-check API Key dynamically before call
+        const freshKey = (typeof CONFIG !== 'undefined') ? CONFIG.GEMINI_API_KEY : "";
+        if (!freshKey || freshKey.length < 20) throw new Error("API Key Missing");
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${freshKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -178,12 +179,21 @@ async function callGemini(prompt, isRaw = false) {
             })
         });
         const data = await response.json();
+        
+        if (!data.candidates || data.candidates.length === 0) {
+             console.error("API Response Error:", data);
+             throw new Error("API trả về lỗi hoặc bị chặn.");
+        }
+
         const text = data.candidates[0].content.parts[0].text;
         // Try to parse JSON if not raw, otherwise return text
         if (isRaw) return text;
         return JSON.parse(text);
 
-    } catch (e) { console.error(e); return null; }
+    } catch (e) { 
+        console.error(e); 
+        return null; 
+    }
 }
 
 // --- GENERATE AI IMAGE (USING POLLINATIONS AI - RELIABLE) ---
@@ -192,8 +202,6 @@ async function generateAIImage(prompt) {
     return new Promise((resolve) => {
         const seed = Math.floor(Math.random() * 1000000);
         // Tối ưu prompt kỹ hơn để tránh ảnh ảo giác
-        // Thêm 'no text' để tránh AI viết chữ linh tinh vào ảnh
-        // Thêm 'clear focus' để ảnh tập trung
         const safePrompt = encodeURIComponent(prompt + ", photorealistic, 8k, highly detailed, professional photography, clear focus, cinematic lighting, no text");
         
         const imageUrl = `https://image.pollinations.ai/prompt/${safePrompt}?width=800&height=450&seed=${seed}&nologo=true&model=flux`;
@@ -542,5 +550,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     selectImageSource('unsplash');
     initVoiceInput();
-
 });
