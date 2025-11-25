@@ -2,19 +2,14 @@
 /*
   JAVASCRIPT RIÊNG CHO TRANG DOMAIN (page-domain.js)
   Đã tách từ thẻ <script> inline của domain.html gốc.
-  Chứa logic cho:
-  - Kích hoạt Lucide Icons
-  - Gợi ý tên miền (Domain Suggestion) - TÍCH HỢP AI GEMINI
-  - Mở/ĐÓng Modal
-  - Xử lý Formspree (Form submission) và Confetti
 */
 
 document.addEventListener('DOMContentLoaded', () => {
     // Kích hoạt icon Lucide
     lucide.createIcons(); 
 
-    // API Key Gemini (Dùng chung với main.js)
-    const GEMINI_API_KEY = "AIzaSyC0sOmXY9FsVM-LrX-1qndfeDn4-waeDTQ";
+    // LẤY API KEY TỪ ENV.JS
+    const GEMINI_API_KEY = (typeof CONFIG !== 'undefined') ? CONFIG.GEMINI_API_KEY : "";
 
     // === SCRIPT GỢI Ý TÊN MIỀN ===
     const domainInput = document.getElementById('domainInput');
@@ -113,6 +108,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- HÀM GỌI AI GEMINI ---
     async function fetchGeminiSuggestions(keyword, industry) {
+        if (!GEMINI_API_KEY) {
+            console.warn('Missing API Key');
+            return null; 
+        }
+
         const prompt = `
         Đóng vai một chuyên gia thương hiệu và đặt tên miền (Naming Expert).
         Tôi đang cần tìm tên miền cho từ khóa: "${keyword}" hoạt động trong lĩnh vực: "${industry || 'Tổng hợp'}".
@@ -449,4 +449,4 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("Không tìm thấy các thành phần form cần thiết."); 
     }
-}); 
+});
