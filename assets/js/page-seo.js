@@ -6,7 +6,7 @@
 // assets/js/page-seo.js
 
 // CONFIG & STATE
-const apiKey = "AIzaSyC0sOmXY9FsVM-LrX-1qndfeDn4-waeDTQ"; // Runtime Environment Key
+const apiKey = "AIzaSyCFM865Yhu2wLW0P7YsIodWxq4lfOltatU"; // Runtime Environment Key
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
 let currentSource = 'unsplash';
@@ -542,4 +542,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     selectImageSource('unsplash');
     initVoiceInput();
+
 });
