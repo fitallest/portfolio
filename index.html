@@ -4,6 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
 	<title>Fi.tallest - Thiết Kế Website & Ứng dụng</title>
 	<meta name="description" content="Thiết kế website và ứng dụng chuyên nghiệp, tinh tế. Dịch vụ UI/UX, phát triển web, app. Liên hệ Fi.tallest để được tư vấn.">
 	
@@ -153,6 +154,7 @@
     <!-- Header/Navbar sẽ được chèn tự động bởi main.js -->
     
 	<main>
+        <!-- PHẦN 1: HERO VIDEO -->
 		<section id="hero" class="relative h-[calc(100vh-4rem)] w-full overflow-hidden">
 			<video
 				class="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto object-cover transform -translate-x-1/2 -translate-y-1/2 z-0"
@@ -191,7 +193,7 @@
 			</div>
 		</section>
 
-        <!-- MODERN TECH MARQUEE SECTION -->
+        <!-- PHẦN 2: MARQUEE (LOGO CHẠY) -->
         <section class="bg-[#0f172a] border-y border-indigo-500/10 py-10 overflow-hidden marquee-container relative">
              <!-- Blur overlay -->
              <div class="absolute inset-0 bg-gradient-to-r from-[#0f172a] via-transparent to-[#0f172a] z-10 pointer-events-none"></div>
@@ -221,6 +223,7 @@
              </div>
         </section>
 
+        <!-- PHẦN 3: ABOUT US -->
 		<section id="about" class="tech-bg py-20 md:py-32">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
@@ -302,6 +305,7 @@
 			</div>
 		</section>
 
+        <!-- PHẦN 4: DỊCH VỤ (CARDS) -->
 		<section id="services" class="bg-slate-50 py-20 md:py-32 relative overflow-hidden">
              <!-- Background Decor -->
              <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-full opacity-30 pointer-events-none" 
@@ -369,7 +373,7 @@
 			</div>
 		</section>
 
-        <!-- === AI GEMINI FEATURE SECTION === -->
+        <!-- PHẦN 5: AI GEMINI GENERATOR -->
         <section id="ai-generator" class="py-20 bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 relative overflow-hidden reveal-on-scroll">
             <!-- Background Effects -->
             <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
@@ -460,7 +464,7 @@
             </div>
         </section>
 
-        <!-- === SECTION SẢN PHẨM NÂNG CẤP (ẢNH CỰC ĐẠI + SÓNG 3 LỚP) === -->
+        <!-- PHẦN 6: GIẢI PHÁP PHẦN MỀM -->
 		<section id="software-products" class="relative pt-20 pb-0 bg-gradient-to-b from-[#1e1b4b] to-[#1e3a8a] overflow-hidden min-h-[850px] flex items-center">
             <!-- Background Icons -->
              <div class="absolute inset-0 overflow-hidden pointer-events-none">
@@ -471,8 +475,8 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full">
                     
-                    <!-- CỘT TRÁI: TEXT -->
-                    <div class="text-left text-white flex flex-col justify-center pb-32 lg:pb-0 z-20">
+                    <!-- CỘT TRÁI: TEXT (Tăng padding bottom trên mobile để tránh bị ảnh che) -->
+                    <div class="text-left text-white flex flex-col justify-center pb-48 lg:pb-0 z-20">
                         <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight">
                             Giải pháp phần mềm <br>
                             <span class="bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-cyan-300">
@@ -519,14 +523,14 @@
                 </div>
             </div>
 
-            <!-- ẢNH NHÂN VẬT CỰC ĐẠI (ABSOLUTE) -->
-            <!-- Đặt ở đây để nó nằm đè lên grid nhưng dưới wave -->
-            <div class="absolute bottom-0 right-0 lg:right-[5%] w-full lg:w-[50%] h-[90%] z-10 pointer-events-none flex items-end justify-center">
+            <!-- ẢNH NHÂN VẬT CỰC ĐẠI (ABSOLUTE) - ĐIỀU CHỈNH CHO MOBILE -->
+            <!-- Mobile: opacity-30, pushed right, smaller. Desktop: normal -->
+            <div class="absolute bottom-0 -right-[20%] lg:right-[-2%] w-[90%] lg:w-[50%] h-[55%] lg:h-[80%] z-0 lg:z-10 opacity-30 lg:opacity-100 pointer-events-none flex items-end justify-center">
                  <img src="assets/images/fi.png" 
                       alt="Fi.tallest Man" 
                       class="w-auto h-full object-contain drop-shadow-2xl max-w-none transform translate-x-10 lg:translate-x-0">
                  
-                 <!-- Floating Stats - Định vị tương đối với khung ảnh -->
+                 <!-- Floating Stats - Sẽ mờ theo container trên mobile -->
                  <div class="absolute top-[25%] left-[15%] bg-white/10 backdrop-blur-xl border border-white/20 p-4 pr-6 rounded-2xl shadow-2xl animate-float flex items-center gap-4">
                     <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white shadow-lg">
                         <i data-lucide="trending-up" class="w-6 h-6"></i>
@@ -569,7 +573,7 @@
             </div>
 		</section>
         
-        <!-- WORKFLOW TIMELINE SECTION -->
+        <!-- PHẦN 7: QUY TRÌNH LÀM VIỆC -->
         <section id="workflow" class="bg-gray-50 py-20 reveal-on-scroll">
              <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                  <div class="text-center mb-16">
@@ -626,6 +630,7 @@
              </div>
         </section>
 
+        <!-- PHẦN 8: DỰ ÁN TIÊU BIỂU (PORTFOLIO) -->
 		<section id="projects" class="tech-bg py-20 md:py-32">
 			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div class="text-center reveal-on-scroll">
@@ -670,6 +675,7 @@
 			</div>
 		</section>
 		
+        <!-- PHẦN 9: THÀNH TỰU & HOẠT ĐỘNG -->
 		<section id="achievements" class="relative overflow-hidden py-24 md:py-32">
 			<div class="absolute inset-0 bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950"></div>
             <!-- Grid Overlay -->
@@ -782,7 +788,7 @@
 			</div>
 		</section>
 
-        <!-- === SECTION MỚI: HỆ THỐNG CHI NHÁNH === -->
+        <!-- PHẦN 10: HỆ THỐNG CHI NHÁNH -->
         <section id="branches" class="bg-slate-50 py-20 md:py-32 relative reveal-on-scroll">
              <div class="max-w-6xl mx-auto px-4 sm:px-8 lg:px-8 relative z-10">
                 <div class="text-center mb-12">
@@ -842,7 +848,7 @@
              </div>
         </section>
 		
-		<!-- === KHU VỰC ĐĂNG KÝ TƯ VẤN MỚI (SÁNG TẠO) === -->
+		<!-- PHẦN 11: FORM ĐĂNG KÝ TƯ VẤN -->
 		<section id="register" class="py-20 relative overflow-hidden animate-gradient-bg reveal-on-scroll">
             <!-- Hình nền trang trí -->
             <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
@@ -1007,7 +1013,7 @@
 			</div> 	
 		</section>
 
-
+        <!-- PHẦN 12: LIÊN HỆ -->
 		<section id="contact" class="bg-slate-900 py-10 md:py-24 border-t border-slate-800">
 			<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 				<h2 class="text-3xl font-bold text-white">Bạn có dự án? Hãy liên hệ!</h2>
@@ -1125,6 +1131,7 @@
 
 	<script src="https://unpkg.com/lucide@latest"></script>
 	<script src="assets/js/project-data.js"></script>
+    <script src="assets/js/env.js"></script> <!-- CẤU HÌNH MÔI TRƯỜNG -->
 	<script src="assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
@@ -1149,10 +1156,11 @@
             generateBtn.disabled = true;
             generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
-            const apiKey = "AIzaSyC0sOmXY9FsVM-LrX-1qndfeDn4-waeDTQ"; // API Key đã được cập nhật
+            // --- THAY ĐỔI Ở ĐÂY: LẤY KEY TỪ FILE CONFIG ---
+            const apiKey = CONFIG.GEMINI_API_KEY; 
 
-            if (!apiKey || apiKey === "THAY_API_KEY_CUA_BAN_VAO_DAY") {
-                 alert("Vui lòng nhập API Key của bạn vào file index.html (dòng 917) để sử dụng tính năng này.");
+            if (!apiKey || apiKey.length < 20) {
+                 alert("Lỗi cấu hình API Key. Vui lòng kiểm tra file assets/js/env.js");
                  loadingDiv.classList.add('hidden');
                  generateBtn.disabled = false;
                  generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
