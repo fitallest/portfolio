@@ -1,5 +1,4 @@
 
-
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
 
@@ -17,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const designIdDisplay = document.getElementById('design-id-display');
     const btnRealize = document.getElementById('btn-realize');
     const btnFullscreen = document.getElementById('btn-fullscreen'); 
-    const btnExitFullscreen = document.getElementById('btn-exit-fullscreen'); // New exit button
+    const btnExitFullscreen = document.getElementById('btn-exit-fullscreen'); 
     
     // Elements for Mockup
     const laptopWrapper = document.getElementById('laptop-wrapper');
@@ -30,7 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadForm = document.getElementById('download-form');
     const dlStatus = document.getElementById('dl-status');
 
-    const GEMINI_API_KEY = "AIzaSyC0sOmXY9FsVM-LrX-1qndfeDn4-waeDTQ";
+    // --- LẤY API KEY TỪ CONFIG ---
+    const GEMINI_API_KEY = (typeof CONFIG !== 'undefined') ? CONFIG.GEMINI_API_KEY : "";
+
     let currentDesignId = "";
     let currentGeneratedHTML = ""; // Store generated code for download
     let currentPromptParams = {};  // Store params to send to owner
@@ -112,6 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        // Validate API Key
+        if (!GEMINI_API_KEY || GEMINI_API_KEY.length < 20) {
+            alert("Vui lòng cập nhật API Key trong file assets/js/env.js");
+            return;
+        }
+
         // Validate Phone
         const phone = document.getElementById('contactPhone').value;
         if (!/^\d{10,11}$/.test(phone)) {
@@ -244,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error);
             loadingState.classList.add('hidden');
             emptyState.classList.remove('hidden');
-            alert("Hệ thống đang quá tải, vui lòng thử lại sau ít phút!");
+            alert("Hệ thống đang quá tải hoặc Key hết hạn, vui lòng thử lại sau!");
         }
     });
 
