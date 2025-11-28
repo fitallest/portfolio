@@ -1,4 +1,3 @@
-
 // assets/js/env.js
 // File cấu hình môi trường chung cho toàn bộ website.
 
@@ -18,4 +17,5 @@ const CONFIG = {
     get GEMINI_API_KEY() {
         return this.API_KEY_PART_1 + this.API_KEY_PART_2;
     }
+
 };
