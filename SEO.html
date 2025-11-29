@@ -14,6 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/page-seo.css">
+    <script src="assets/js/env.js"></script>
     
     <script>
         tailwind.config = {
@@ -81,6 +82,15 @@
                     </div>
                 </div>
 
+                <!-- 1.1 REQUIRED CONTENT -->
+                <div>
+                    <label class="text-[11px] font-bold text-indigo-400 uppercase tracking-wider mb-2 block">
+                        <i class="fa-solid fa-list-check mr-1"></i> Nội dung bắt buộc có
+                    </label>
+                    <textarea id="requiredContentInput" rows="2" placeholder="VD: Phải nhắc đến ưu điểm ABC, bảng giá năm 2025..." 
+                        class="w-full p-3 rounded-xl bg-inputBg border border-slate-700 text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-xs font-medium transition-all hover:border-slate-600 custom-scrollbar"></textarea>
+                </div>
+
                 <!-- 2. BUSINESS INFO (Collapsible) -->
                 <details class="group bg-slate-800/40 rounded-xl border border-slate-700/50 overflow-hidden transition-all duration-300">
                     <summary class="flex items-center justify-between p-3 cursor-pointer hover:bg-slate-800 transition-colors">
@@ -109,6 +119,24 @@
                             <label class="text-[9px] text-slate-500 uppercase font-bold mb-1 block">Thông tin Footer</label>
                             <textarea id="footerInput" rows="2" placeholder="Hotline, Địa chỉ, Website..." class="w-full p-2 rounded bg-slate-900 border border-slate-700 text-xs text-white focus:border-indigo-500 outline-none"></textarea>
                         </div>
+                    </div>
+                </details>
+
+                <!-- NEW SECTION: CONTENT IDEAS -->
+                <details class="group bg-gradient-to-br from-indigo-900/40 to-purple-900/40 rounded-xl border border-indigo-500/30 overflow-hidden transition-all duration-300">
+                    <summary class="flex items-center justify-between p-3 cursor-pointer hover:bg-slate-800 transition-colors">
+                        <div class="text-[10px] font-bold text-indigo-300 uppercase tracking-wider cursor-pointer flex items-center">
+                            <i class="fa-solid fa-lightbulb mr-2 text-yellow-400"></i> Gợi ý chủ đề mới
+                        </div>
+                        <span class="text-indigo-400 text-xs group-open:rotate-180 transition-transform duration-300"><i class="fa-solid fa-chevron-down"></i></span>
+                    </summary>
+                    <div class="p-3 pt-2 border-t border-indigo-500/20">
+                        <p class="text-[10px] text-slate-400 mb-3 leading-relaxed">
+                            AI sẽ phân tích lĩnh vực của bạn và đề xuất các chủ đề bài viết tiềm năng tiếp theo.
+                        </p>
+                        <button onclick="generateTopicIdeas()" id="btnSuggestTopics" class="w-full py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-lg shadow-indigo-900/20 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Tìm ý tưởng mới
+                        </button>
                     </div>
                 </details>
 
@@ -414,9 +442,31 @@
         </aside>
     </div>
 
+    <!-- MODAL SUGGEST TOPICS -->
+    <div id="topicModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full flex flex-col max-h-[80vh] overflow-hidden">
+            <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb text-yellow-500"></i> Gợi ý chủ đề tiếp theo
+                </h3>
+                <button onclick="document.getElementById('topicModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-5 custom-scrollbar bg-slate-50 space-y-3" id="topicList">
+                <div class="text-center py-10 text-gray-400">
+                    <i class="fa-solid fa-spinner fa-spin text-2xl text-indigo-500 mb-3"></i>
+                    <p>Đang tìm ý tưởng hay cho bạn...</p>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-100 bg-white text-right">
+                <button onclick="document.getElementById('topicModal').classList.add('hidden')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-sm font-bold">Đóng</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Script Links -->
     <script src="https://unpkg.com/lucide@latest"></script> <!-- Icon cho Menu -->
-    <script src="assets/js/env.js"></script> <!-- CẤU HÌNH MÔI TRƯỜNG -->
     <script src="assets/js/main.js"></script> <!-- Main JS để load Header Menu -->
     <script src="assets/js/page-seo.js"></script> <!-- JS riêng của trang SEO -->
 </body>
