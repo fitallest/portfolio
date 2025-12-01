@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function generateDesignId() { return `#AI-${Math.floor(Math.random() * 9000) + 1000}`; }
 
     // --- INITIAL SETUP ---
-    // IMPORTANT: Move iframe to laptop screen initially if elements exist
     if (laptopScreen && previewFrame) {
         laptopScreen.appendChild(previewFrame);
     }
@@ -62,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (btn.classList.contains('active')) {
                 // Remove text
                 btn.classList.remove('active');
-                // Simple remove: replace text and trim cleanup
                 if (currentText.includes(textToAdd)) {
                     descriptionArea.value = currentText.replace(textToAdd, '').replace(/\n\s*\n/g, '\n').trim();
                 }
@@ -114,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         
         // Validate API Key
-        if (!GEMINI_API_KEY || GEMINI_API_KEY.length < 20) {
-            alert("Vui lòng cập nhật API Key trong file assets/js/env.js");
+        if (!GEMINI_API_KEY || GEMINI_API_KEY.includes("PASTE_YOUR") || GEMINI_API_KEY.length < 20) {
+            alert("Vui lòng cập nhật API Key mới trong file assets/js/env.js");
             return;
         }
 
@@ -206,36 +204,45 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => loadingText.textContent = "Đang hoàn thiện giao diện...", 4500);
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
 
             const data = await response.json();
+            
+            if (!response.ok) {
+                console.error("API Error Detail:", data);
+                let msg = "Lỗi kết nối AI.";
+                if (data.error) {
+                    if (data.error.code === 400 && data.error.message.includes("API key")) msg = "API Key không hợp lệ. Vui lòng kiểm tra file assets/js/env.js";
+                    else if (data.error.code === 429) msg = "Hết lượt sử dụng API (Quota Exceeded). Vui lòng thử lại sau hoặc đổi Key mới.";
+                    else msg = `Lỗi API (${data.error.code}): ${data.error.message}`;
+                }
+                alert(msg);
+                throw new Error(msg);
+            }
+
             let htmlCode = data.candidates?.[0]?.content?.parts?.[0]?.text;
             
             if (htmlCode) {
-                // Cleanup
                 htmlCode = htmlCode.replace(/```html|```/g, '').trim();
-                currentGeneratedHTML = htmlCode; // Save for download
+                currentGeneratedHTML = htmlCode; 
 
-                // Inject to iframe
                 const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
                 doc.open();
                 doc.write(htmlCode);
                 doc.close();
 
-                // Show Result
                 loadingState.classList.add('hidden');
                 previewContainer.classList.remove('hidden');
-                // Ensure laptop wrapper is visible
                 if(laptopWrapper) laptopWrapper.classList.remove('hidden');
 
                 setTimeout(() => {
-                     previewContainer.classList.add('visible'); // Fade in
-                     conversionBar.classList.add('visible'); // Slide up bar
-                     if(btnFullscreen) btnFullscreen.classList.remove('hidden'); // Show fullscreen btn
+                     previewContainer.classList.add('visible');
+                     conversionBar.classList.add('visible');
+                     if(btnFullscreen) btnFullscreen.classList.remove('hidden');
                      designIdDisplay.textContent = currentDesignId;
                      
                      if (typeof confetti === 'function') {
@@ -251,51 +258,45 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(error);
             loadingState.classList.add('hidden');
             emptyState.classList.remove('hidden');
-            alert("Hệ thống đang quá tải hoặc Key hết hạn, vui lòng thử lại sau!");
         }
     });
 
     // --- 5. CONVERSION ACTIONS ---
     btnRealize.addEventListener('click', () => {
-        // Zalo Link with pre-filled message
         const msg = encodeURIComponent(`Chào Fi.tallest, tôi muốn hiện thực hóa bản vẽ mã số ${currentDesignId}. Tôi đã có ý tưởng cụ thể.`);
         window.open(`https://zalo.me/0909876817?text=${msg}`, '_blank');
     });
     
-    // --- FULLSCREEN LOGIC (Request on Container) ---
+    // --- FULLSCREEN LOGIC ---
     if (btnFullscreen) {
         btnFullscreen.addEventListener('click', () => {
             if (!currentGeneratedHTML) {
                 alert("Chưa có bản vẽ nào để xem!");
                 return;
             }
-            // Request Fullscreen on the laptop screen container (to show exit btn)
             if (laptopScreen.requestFullscreen) {
                 laptopScreen.requestFullscreen();
-            } else if (laptopScreen.webkitRequestFullscreen) { /* Safari */
+            } else if (laptopScreen.webkitRequestFullscreen) { 
                 laptopScreen.webkitRequestFullscreen();
-            } else if (laptopScreen.msRequestFullscreen) { /* IE11 */
+            } else if (laptopScreen.msRequestFullscreen) { 
                 laptopScreen.msRequestFullscreen();
             }
         });
     }
 
-    // --- EXIT FULLSCREEN LOGIC ---
     if (btnExitFullscreen) {
         btnExitFullscreen.addEventListener('click', () => {
             if (document.exitFullscreen) {
                 document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) { /* Safari */
+            } else if (document.webkitExitFullscreen) { 
                 document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { /* IE11 */
+            } else if (document.msExitFullscreen) {
                 document.msExitFullscreen();
             }
         });
     }
 
-    // Listen for fullscreen changes to toggle button visibility
     document.addEventListener('fullscreenchange', () => {
-        // If we are in fullscreen mode AND the element is our laptop screen
         if (document.fullscreenElement === laptopScreen) {
             btnExitFullscreen.classList.remove('hidden');
         } else {
@@ -316,7 +317,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Close modal on click outside
     window.addEventListener('click', (e) => {
         if (e.target === downloadModal) downloadModal.style.display = 'none';
     });
@@ -332,7 +332,6 @@ document.addEventListener('DOMContentLoaded', () => {
             dlStatus.textContent = "Đang xử lý...";
             dlStatus.className = "text-center text-xs mt-3 h-4 text-indigo-600";
 
-            // 1. Send Info to Formspree
             const fd = new FormData();
             fd.append('name', document.getElementById('dl-name').value);
             fd.append('phone', document.getElementById('dl-phone').value);
@@ -346,7 +345,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     dlStatus.textContent = "Thành công! Đang tải xuống...";
                     dlStatus.className = "text-center text-xs mt-3 h-4 text-green-600";
                     
-                    // 2. Download File
                     const blob = new Blob([currentGeneratedHTML], { type: 'text/html' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -360,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         downloadModal.style.display = 'none';
                         dlStatus.textContent = "";
-                        document.getElementById('dl-name').value = ""; // Reset form
+                        document.getElementById('dl-name').value = ""; 
                     }, 2000);
                 } else {
                     throw new Error("Form submission failed");
