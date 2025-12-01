@@ -1,0 +1,1334 @@
+
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+	<title>Fi.tallest - Thiết Kế Website & Ứng dụng</title>
+	<meta name="description" content="Thiết kế website và ứng dụng chuyên nghiệp, tinh tế. Dịch vụ UI/UX, phát triển web, app. Liên hệ Fi.tallest để được tư vấn.">
+	
+	<script src="https://cdn.tailwindcss.com"></script>
+	
+	<link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- CSS cho Hiệu ứng Loading AI & Form Đăng Ký Sáng Tạo -->
+    <style>
+        /* --- Loading AI Animation --- */
+        @keyframes bounce-delay {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+        .ai-dots > div {
+            width: 12px;
+            height: 12px;
+            background-color: #6366f1;
+            border-radius: 100%;
+            display: inline-block;
+            animation: bounce-delay 1.4s infinite ease-in-out both;
+        }
+        .ai-dots > div:nth-child(2) { animation-delay: -0.32s; }
+        .ai-dots > div:nth-child(3) { animation-delay: -0.16s; }
+
+        /* --- CSS CHO PHẦN ĐĂNG KÝ SÁNG TẠO (GLASSMORPHISM) --- */
+        
+        /* Nền Gradient Động */
+        .animate-gradient-bg {
+            background: linear-gradient(-45deg, #4f46e5, #7c3aed, #ec4899, #3b82f6);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Card hiệu ứng kính */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95); /* Màu trắng đục nhẹ */
+            backdrop-filter: blur(20px); /* Làm mờ nền phía sau */
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 1.5rem;
+        }
+
+        /* Input Fields */
+        .custom-input-group {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .custom-input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 3rem; /* Padding trái chừa chỗ cho icon */
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .custom-input:focus {
+            background-color: #ffffff;
+            border-color: #6366f1; /* Indigo */
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            outline: none;
+        }
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            transition: color 0.3s;
+            pointer-events: none;
+        }
+        .custom-input:focus + .input-icon {
+            color: #6366f1;
+        }
+
+        /* Checkbox Cards (Các nút chọn dịch vụ) */
+        .service-option {
+            cursor: pointer;
+            position: relative;
+        }
+        .service-option input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .service-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            background: #ffffff;
+            border: 2px solid #f3f4f6;
+            border-radius: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+        }
+        .service-option:hover .service-card {
+            border-color: #a5b4fc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .service-option input:checked + .service-card {
+            border-color: #6366f1;
+            background-color: #eef2ff;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2);
+        }
+        .service-option input:checked + .service-card i {
+            color: #4f46e5;
+            transform: scale(1.1);
+        }
+        .service-card i {
+            transition: all 0.3s;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+        .service-card span {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        /* Submit Button Gradient */
+        .btn-gradient {
+            background-image: linear-gradient(to right, #4f46e5 0%, #7c3aed 100%);
+            transition: all 0.3s ease;
+            background-size: 200% auto;
+        }
+        .btn-gradient:hover {
+            background-position: right center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+        .btn-gradient:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header/Navbar sẽ được chèn tự động bởi main.js -->
+    
+	<main>
+        <!-- PHẦN 1: HERO VIDEO -->
+		<section id="hero" class="relative h-[calc(100vh-4rem)] w-full overflow-hidden">
+			<video
+				class="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto object-cover transform -translate-x-1/2 -translate-y-1/2 z-0"
+				src="https://videos.pexels.com/video-files/7578543/7578543-hd_1920_1080_30fps.mp4" 
+				autoplay
+				loop
+				muted
+				playsinline
+				poster="https://placehold.co/1920x1080/1e293b/ffffff?text=Video+Dang+Tai...">
+			</video>
+			<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/30 z-10 backdrop-blur-[1px]"></div>
+			<div class="relative z-20 flex flex-col justify-center items-center h-full text-center max-w-5xl mx-auto px-4 reveal-on-scroll">
+				<span class="py-1 px-3 rounded-full bg-indigo-600/30 border border-indigo-500/50 text-indigo-200 text-sm font-semibold mb-4 backdrop-blur-sm uppercase tracking-wider">
+                    Fi.Tallest Technology
+                </span>
+                <!-- ĐÃ CHỈNH SỬA: Giảm cỡ chữ trên mobile (text-3xl sm:text-5xl) -->
+				<h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mt-2 drop-shadow-lg leading-tight">
+					Giải pháp công nghệ <br>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-gradient-x" id="typewriter-text">
+                        Tinh Tế & Đột Phá
+                    </span>
+				</h1>
+				<p class="mt-6 text-lg md:text-xl text-gray-200 max-w-2xl mx-auto font-light">
+                    Kiến tạo trải nghiệm kỹ thuật số đẳng cấp, nâng tầm vị thế thương hiệu của bạn trên thị trường toàn cầu.
+                </p>
+				<div class="mt-10 flex flex-wrap justify-center gap-6">
+					<a href="#projects" class="relative inline-flex items-center px-8 py-4 border border-transparent text-base font-bold rounded-full text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.8)] hover:-translate-y-1">
+						<i data-lucide="folder-kanban" class="mr-2 -ml-1 h-5 w-5"></i>
+						Xem dự án
+					</a>
+					<a href="bao-gia.html" class="relative inline-flex items-center px-8 py-4 border border-white/30 text-base font-bold rounded-full text-white bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all duration-300 hover:-translate-y-1">
+						<i data-lucide="dollar-sign" class="mr-2 -ml-1 h-5 w-5"></i>
+						Xem báo giá
+					</a>
+				</div>
+			</div>
+		</section>
+
+        <!-- PHẦN 2: MARQUEE (LOGO CHẠY) -->
+        <section class="bg-[#0f172a] border-y border-indigo-500/10 py-10 overflow-hidden marquee-container relative">
+             <!-- Blur overlay -->
+             <div class="absolute inset-0 bg-gradient-to-r from-[#0f172a] via-transparent to-[#0f172a] z-10 pointer-events-none"></div>
+             
+             <div class="">
+                <div class="flex space-x-16 items-center animate-marquee w-max px-4">
+                     <!-- Tech Capsules -->
+                    <div class="tech-pill"><i data-lucide="codepen" class="text-cyan-400 mr-3"></i> <span class="font-mono font-bold text-lg text-cyan-100">REACT NATIVE</span></div>
+                    <div class="tech-pill"><i data-lucide="box" class="text-green-400 mr-3"></i> <span class="font-mono font-bold text-lg text-green-100">NODE.JS</span></div>
+                    <div class="tech-pill"><i data-lucide="cloud" class="text-yellow-400 mr-3"></i> <span class="font-mono font-bold text-lg text-yellow-100">AWS CLOUD</span></div>
+                    <div class="tech-pill"><i data-lucide="database" class="text-emerald-400 mr-3"></i> <span class="font-mono font-bold text-lg text-emerald-100">MONGODB</span></div>
+                    <div class="tech-pill"><i data-lucide="figma" class="text-pink-400 mr-3"></i> <span class="font-mono font-bold text-lg text-pink-100">FIGMA UI/UX</span></div>
+                    <div class="tech-pill"><i data-lucide="zap" class="text-white mr-3"></i> <span class="font-mono font-bold text-lg text-white">NEXT.JS 14</span></div>
+                    <div class="tech-pill"><i data-lucide="smartphone" class="text-blue-400 mr-3"></i> <span class="font-mono font-bold text-lg text-blue-100">FLUTTER</span></div>
+                    <div class="tech-pill"><i data-lucide="shield" class="text-orange-400 mr-3"></i> <span class="font-mono font-bold text-lg text-orange-100">CLOUDFLARE</span></div>
+                    
+                    <!-- Duplicate for infinite loop -->
+                    <div class="tech-pill"><i data-lucide="codepen" class="text-cyan-400 mr-3"></i> <span class="font-mono font-bold text-lg text-cyan-100">REACT NATIVE</span></div>
+                    <div class="tech-pill"><i data-lucide="box" class="text-green-400 mr-3"></i> <span class="font-mono font-bold text-lg text-green-100">NODE.JS</span></div>
+                    <div class="tech-pill"><i data-lucide="cloud" class="text-yellow-400 mr-3"></i> <span class="font-mono font-bold text-lg text-yellow-100">AWS CLOUD</span></div>
+                    <div class="tech-pill"><i data-lucide="database" class="text-emerald-400 mr-3"></i> <span class="font-mono font-bold text-lg text-emerald-100">MONGODB</span></div>
+                    <div class="tech-pill"><i data-lucide="figma" class="text-pink-400 mr-3"></i> <span class="font-mono font-bold text-lg text-pink-100">FIGMA UI/UX</span></div>
+                    <div class="tech-pill"><i data-lucide="zap" class="text-white mr-3"></i> <span class="font-mono font-bold text-lg text-white">NEXT.JS 14</span></div>
+                    <div class="tech-pill"><i data-lucide="smartphone" class="text-blue-400 mr-3"></i> <span class="font-mono font-bold text-lg text-blue-100">FLUTTER</span></div>
+                    <div class="tech-pill"><i data-lucide="shield" class="text-orange-400 mr-3"></i> <span class="font-mono font-bold text-lg text-orange-100">CLOUDFLARE</span></div>
+                </div>
+             </div>
+        </section>
+
+        <!-- PHẦN 3: ABOUT US -->
+		<section id="about" class="tech-bg py-20 md:py-32">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div class="relative reveal-on-scroll">
+                         <!-- Decorative elements -->
+                        <div class="absolute -top-10 -left-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl"></div>
+                        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-pink-500/10 rounded-full blur-3xl"></div>
+                        
+                        <div class="relative group">
+                            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl transform rotate-3 opacity-50 group-hover:rotate-6 transition duration-500"></div>
+                            <img class="relative rounded-2xl shadow-2xl w-full object-cover border-4 border-white transform transition duration-500 group-hover:-translate-y-2"
+                                src="assets/images/amz.png"
+                                alt="Ảnh Fi.tallest">
+                        </div>
+                    </div>
+                    <div class="reveal-on-scroll">
+                        <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Về chúng tôi</h2>
+                        <p class="mt-2 text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">
+                            Fi.Tallest <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Studio</span>
+                        </p>
+                        <p class="mt-6 text-lg text-gray-600 leading-relaxed">
+                            Xin chào! Tôi là một nhà thiết kế web và ứng dụng đam mê sáng tạo. Với tư duy thiết kế hiện đại (Modern UI/UX), tôi chuyên biến những ý tưởng phức tạp thành các sản phẩm kỹ thuật số trực quan, mượt mà và giàu cảm xúc.
+                        </p>
+                        <p class="mt-4 text-lg text-gray-600 leading-relaxed">
+                            Mục tiêu của tôi không chỉ là tạo ra giao diện đẹp, mà là xây dựng những giải pháp công nghệ mang lại hiệu quả kinh doanh thực tế và bền vững.
+                        </p>
+                        
+                        <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Feature 1 -->
+                            <div class="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition">
+                                <div class="flex-shrink-0 h-12 w-12 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
+                                    <i data-lucide="search" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-gray-900 font-bold text-base">Chuẩn SEO</h4>
+                                    <p class="text-sm text-gray-500 mt-1">Tối ưu hóa tìm kiếm ngay từ dòng code đầu tiên.</p>
+                                </div>
+                            </div>
+                            <!-- Feature 2 -->
+                            <div class="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition">
+                                <div class="flex-shrink-0 h-12 w-12 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
+                                    <i data-lucide="zap" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-gray-900 font-bold text-base">Tốc độ cao</h4>
+                                    <p class="text-sm text-gray-500 mt-1">Load trang siêu tốc, trải nghiệm mượt mà.</p>
+                                </div>
+                            </div>
+                            <!-- Feature 3 -->
+                            <div class="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition">
+                                <div class="flex-shrink-0 h-12 w-12 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
+                                    <i data-lucide="smartphone" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-gray-900 font-bold text-base">Mobile First</h4>
+                                    <p class="text-sm text-gray-500 mt-1">Hiển thị hoàn hảo trên mọi thiết bị di động.</p>
+                                </div>
+                            </div>
+                             <!-- Feature 4 -->
+                             <div class="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition">
+                                <div class="flex-shrink-0 h-12 w-12 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 shadow-sm">
+                                    <i data-lucide="shield-check" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-gray-900 font-bold text-base">Bảo mật cao</h4>
+                                    <p class="text-sm text-gray-500 mt-1">An toàn dữ liệu, chống tấn công mạng.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-10">
+                            <a href="#contact" class="inline-flex items-center px-8 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 hover:text-indigo-600 hover:border-indigo-300 transition-all duration-300">
+                                <i data-lucide="send" class="mr-2 -ml-1 h-5 w-5"></i>
+                                Liên hệ hợp tác
+                            </a>
+                        </div>
+                    </div>
+                </div>
+			</div>
+		</section>
+
+        <!-- PHẦN 4: DỊCH VỤ (CARDS) -->
+		<section id="services" class="bg-slate-50 py-20 md:py-32 relative overflow-hidden">
+             <!-- Background Decor -->
+             <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-full opacity-30 pointer-events-none" 
+             style="background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 32px 32px;"></div>
+
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+				<div class="text-center max-w-3xl mx-auto reveal-on-scroll">
+                    <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Dịch vụ chuyên nghiệp</h2>
+					<p class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">Giải pháp toàn diện</p>
+					<p class="mt-4 text-lg text-gray-600">Cung cấp hệ sinh thái công nghệ từ ý tưởng đến sản phẩm thực tế.</p>
+				</div>
+
+				<div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Service 1 -->
+					<div class="tech-card tilt-card rounded-2xl p-8 reveal-on-scroll">
+						<div class="tech-card-icon-wrapper mb-6">
+							<i data-lucide="layout-template" class="h-8 w-8 text-indigo-600"></i>
+						</div>
+						<h3 class="text-xl font-bold text-gray-900">Thiết kế UI/UX</h3>
+						<p class="mt-4 text-base text-gray-600 leading-relaxed">Thiết kế giao diện người dùng hiện đại, tập trung vào trải nghiệm mượt mà, tối ưu hóa hành trình khách hàng và tương thích mọi thiết bị.</p>
+                        <ul class="mt-6 space-y-2">
+                            <li class="flex items-start text-sm text-gray-500">
+                                <span class="mr-2 text-indigo-500">•</span> Wireframe & Prototype
+                            </li>
+                            <li class="flex items-start text-sm text-gray-500">
+                                <span class="mr-2 text-indigo-500">•</span> Mobile-First Design
+                            </li>
+                        </ul>
+					</div>
+
+                    <!-- Service 2 -->
+					<div class="tech-card tilt-card rounded-2xl p-8 reveal-on-scroll" style="transition-delay: 100ms;">
+						<div class="tech-card-icon-wrapper mb-6">
+							<i data-lucide="code-2" class="h-8 w-8 text-indigo-600"></i>
+						</div>
+						<h3 class="text-xl font-bold text-gray-900">Phát triển Website</h3>
+						<p class="mt-4 text-base text-gray-600 leading-relaxed">Xây dựng website mạnh mẽ với công nghệ mới nhất (React, Next.js...), đảm bảo tốc độ tải trang nhanh, bảo mật cao và chuẩn SEO.</p>
+                         <ul class="mt-6 space-y-2">
+                            <li class="flex items-start text-sm text-gray-500">
+                                <span class="mr-2 text-indigo-500">•</span> Landing Page & E-commerce
+                            </li>
+                            <li class="flex items-start text-sm text-gray-500">
+                                <span class="mr-2 text-indigo-500">•</span> CMS quản trị nội dung
+                            </li>
+                        </ul>
+					</div>
+
+                    <!-- Service 3 -->
+					<div class="tech-card tilt-card rounded-2xl p-8 reveal-on-scroll" style="transition-delay: 200ms;">
+						<div class="tech-card-icon-wrapper mb-6">
+							<i data-lucide="smartphone" class="h-8 w-8 text-indigo-600"></i>
+						</div>
+						<h3 class="text-xl font-bold text-gray-900">Ứng dụng Mobile</h3>
+						<p class="mt-4 text-base text-gray-600 leading-relaxed">Phát triển ứng dụng di động đa nền tảng (iOS & Android) với hiệu năng cao, giao diện thân thiện giúp giữ chân người dùng lâu dài.</p>
+                         <ul class="mt-6 space-y-2">
+                            <li class="flex items-start text-sm text-gray-500">
+                                <span class="mr-2 text-indigo-500">•</span> Flutter / React Native
+                            </li>
+                            <li class="flex items-start text-sm text-gray-500">
+                                <span class="mr-2 text-indigo-500">•</span> App Store & CH Play
+                            </li>
+                        </ul>
+					</div>
+				</div>
+			</div>
+		</section>
+
+        <!-- PHẦN 5: AI GEMINI GENERATOR -->
+        <section id="ai-generator" class="py-20 bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 relative overflow-hidden reveal-on-scroll">
+            <!-- Background Effects -->
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+                <div class="absolute top-10 left-10 w-64 h-64 bg-purple-500/10 rounded-full blur-[100px]"></div>
+                <div class="absolute bottom-10 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-[100px]"></div>
+            </div>
+
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-12">
+                    <span class="inline-block py-1.5 px-4 rounded-full bg-white/10 text-indigo-200 text-sm font-bold mb-6 border border-white/10 backdrop-blur-md shadow-lg">
+                        ✨ Powered by Fitallest AI
+                    </span>
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">Trợ Lý Sáng Tạo Nội Dung</h2>
+                    <p class="text-indigo-200/80 text-lg max-w-2xl mx-auto font-light">
+                        Bạn đang bí ý tưởng? Hãy để AI của Fi.tallest đề xuất <span class="text-white font-semibold">Slogan ấn tượng</span> và <span class="text-white font-semibold">Mô tả chuẩn SEO</span> ngay lập tức.
+                    </p>
+                </div>
+
+                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl hover:shadow-indigo-500/20 transition-shadow duration-500">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <label for="brandName" class="block text-sm font-medium text-indigo-200 mb-2 ml-1">Tên thương hiệu / Dự án</label>
+                            <input type="text" id="brandName" placeholder="Ví dụ: Cà phê Mây Lang Thang" 
+                                class="w-full px-5 py-4 bg-black/20 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition text-base">
+                        </div>
+                        <div>
+                            <label for="industry" class="block text-sm font-medium text-indigo-200 mb-2 ml-1">Lĩnh vực hoạt động</label>
+                            <input type="text" id="industry" placeholder="Ví dụ: Quán cà phê acoustic, không gian mở" 
+                                class="w-full px-5 py-4 bg-black/20 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition text-base">
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button onclick="generateAIContent()" id="generateBtn" class="group relative inline-flex items-center justify-center px-10 py-4 text-base font-bold text-white transition-all duration-200 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full hover:from-indigo-500 hover:to-purple-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:-translate-y-1">
+                            <span class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-black"></span>
+                            <span class="relative flex items-center">
+                                <i data-lucide="sparkles" class="w-5 h-5 mr-3"></i>
+                                Tạo Nội Dung Ngay
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- Loading State (Cải thiện giao diện) -->
+                    <div id="aiLoading" class="hidden mt-8 text-center py-6">
+                        <div class="flex flex-col items-center justify-center space-y-4">
+                             <!-- Hiệu ứng 3 chấm nảy lên (Bounce Dots) -->
+                            <div class="ai-dots space-x-2">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <p class="text-indigo-200 font-semibold text-lg">Gemini đang suy nghĩ...</p>
+                            <p class="text-indigo-300/60 text-sm italic">
+                                Việc này có thể mất 15-45 giây do độ phức tạp của AI và mạng.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Result Display -->
+                    <div id="aiResult" class="hidden mt-10 pt-10 border-t border-white/10 animate-fade-in">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Slogans -->
+                            <div class="bg-white/5 rounded-2xl p-6 border border-white/5 hover:bg-white/10 transition">
+                                <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                                    <i data-lucide="lightbulb" class="w-5 h-5 mr-3 text-yellow-400"></i>
+                                    Gợi ý Slogan
+                                </h3>
+                                <ul id="sloganList" class="space-y-3 text-indigo-100/90">
+                                    <!-- Slogans will be injected here -->
+                                </ul>
+                            </div>
+                            <!-- Description -->
+                            <div class="bg-white/5 rounded-2xl p-6 border border-white/5 hover:bg-white/10 transition">
+                                <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                                    <i data-lucide="file-text" class="w-5 h-5 mr-3 text-green-400"></i>
+                                    Mô tả Website (SEO)
+                                </h3>
+                                <p id="seoDesc" class="text-indigo-100/90 text-sm leading-relaxed italic">
+                                    <!-- Description will be injected here -->
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mt-8 text-center">
+                             <p class="text-indigo-300 text-sm">💡 Thích ý tưởng này? <a href="#contact" class="text-white underline hover:text-indigo-200 font-bold transition">Liên hệ Fi.tallest</a> để hiện thực hóa nó ngay!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN 6: GIẢI PHÁP PHẦN MỀM -->
+		<section id="software-products" class="relative pt-20 pb-0 bg-gradient-to-b from-[#1e1b4b] to-[#1e3a8a] overflow-hidden min-h-[850px] flex items-center">
+            <!-- Background Icons -->
+             <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                <i data-lucide="code" class="absolute top-20 left-10 text-white/5 w-24 h-24 rotate-12"></i>
+                <i data-lucide="database" class="absolute bottom-40 left-1/4 text-white/5 w-32 h-32 -rotate-12"></i>
+             </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full h-full">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full">
+                    
+                    <!-- CỘT TRÁI: TEXT (Tăng padding bottom trên mobile để tránh bị ảnh che) -->
+                    <div class="text-left text-white flex flex-col justify-center pb-48 lg:pb-0 z-20">
+                        <h2 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight">
+                            Giải pháp phần mềm <br>
+                            <span class="bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-cyan-300">
+                                Mọi lĩnh vực, mọi ý tưởng
+                            </span>
+                        </h2>
+                        <p class="text-xl md:text-2xl text-indigo-100 mb-10 font-light max-w-lg">
+                            Những gì doanh nghiệp cần, <span class="font-bold text-yellow-400 border-b-4 border-yellow-400/50">FI.TALLEST đều có đủ!</span>
+                        </p>
+                        
+                        <ul class="space-y-5 mb-12 text-lg font-medium text-indigo-50">
+                            <li class="flex items-center">
+                                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center mr-4 shadow-lg shadow-green-500/30">
+                                    <i data-lucide="check" class="w-5 h-5"></i>
+                                </span>
+                                Website Thương mại điện tử & Bán hàng
+                            </li>
+                            <li class="flex items-center">
+                                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center mr-4 shadow-lg shadow-green-500/30">
+                                    <i data-lucide="check" class="w-5 h-5"></i>
+                                </span>
+                                Phần mềm Quản lý doanh nghiệp (ERP/CRM)
+                            </li>
+                            <li class="flex items-center">
+                                <span class="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center mr-4 shadow-lg shadow-green-500/30">
+                                    <i data-lucide="check" class="w-5 h-5"></i>
+                                </span>
+                                Landing Page chuyển đổi cao
+                            </li>
+                        </ul>
+
+                        <div class="flex flex-wrap gap-4">
+                            <a href="#contact" class="inline-flex items-center px-10 py-4 bg-white text-indigo-900 font-bold rounded-full hover:bg-gray-100 transition-all shadow-[0_10px_20px_rgba(0,0,0,0.2)] hover:-translate-y-1 text-lg">
+                                <i data-lucide="phone-call" class="w-5 h-5 mr-2 text-indigo-600"></i> Tư vấn ngay
+                            </a>
+                            <a href="#projects" class="inline-flex items-center px-10 py-4 border-2 border-white/20 text-white font-semibold rounded-full hover:bg-white/10 transition-all backdrop-blur-sm text-lg">
+                                Xem hồ sơ năng lực <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- CỘT PHẢI: CHỈ LÀ GHOST ĐỂ GIỮ CHỖ TRONG GRID -->
+                    <div class="hidden lg:block"></div>
+                </div>
+            </div>
+
+            <!-- ẢNH NHÂN VẬT CỰC ĐẠI (ABSOLUTE) - ĐIỀU CHỈNH CHO MOBILE -->
+            <!-- Mobile: opacity-30, pushed right, smaller. Desktop: normal -->
+            <div class="absolute bottom-0 -right-[20%] lg:right-[-2%] w-[90%] lg:w-[50%] h-[55%] lg:h-[80%] z-0 lg:z-10 opacity-30 lg:opacity-100 pointer-events-none flex items-end justify-center">
+                 <img src="assets/images/fi.png" 
+                      alt="Fi.tallest Man" 
+                      class="w-auto h-full object-contain drop-shadow-2xl max-w-none transform translate-x-10 lg:translate-x-0">
+                 
+                 <!-- Floating Stats - Sẽ mờ theo container trên mobile -->
+                 <div class="absolute top-[25%] left-[15%] bg-white/10 backdrop-blur-xl border border-white/20 p-4 pr-6 rounded-2xl shadow-2xl animate-float flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white shadow-lg">
+                        <i data-lucide="trending-up" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-indigo-200 uppercase font-bold tracking-wider">TĂNG TRƯỞNG</p>
+                        <p class="text-2xl font-black text-white">+150%</p>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-[40%] right-[-5%] bg-white/10 backdrop-blur-xl border border-white/20 p-4 pr-6 rounded-2xl shadow-2xl animate-float flex items-center gap-4" style="animation-delay: 2s;">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white shadow-lg">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-indigo-200 uppercase font-bold tracking-wider">KHÁCH HÀNG</p>
+                        <p class="text-2xl font-black text-white">5.000+</p>
+                    </div>
+                </div>
+
+                <!-- Floating Items -->
+                <img src="assets/images/wow/fb.png" class="absolute top-[15%] right-[10%] w-20 drop-shadow-2xl animate-float" style="animation-duration: 6s;">
+                <img src="assets/images/wow/edu.png" class="absolute bottom-[20%] left-[-5%] w-16 drop-shadow-2xl animate-float" style="animation-duration: 7s;">
+            </div>
+
+            <!-- SVG WAVE 3 LỚP (CHE CHÂN) -->
+            <div class="absolute bottom-0 left-0 w-full z-20 leading-none">
+                <!-- Lớp 1: Mờ nhất -->
+                <svg class="block w-full h-[80px] md:h-[150px] opacity-30 absolute bottom-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                    <path fill="#f9fafb" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                </svg>
+                <!-- Lớp 2: Mờ vừa -->
+                <svg class="block w-full h-[60px] md:h-[120px] opacity-60 absolute bottom-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                     <path fill="#f9fafb" fill-opacity="1" d="M0,96L48,128C96,160,192,224,288,213.3C384,203,480,117,576,117.3C672,117,768,203,864,202.7C960,203,1056,117,1152,112C1248,107,1344,181,1392,218.7L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                </svg>
+                <!-- Lớp 3: Màu thật (trùng bg section kế) -->
+                <svg class="relative block w-full h-[40px] md:h-[80px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                    <path fill="#f9fafb" fill-opacity="1" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,250.7C960,235,1056,181,1152,165.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                </svg>
+            </div>
+		</section>
+        
+        <!-- PHẦN 7: QUY TRÌNH LÀM VIỆC -->
+        <section id="workflow" class="bg-gray-50 py-20 reveal-on-scroll">
+             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                 <div class="text-center mb-16">
+                    <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Quy trình làm việc</h2>
+					<p class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">4 Bước Tới Thành Công</p>
+                    <p class="mt-4 text-gray-600">Quy trình tinh gọn, minh bạch giúp dự án vận hành trơn tru.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center relative">
+                    <!-- Step 1 -->
+                    <div class="workflow-step">
+                        <div class="step-connector"></div>
+                        <div class="flex justify-center mb-6 relative">
+                            <div class="step-icon-wrapper">
+                                <i data-lucide="lightbulb" class="w-8 h-8 text-yellow-500"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">1. Tư vấn & Ý tưởng</h3>
+                        <p class="text-sm text-gray-500 px-4">Lắng nghe nhu cầu, tư vấn giải pháp và chốt phương án tối ưu nhất.</p>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="workflow-step" style="transition-delay: 100ms;">
+                        <div class="step-connector"></div>
+                         <div class="flex justify-center mb-6 relative">
+                            <div class="step-icon-wrapper">
+                                <i data-lucide="pencil-ruler" class="w-8 h-8 text-indigo-500"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">2. Thiết kế Demo</h3>
+                        <p class="text-sm text-gray-500 px-4">Phác thảo giao diện UI/UX, gửi demo để khách hàng hình dung sản phẩm.</p>
+                    </div>
+                    <!-- Step 3 -->
+                     <div class="workflow-step" style="transition-delay: 200ms;">
+                        <div class="step-connector"></div>
+                         <div class="flex justify-center mb-6 relative">
+                            <div class="step-icon-wrapper">
+                                <i data-lucide="code" class="w-8 h-8 text-cyan-500"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">3. Lập trình & Tối ưu</h3>
+                        <p class="text-sm text-gray-500 px-4">Code chức năng, tối ưu tốc độ, SEO và kiểm thử lỗi kỹ lưỡng.</p>
+                    </div>
+                    <!-- Step 4 -->
+                     <div class="workflow-step" style="transition-delay: 300ms;">
+                         <div class="flex justify-center mb-6 relative">
+                            <div class="step-icon-wrapper bg-green-50 border-green-100">
+                                <i data-lucide="rocket" class="w-8 h-8 text-green-600"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">4. Bàn giao & Hỗ trợ</h3>
+                        <p class="text-sm text-gray-500 px-4">Hướng dẫn sử dụng, bàn giao source code và bảo hành trọn đời.</p>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- PHẦN 8: DỰ ÁN TIÊU BIỂU (PORTFOLIO) -->
+		<section id="projects" class="tech-bg py-20 md:py-32">
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="text-center reveal-on-scroll">
+                    <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Portfolio</h2>
+					<p class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">Dự án tiêu biểu</p>
+					<p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Những sản phẩm tâm huyết đã được bàn giao và vận hành thành công.</p>
+				</div>
+
+				<!-- Carousel Container -->
+				<div id="projects-carousel-container" class="mt-16 relative reveal-on-scroll">
+					<!-- Navigation Buttons -->
+					<button type="button" class="carousel-btn carousel-btn-prev" aria-label="Dự án trước">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+						</svg>
+					</button>
+
+					<button type="button" class="carousel-btn carousel-btn-next" aria-label="Dự án tiếp theo">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+						</svg>
+					</button>
+
+					<!-- Projects Grid -->
+					<div class="projects-grid">
+						<!-- Dự án sẽ được load bởi JavaScript -->
+						<div class="col-span-full text-center py-12">
+							<div class="ai-dots space-x-2 flex justify-center">
+                                <div></div> <div></div> <div></div>
+                            </div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Link xem thêm -->
+				<div class="mt-16 text-center reveal-on-scroll">
+					<a href="projects.html" class="inline-flex items-center px-8 py-3 border border-indigo-600 text-base font-bold rounded-full text-indigo-600 bg-white hover:bg-indigo-50 hover:shadow-lg transition duration-300">
+						<i data-lucide="arrow-right" class="mr-2 -ml-1 h-5 w-5"></i>
+						Xem tất cả dự án
+					</a>
+				</div>
+			</div>
+		</section>
+		
+        <!-- PHẦN 9: THÀNH TỰU & HOẠT ĐỘNG -->
+		<section id="achievements" class="relative overflow-hidden py-24 md:py-32">
+			<div class="absolute inset-0 bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950"></div>
+            <!-- Grid Overlay -->
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxwYXRoIGQ9Ik0wIDBoNDB2NDBIMHoiIGZpbGw9Im5vbmUiLz4KPHBhdGggZD0iTTAgNDBMMCAwSDEiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxwYXRoIGQ9Ik00MCA0MEw0MCAwSDQxIiBzdHJva2U9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wMykiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNMCA0MEw0MCA0MFY0MSIgc3Ryb2tlPSJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMDMpIiBzdHJva2Utd2lkdGg9IjEiLz4KPC9zdmc+')] opacity-20"></div>
+			
+			<div class="absolute bottom-0 left-0 right-0">
+				<svg viewBox="0 0 1440 320" class="w-full h-auto">
+					<path fill="rgba(99, 102, 241, 0.1)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,170.7C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+				</svg>
+			</div>
+
+			<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+				<div class="text-center mb-20 reveal-on-scroll">
+					<div class="inline-block bg-white/10 backdrop-blur-md rounded-full px-6 py-2 mb-6 border border-white/10">
+						<p class="text-indigo-200 text-sm font-bold tracking-wide uppercase">Có mặt từ 2010</p>
+					</div>
+					<h2 class="text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight">
+						<span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 via-white to-purple-200 counter-value" data-target="12000">
+							0
+						</span>+
+					</h2>
+					<p class="text-2xl md:text-3xl text-white font-bold mb-3">Dự án đã thực hiện & Vận hành</p>
+					<p class="text-lg text-indigo-200/80">Đồng hành cùng hàng nghìn doanh nghiệp trên toàn quốc</p>
+				</div>
+
+				<div class="relative reveal-on-scroll">
+					<div class="grid grid-cols-12 gap-3 md:gap-4">
+						
+						<div class="col-span-3 space-y-3 md:space-y-4">
+							<div class="photo-card transform hover:scale-105 transition duration-500 rotate-[-2deg] hover:rotate-0">
+								<img src="assets/images/hoatdong-sinhnhat.jpg" alt="Team 1" class="w-full h-auto rounded-lg shadow-2xl border-4 border-white/10">
+								<div class="absolute -bottom-2 -right-2 bg-white/90 backdrop-blur-md rounded-lg px-3 py-1 shadow-lg">
+									<p class="text-xs font-bold text-purple-900">Sinh nhật thành viên</p>
+								</div>
+							</div>
+							<div class="photo-card transform hover:scale-105 transition duration-500 rotate-[3deg] hover:rotate-0">
+								<img src="assets/images/hd-tien.jpg" alt="Workshop" class="w-full h-auto rounded-lg shadow-2xl border-4 border-white/10">
+							</div>
+						</div>
+
+						<div class="col-span-3 space-y-3 md:space-y-4 mt-8">
+							<div class="photo-card transform hover:scale-105 transition duration-500 rotate-[2deg] hover:rotate-0">
+								<img src="assets/images/vietan.jpg" alt="Success" class="w-full h-auto rounded-lg shadow-2xl border-4 border-white/10">
+									<div class="absolute -top-2 -left-2 bg-yellow-400 text-purple-900 rounded-full w-12 h-12 flex items-center justify-center shadow-lg font-bold text-xs transform rotate-12">
+									NEW
+								</div>
+							</div>
+							<div class="photo-card transform hover:scale-105 transition duration-500 rotate-[-3deg] hover:rotate-0">
+								<img src="assets/images/tbd.jpg" alt="Team 2" class="w-full h-auto rounded-lg shadow-2xl border-4 border-white/10">
+								<div class="absolute bottom-4 left-4 right-4 text-white">
+									<p class="text-shadow-sm text-xl font-bold mb-1">Hoạt động nổi bật</p>
+									<p class="text-sm opacity-90">Team building hằng năm</p>
+								</div>
+						
+							</div>
+						</div>
+
+						<div class="col-span-3 flex items-center">
+							<div class="photo-card transform hover:scale-105 transition duration-500">
+								<img src="assets/images/hd-hph.jpg" alt="Main" class="w-full h-auto rounded-xl shadow-2xl border-8 border-white/20">
+								<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-xl"></div>
+								
+							</div>
+						</div>
+						
+
+						<div class="col-span-3 space-y-3 md:space-y-4 mt-12">
+							<div class="photo-card transform hover:scale-105 transition duration-500 rotate-[-2deg] hover:rotate-0">
+								<img src="assets/images/tb.jpg" alt="Award" class="w-full h-auto rounded-lg shadow-2xl border-4 border-white/10">
+							</div>
+							<div class="photo-card transform hover:scale-105 transition duration-500 rotate-[3deg] hover:rotate-0">
+								<img src="assets/images/mn.jpg" alt="Team 3" class="w-full h-auto rounded-lg shadow-2xl border-4 border-white/10">
+							</div>
+						</div>
+
+					</div>
+
+					<div class="absolute top-10 left-10 w-32 h-32 bg-indigo-500 rounded-full opacity-20 blur-3xl animate-pulse"></div>
+					<div class="absolute bottom-20 right-20 w-40 h-40 bg-pink-500 rounded-full opacity-20 blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+					
+					<div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+						<div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full p-4 shadow-[0_0_30px_rgba(99,102,241,0.6)] border border-white/20">
+							<a href="">
+								<img src="assets/images/logo.png"
+									 alt="Logo F17"
+									 style="height: 80px; object-fit: contain;">
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 reveal-on-scroll">
+					<div class="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+						<p class="text-4xl font-extrabold text-white mb-2 counter-value" data-target="12000">0</p>
+						<p class="text-indigo-200 text-sm font-medium uppercase tracking-wider">Dự án hoàn thành</p>
+					</div>
+					<div class="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+						<p class="text-4xl font-extrabold text-white mb-2 counter-value" data-target="3500">0</p>
+						<p class="text-indigo-200 text-sm font-medium uppercase tracking-wider">Khách hàng</p>
+					</div>
+					<div class="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+						<p class="text-4xl font-extrabold text-white mb-2"><span class="counter-value" data-target="98">0</span>%</p>
+						<p class="text-indigo-200 text-sm font-medium uppercase tracking-wider">Hài lòng</p>
+					</div>
+					<div class="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+						<p class="text-4xl font-extrabold text-white mb-2">24/7</p>
+						<p class="text-indigo-200 text-sm font-medium uppercase tracking-wider">Hỗ trợ</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+        <!-- PHẦN 10: HỆ THỐNG CHI NHÁNH -->
+        <section id="branches" class="bg-slate-50 py-20 md:py-32 relative reveal-on-scroll">
+             <div class="max-w-6xl mx-auto px-4 sm:px-8 lg:px-8 relative z-10">
+                <div class="text-center mb-12">
+                    <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Mạng lưới hoạt động</h2>
+					<p class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">Hệ thống chi nhánh</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Branch 1 -->
+                    <div class="group relative overflow-hidden rounded-3xl shadow-xl cursor-pointer h-[400px]">
+                        <!-- Placeholder Image: Replace src with your actual image path e.g., assets/images/branch-1.jpg -->
+                        <img src="assets/images/cnhcm.jpg" 
+                             alt="Chi nhánh 1" 
+                             class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300"></div>
+                        
+                        <div class="absolute bottom-0 left-0 w-full p-8 transform transition-transform duration-300 translate-y-2 group-hover:translate-y-0">
+                            <div class="inline-flex items-center justify-center w-10 h-10 bg-indigo-600 rounded-full text-white mb-3 shadow-lg">
+                                <i data-lucide="map-pin" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mb-2">Chi nhánh Hồ Chí Minh</h3>
+                            <p class="text-indigo-100 text-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                Lầu 1,2,3 Tòa nhà Saigon ICT, Lô 46 CVPM Quang Trung, P. Trung Mỹ Tây, Quận 12, TP.HCM
+                            </p>
+                             <!-- Replace href with actual Google Maps link -->
+                            <a href="https://maps.app.goo.gl/HFwfffUbHiRpvSrU8" target="_blank" class="inline-flex items-center text-white font-semibold hover:text-indigo-300 transition-colors">
+                                Xem bản đồ <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Branch 2 -->
+                    <div class="group relative overflow-hidden rounded-3xl shadow-xl cursor-pointer h-[400px]">
+                        <!-- Placeholder Image: Replace src with your actual image path e.g., assets/images/branch-2.jpg -->
+                        <img src="assets/images/cnct.jpg" 
+                             alt="Chi nhánh 2" 
+                             class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300"></div>
+                        
+                        <div class="absolute bottom-0 left-0 w-full p-8 transform transition-transform duration-300 translate-y-2 group-hover:translate-y-0">
+                            <div class="inline-flex items-center justify-center w-10 h-10 bg-purple-600 rounded-full text-white mb-3 shadow-lg">
+                                <i data-lucide="map-pin" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mb-2">Chi nhánh Cần Thơ</h3>
+                            <p class="text-indigo-100 text-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                                Tòa nhà văn phòng 295 Đường 30/4, Ninh Kiều, Cần Thơ
+                            </p>
+                            <!-- Replace href with actual Google Maps link -->
+                            <a href="https://maps.app.goo.gl/7VNqvq9n9TYx2U777" target="_blank" class="inline-flex items-center text-white font-semibold hover:text-purple-300 transition-colors">
+                                Xem bản đồ <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+		
+		<!-- PHẦN 11: FORM ĐĂNG KÝ TƯ VẤN -->
+		<section id="register" class="py-20 relative overflow-hidden animate-gradient-bg reveal-on-scroll">
+            <!-- Hình nền trang trí -->
+            <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+                <div class="absolute -top-24 -left-24 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl"></div>
+            </div>
+
+			<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+				<div class="glass-card p-8 md:p-12">
+					<div class="grid grid-cols-1 lg:grid-cols-5 gap-12">
+                        
+                        <!-- LEFT COLUMN: FORM -->
+                        <div class="lg:col-span-3">
+                            <header class="mb-8">
+                                <span class="inline-block py-1 px-3 rounded-full bg-indigo-100 text-indigo-600 text-sm font-semibold mb-4 border border-indigo-200">
+                                    ✨ Kết nối với chúng tôi
+                                </span>
+                                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">Hiện Thực Hóa Ý Tưởng</h2>
+                                <p class="text-lg text-gray-600 font-light">
+                                    Để lại thông tin, đội ngũ Fi.tallest sẽ liên hệ tư vấn giải pháp tối ưu nhất cho bạn trong vòng 15 phút.
+                                </p>
+                            </header>
+                            
+                            <form id="registrationForm" action="https://formspree.io/f/xldojlkn" method="POST" class="space-y-6">
+                                <input type="hidden" name="_gotcha">
+                                
+                                <!-- Dữ liệu cơ bản -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="custom-input-group group">
+                                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2 ml-1">Họ và tên</label>
+                                        <div class="relative">
+                                            <input type="text" name="Họ tên" id="name" autocomplete="name" placeholder="Nguyễn Văn A" class="custom-input">
+                                            <i data-lucide="user" class="w-5 h-5 input-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="custom-input-group group">
+                                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2 ml-1">
+                                            Số điện thoại <span class="text-red-500">*</span>
+                                        </label>
+                                        <div class="relative">
+                                            <input type="tel" name="Số điện thoại" id="phone" autocomplete="tel" required placeholder="0909 xxx xxx" class="custom-input">
+                                            <i data-lucide="phone" class="w-5 h-5 input-icon"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dịch vụ quan tâm (Card Style) -->
+                                <div>
+                                    <fieldset>
+                                        <legend class="text-sm font-bold text-gray-900 mb-4 ml-1">Chọn giải pháp quan tâm</legend>
+                                        
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                            <!-- Thiết kế Web -->
+                                            <label class="service-option">
+                                                <input id="service_web" name="Tư vấn Web" type="checkbox">
+                                                <div class="service-card">
+                                                    <i data-lucide="layout-template" class="w-6 h-6"></i>
+                                                    <span class="text-sm">Website</span>
+                                                </div>
+                                            </label>
+                                            <!-- Thiết kế App -->
+                                            <label class="service-option">
+                                                <input id="service_app" name="Tư vấn App" type="checkbox">
+                                                <div class="service-card">
+                                                    <i data-lucide="smartphone" class="w-6 h-6"></i>
+                                                    <span class="text-sm">Thiết kế App</span>
+                                                </div>
+                                            </label>
+                                            <!-- Hosting -->
+                                            <label class="service-option">
+                                                <input id="service_hosting" name="Hosting" type="checkbox">
+                                                <div class="service-card">
+                                                    <i data-lucide="server" class="w-6 h-6"></i>
+                                                    <span class="text-sm">Hosting</span>
+                                                </div>
+                                            </label>
+                                            <!-- Tên miền -->
+                                            <label class="service-option">
+                                                <input id="service_domain" name="Tên miền" type="checkbox">
+                                                <div class="service-card">
+                                                    <i data-lucide="globe" class="w-6 h-6"></i>
+                                                    <span class="text-sm">Tên miền</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <!-- Nội dung thêm -->
+                                <div class="custom-input-group">
+                                    <label for="message" class="block text-sm font-medium text-gray-700 mb-2 ml-1">Mô tả dự án (Tuỳ chọn)</label>
+                                    <textarea id="message" name="Nội dung thêm" rows="3" class="custom-input !pl-4 !pt-3" placeholder="Ví dụ: Tôi muốn làm website E-commerce bán giày..."></textarea>
+                                </div>
+                                
+                                <div id="form-status" class="text-center text-sm font-medium h-4 transition-all duration-300"></div>
+
+                                <!-- Nút gửi -->
+                                <div class="pt-2">
+                                    <button type="submit" id="submitButton" class="btn-gradient w-full inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-bold rounded-full text-white shadow-lg transform transition-transform">
+                                        <i data-lucide="send" class="w-5 h-5 mr-2"></i>
+                                        Gửi Yêu Cầu Tư Vấn
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- RIGHT COLUMN: CONTACT INFO & BENEFITS -->
+                        <div class="lg:col-span-2 flex flex-col justify-center">
+                            <div class="bg-indigo-50/80 p-8 rounded-2xl border border-indigo-100 shadow-inner h-full flex flex-col justify-between">
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                                        <span class="bg-indigo-600 w-8 h-8 rounded-full flex items-center justify-center text-white mr-3 shadow-md">
+                                            <i data-lucide="phone-call" class="w-4 h-4"></i>
+                                        </span>
+                                        Liên hệ trực tiếp
+                                    </h3>
+                                    
+                                    <div class="space-y-6">
+                                        <div>
+                                            <p class="text-sm text-gray-500 font-medium uppercase tracking-wide mb-1">Hotline tư vấn 24/7</p>
+                                            <a href="tel:0909876817" class="text-3xl font-extrabold text-indigo-600 hover:text-indigo-700 transition">0909.876.817</a>
+                                        </div>
+                                        
+                                        <div>
+                                            <p class="text-sm text-gray-500 font-medium uppercase tracking-wide mb-1">Email hỗ trợ</p>
+                                            <a href="mailto:caophi.nasani@gmail.com" class="text-lg font-medium text-gray-900 hover:text-indigo-600 transition">caophi.nasani@gmail.com</a>
+                                        </div>
+
+                                        <div class="pt-4 border-t border-indigo-200">
+                                            <h4 class="font-bold text-gray-900 mb-3">Tại sao chọn Fi.Tallest?</h4>
+                                            <ul class="space-y-2">
+                                                <li class="flex items-start text-gray-600 text-sm">
+                                                    <i data-lucide="check-circle" class="w-4 h-4 text-green-500 mr-2 mt-0.5"></i>
+                                                    Tư vấn giải pháp phù hợp nhất, không vẽ vời.
+                                                </li>
+                                                <li class="flex items-start text-gray-600 text-sm">
+                                                    <i data-lucide="check-circle" class="w-4 h-4 text-green-500 mr-2 mt-0.5"></i>
+                                                    Báo giá minh bạch, không phát sinh chi phí.
+                                                </li>
+                                                <li class="flex items-start text-gray-600 text-sm">
+                                                    <i data-lucide="check-circle" class="w-4 h-4 text-green-500 mr-2 mt-0.5"></i>
+                                                    Hỗ trợ kỹ thuật trọn đời sản phẩm.
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-8 grid grid-cols-2 gap-3">
+                                    <a href="https://zalo.me/0909876817" target="_blank" class="flex items-center justify-center px-4 py-3 bg-blue-500 text-white rounded-xl font-bold hover:bg-blue-600 transition shadow-sm hover:shadow-md">
+                                        <span class="mr-2 font-extrabold">Zalo</span> Chat
+                                    </a>
+                                    <a href="https://maps.app.goo.gl/HFwfffUbHiRpvSrU8" target="_blank" class="flex items-center justify-center px-4 py-3 bg-white text-gray-700 border border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition shadow-sm hover:shadow-md">
+                                        <i data-lucide="map-pin" class="w-4 h-4 mr-2"></i> Bản đồ
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+				</div>
+			</div> 	
+		</section>
+
+        <!-- PHẦN 12: LIÊN HỆ -->
+		<section id="contact" class="bg-slate-900 py-10 md:py-24 border-t border-slate-800">
+			<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+				<h2 class="text-3xl font-bold text-white">Bạn có dự án? Hãy liên hệ!</h2>
+				<p class="mt-4 text-lg text-slate-300">Tôi luôn sẵn sàng lắng nghe ý tưởng của bạn và biến nó thành hiện thực. Đừng ngần ngại gửi email hoặc liên hệ qua các kênh dưới đây.</p>
+				<div class="mt-8 space-y-4 sm:space-y-0 sm:flex sm:justify-center sm:gap-4">
+					<a href="mailto:caophi.nasani@gmail.com" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-bold rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-300">
+						<i data-lucide="mail" class="mr-2 -ml-1 h-5 w-5"></i>
+						Gửi Email
+					</a>
+					 <a href="tel:0909876817" class="inline-flex items-center justify-center px-8 py-3 border border-slate-600 text-base font-bold rounded-full shadow-sm text-slate-200 hover:bg-slate-800 transition-all duration-300">
+						<i data-lucide="phone" class="mr-2 -ml-1 h-5 w-5"></i>
+						Gọi Ngay
+					</a>
+				</div>
+			</div>
+		</section>
+	</main>
+
+    <!-- PROFESSIONAL FOOTER (UPDATED) -->
+	<footer class="bg-slate-950 border-t border-slate-900 pt-16 pb-8 text-slate-300">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <!-- Col 1: Company Info -->
+                <div>
+                    <a href="#" class="text-2xl font-bold text-white mb-6 inline-block">Fi.tallest</a>
+                    <p class="text-sm leading-relaxed mb-6 text-slate-400">
+                        Đơn vị tiên phong trong lĩnh vực thiết kế website và phát triển ứng dụng tại Việt Nam. Chúng tôi mang đến giải pháp công nghệ toàn diện cho doanh nghiệp.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Quick Links -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-6">Liên kết nhanh</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="index.html" class="hover:text-indigo-400 transition-colors">Trang chủ</a></li>
+                        <li><a href="index.html#about" class="hover:text-indigo-400 transition-colors">Về chúng tôi</a></li>
+                        <li><a href="projects.html" class="hover:text-indigo-400 transition-colors">Dự án tiêu biểu</a></li>
+                        <li><a href="bao-gia.html" class="hover:text-indigo-400 transition-colors">Báo giá dịch vụ</a></li>
+                        <li><a href="index.html#contact" class="hover:text-indigo-400 transition-colors">Liên hệ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Services -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-6">Dịch vụ</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-indigo-400 transition-colors">Thiết kế Website</a></li>
+                        <li><a href="#" class="hover:text-indigo-400 transition-colors">Phát triển Mobile App</a></li>
+                        <li><a href="hosting.html" class="hover:text-indigo-400 transition-colors">Hosting & VPS</a></li>
+                        <li><a href="domain.html" class="hover:text-indigo-400 transition-colors">Đăng ký Tên miền</a></li>
+                        <li><a href="ai-design.html" class="hover:text-indigo-400 transition-colors text-pink-400 font-bold">AI Design Tool</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Contact -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-6">Thông tin liên hệ</h3>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-start">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-indigo-500 mr-3 mt-0.5 flex-shrink-0"></i>
+                            <span>Lầu 1 Tòa nhà Saigon ICT, CVPM Quang Trung, Q.12, TP.HCM</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="phone" class="w-5 h-5 text-indigo-500 mr-3 flex-shrink-0"></i>
+                            <a href="tel:0909876817" class="hover:text-white">0909.876.817</a>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="mail" class="w-5 h-5 text-indigo-500 mr-3 flex-shrink-0"></i>
+                            <a href="mailto:caophi.nasani@gmail.com" class="hover:text-white">caophi.nasani@gmail.com</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-900 pt-8 text-center text-sm text-slate-500">
+                <p>&copy; 2025 Fi.tallest Technology. Mọi quyền được bảo lưu.</p>
+            </div>
+		</div>
+	</footer>
+
+	<div class="fixed right-4 top-1/2 -translate-y-1/2 z-[1000] flex flex-col gap-3">
+		<a href="tel:0909876817"
+		   class="bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-300 ease-in-out transform hover:scale-110 hover:shadow-[0_0_20px_rgba(79,70,229,0.6)]"
+		   aria-label="Gọi ngay"
+		   title="Gọi ngay (0909876817)">	
+			<i data-lucide="phone" class="w-6 h-6"></i>
+		</a>
+		<a href="https://zalo.me/0909876817"
+		   target="_blank"
+		   rel="noopener noreferrer"
+		   class="bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 ease-in-out transform hover:scale-110 hover:shadow-[0_0_20px_rgba(59,130,246,0.6)]"
+		   aria-label="Nhắn Zalo"
+		   title="Nhắn Zalo (0909876817)">
+			<i data-lucide="message-circle" class="w-6 h-6"></i>
+		</a>
+	</div>
+
+	<!-- UPDATE: Success Toast -->
+    <div id="success-message">
+        <div class="w-8 h-8 rounded-full bg-white text-green-500 flex items-center justify-center shrink-0">
+            <i data-lucide="check" class="w-5 h-5"></i>
+        </div>
+        <div>
+            <p class="font-bold text-sm">Đăng ký thành công!</p>
+            <p class="text-xs font-normal opacity-90">Chúng tôi sẽ liên hệ lại sớm.</p>
+        </div>
+    </div>
+
+
+	<script src="https://unpkg.com/lucide@latest"></script>
+	<script src="assets/js/project-data.js"></script>
+    <script src="assets/js/env.js"></script> <!-- CẤU HÌNH MÔI TRƯỜNG -->
+	<script src="assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+
+    <!-- SCRIPT CHO GEMINI AI (ĐÃ CẬP NHẬT XỬ LÝ LỖI MẠNH MẼ HƠN) -->
+    <script>
+        async function generateAIContent() {
+            const brandName = document.getElementById('brandName').value;
+            const industry = document.getElementById('industry').value;
+            const resultDiv = document.getElementById('aiResult');
+            const loadingDiv = document.getElementById('aiLoading');
+            const generateBtn = document.getElementById('generateBtn');
+
+            if (!brandName || !industry) {
+                alert('Vui lòng nhập đầy đủ Tên thương hiệu và Lĩnh vực!');
+                return;
+            }
+
+            // Hiệu ứng loading
+            resultDiv.classList.add('hidden');
+            loadingDiv.classList.remove('hidden');
+            generateBtn.disabled = true;
+            generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // --- THAY ĐỔI Ở ĐÂY: LẤY KEY TỪ FILE CONFIG ---
+            const apiKey = CONFIG.GEMINI_API_KEY; 
+
+            if (!apiKey || apiKey.length < 20) {
+                 alert("Lỗi cấu hình API Key. Vui lòng kiểm tra file assets/js/env.js");
+                 loadingDiv.classList.add('hidden');
+                 generateBtn.disabled = false;
+                 generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                 return;
+            }
+
+            const prompt = `Bạn là chuyên gia Copywriter và Marketing hàng đầu. Hãy tạo nội dung sáng tạo cho thương hiệu: "${brandName}" hoạt động trong lĩnh vực: "${industry}".
+            Yêu cầu đầu ra định dạng JSON với cấu trúc chính xác như sau (không thêm markdown):
+            {
+                "slogans": [
+                    "Slogan 1 (kèm 1 emoji phù hợp)",
+                    "Slogan 2 (kèm 1 emoji phù hợp)",
+                    "Slogan 3 (kèm 1 emoji phù hợp)"
+                ],
+                "seoDescription": "Một đoạn mô tả website chuẩn SEO hấp dẫn, khoảng 50-60 từ, chứa tên thương hiệu và từ khóa lĩnh vực."
+            }`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }]
+                    })
+                });
+
+                if (!response.ok) throw new Error('Lỗi kết nối API hoặc lỗi phản hồi HTTP.');
+                
+                const data = await response.json();
+                let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (!text) throw new Error('Phản hồi rỗng từ AI.');
+                
+                console.log('Phản hồi thô từ AI (để Debug):', text);
+                
+                // Xử lý chuỗi JSON sạch (loại bỏ markdown ```json nếu có)
+                text = text.replace(/```json|```/g, '').trim();
+                
+                const result = JSON.parse(text);
+
+                // Hiển thị kết quả
+                const sloganList = document.getElementById('sloganList');
+                sloganList.innerHTML = result.slogans.map(slogan => 
+                    `<li class="flex items-start"><span class="mr-2 text-yellow-400">★</span> ${slogan}</li>`
+                ).join('');
+
+                const seoDesc = document.getElementById('seoDesc');
+                seoDesc.textContent = result.seoDescription;
+
+                // Scroll nhẹ xuống kết quả
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Hiển thị kết quả thành công
+                loadingDiv.classList.add('hidden');
+                resultDiv.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('LỖI AI GENERATOR:', error);
+                
+                let errorMessage = 'Có lỗi xảy ra khi tạo nội dung. Vui lòng thử lại sau!';
+                
+                if (error instanceof SyntaxError) {
+                    errorMessage = 'Lỗi phân tích dữ liệu: AI không trả về định dạng hợp lệ (JSON). Vui lòng thử lại với từ khóa khác.';
+                } else if (error.message.includes('API') || error.message.includes('Phản hồi rỗng')) {
+                    errorMessage = 'Lỗi kết nối API hoặc AI không thể tạo nội dung. Vui lòng kiểm tra lại từ khóa và mạng.';
+                }
+                
+                // Sử dụng alert() để hiển thị lỗi như yêu cầu
+                alert(errorMessage); 
+                
+                // Ẩn loading
+                loadingDiv.classList.add('hidden');
+                
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+    </script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			
+			const form = document.getElementById('registrationForm');
+			const formStatus = document.getElementById('form-status');
+			const submitButton = document.getElementById('submitButton');
+			const successMessage = document.getElementById('success-message');
+
+			if (form && formStatus && submitButton) {
+				form.addEventListener('submit', function(event) {
+					event.preventDefault();
+					console.log("Form submission prevented.");
+
+					const formData = new FormData(form);
+					submitButton.disabled = true;
+					formStatus.textContent = 'Đang gửi...';
+					formStatus.className = 'text-center text-sm font-medium text-indigo-600 h-4'; // Đổi màu status thành indigo-600
+
+					fetch(form.action, {
+						method: form.method,
+						body: formData,
+						headers: {
+							'Accept': 'application/json'
+						}
+					}).then(response => {
+						console.log("Fetch response received:", response.status);
+						if (response.ok) {
+							console.log("Form submitted successfully via AJAX.");
+							formStatus.textContent = 'Gửi thành công!';
+							formStatus.className = 'text-center text-sm text-green-600';
+							form.reset();
+							
+							if (successMessage) {
+								successMessage.classList.add('show');
+								setTimeout(() => {
+									successMessage.classList.remove('show');
+								}, 3000);
+							}
+
+							if (typeof confetti === 'function') {
+								console.log("Triggering confetti!");
+								confetti({
+									particleCount: 150,
+									spread: 90,
+									origin: { y: 0.6 }
+								});
+							} else {
+								console.log("Confetti function not found.");
+							}
+							
+						} else {
+							console.log("Form submission failed via AJAX.");
+							response.json().then(data => {
+								if (data && data.errors) {
+									 formStatus.textContent = data.errors.map(error => error.message || 'Lỗi không xác định').join(", ");
+								} else {
+									formStatus.textContent = 'Oops! Có lỗi xảy ra khi gửi form.';
+								}
+								formStatus.className = 'text-center text-sm text-red-600';
+							}).catch(() => {
+								formStatus.textContent = 'Oops! Có lỗi xảy ra khi xử lý phản hồi.';
+								formStatus.className = 'text-center text-sm text-red-600';
+							});
+						}
+					}).catch(error => {
+						console.error('Form submission fetch error:', error);
+						formStatus.textContent = 'Oops! Có lỗi mạng xảy ra khi gửi form.';
+						formStatus.className = 'text-center text-sm text-red-600';
+					}).finally(() => {
+						submitButton.disabled = false;
+						setTimeout(() => {
+						   if (formStatus) formStatus.textContent = '';
+						}, 5000);
+					   
+					});
+				});
+			} else {
+				console.error("Could not find form elements for AJAX submission.");
+			}
+			// === HẾT SCRIPT FORM SUBMISSION ===
+
+		}); // Đóng DOMContentLoaded
+	</script>
+</body>
+</html>

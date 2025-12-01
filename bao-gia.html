@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Giá Thiết Kế Website - Fi.tallest</title>
+    <meta name="description" content="Tính toán chi phí thiết kế website chuyên nghiệp theo gói, tùy chọn addon, hosting và tên miền. Yêu cầu báo giá nhanh chóng.">
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script> 
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/page-baogia.css">
+</head>
+<body class="bg-slate-100 overflow-hidden" id="body-content"> 
+    <!-- GATED ACCESS MODAL -->
+    <div id="gated-modal" class="fixed inset-0 z-[9999] bg-slate-900/95 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden relative">
+            <!-- Step 1: Phone Input -->
+            <div id="step-phone" class="p-8 text-center">
+                <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="lock" class="w-8 h-8 text-indigo-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Tra cứu Báo giá Chi tiết</h2>
+                <p class="text-gray-600 mb-6 text-sm">Vui lòng nhập số điện thoại để nhận mã truy cập hệ thống báo giá tự động.</p>
+                
+                <form id="lead-form" class="space-y-4">
+                    <div class="relative">
+                        <input type="text" id="lead-phone" required placeholder="Nhập số điện thoại..." 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition pl-10">
+                        <i data-lucide="phone" class="w-5 h-5 text-gray-400 absolute left-3 top-3.5"></i>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center">
+                        <span id="btn-text-phone">Yêu cầu gửi mã</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </button>
+                </form>
+                <p class="text-xs text-gray-400 mt-4">Thông tin của bạn được bảo mật tuyệt đối.</p>
+            </div>
+
+            <!-- Step 2: Code Input -->
+            <div id="step-code" class="p-8 text-center hidden">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="shield-check" class="w-8 h-8 text-green-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Xác thực truy cập</h2>
+                <p class="text-gray-600 mb-6 text-sm">Mã truy cập đã được gửi. Vui lòng kiểm tra và nhập mã bên dưới (Mã mặc định: <b>xembaogia.fi</b>).</p>
+                
+                <form id="code-form" class="space-y-4">
+                    <div class="relative">
+                        <input type="text" id="access-code" required placeholder="Nhập mã truy cập" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition text-center font-mono text-lg tracking-widest uppercase">
+                    </div>
+                    <p id="code-error" class="text-red-500 text-xs hidden text-left">Mã không chính xác.</p>
+                    <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition">
+                        Xác nhận & Xem Báo Giá
+                    </button>
+                </form>
+                <button id="back-to-phone" class="text-sm text-indigo-600 hover:underline mt-4">Nhập lại số điện thoại</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 blur-sm transition-all duration-500" id="main-container">
+
+        <!-- SECTION I: HEADER BÁO GIÁ (Thiết kế theo ảnh yêu cầu) -->
+        <header class="mb-12 bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+            <div class="p-8 sm:p-10 text-center border-b border-gray-100">
+                <h1 class="text-3xl sm:text-5xl font-extrabold mb-3 uppercase tracking-tight">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">BÁO GIÁ DỊCH VỤ THIẾT KẾ WEBSITE</span>
+                </h1>
+                <p class="text-lg sm:text-xl font-medium text-gray-600">
+                    Giải pháp chuyên nghiệp cho <span class="text-cyan-600 font-bold">Mọi Ngành Nghề</span>
+                </p>
+            </div>
+            
+            <div class="bg-slate-50 px-8 py-6 sm:px-10">
+                 <h2 class="text-sm font-bold text-gray-900 uppercase text-center mb-6 tracking-wider">CÔNG TY TNHH CÔNG NGHỆ PHẦN MỀM NASANI</h2>
+                 
+                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm text-gray-700">
+                     <!-- Cột 1: Địa chỉ -->
+                     <div class="flex items-start space-x-3">
+                         <div class="flex-shrink-0 mt-0.5">
+                             <i data-lucide="map-pin" class="w-5 h-5 text-purple-600"></i>
+                         </div>
+                         <span>Lầu 1 Tòa nhà Saigon ICT, Lô 46 CVPM Quang Trung, P. Trung Mỹ Tây, TP. Hồ Chí Minh.</span>
+                     </div>
+                     
+                     <!-- Cột 2: Liên hệ -->
+                     <div class="space-y-3">
+                         <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                                <i data-lucide="phone" class="w-5 h-5 text-cyan-600"></i>
+                            </div>
+                            <span>Tel: 028.37154879</span>
+                            <span class="text-gray-300">|</span>
+                            <span>Fax: 028.37154878</span>
+                         </div>
+                         <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                                <i data-lucide="mail" class="w-5 h-5 text-cyan-600"></i>
+                            </div>
+                            <span>Email: nasani@nasani.vn</span>
+                         </div>
+                     </div>
+
+                     <!-- Cột 3: Tài chính -->
+                     <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                                <i data-lucide="info" class="w-5 h-5 text-cyan-600"></i>
+                            </div>
+                            <span>MST: 0319082906</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                                <i data-lucide="credit-card" class="w-5 h-5 text-cyan-600"></i>
+                            </div>
+                            <span>TK: 2825456789 (MB bank)</span>
+                        </div>
+                     </div>
+                 </div>
+            </div>
+        </header>
+
+        <section id="package-section" class="mb-12">
+             <div class="flex items-center mb-8">
+                <span class="bg-indigo-600 w-1 h-8 rounded-r-lg mr-4"></span>
+                <h2 class="text-2xl font-bold text-gray-800">II. Chọn Gói Thiết Kế (Chưa VAT)</h2>
+             </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <label for="package_basic" class="cursor-pointer bg-white p-6 rounded-2xl shadow-md border-2 border-transparent hover:border-indigo-200 hover:shadow-xl transition duration-300 flex flex-col transform hover:-translate-y-1">
+                    <input type="radio" id="package_basic" name="package-option" value="7500000" class="hidden">
+                    <h3 class="text-xl font-extrabold text-gray-700 mb-2">1. Gói Cơ Bản</h3>
+                    <p class="text-sm text-gray-500 mb-4">Dành cho website giới thiệu, thông tin tĩnh.</p>
+                    <div class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">7.500.000 <span class="text-lg font-normal text-gray-500">đ</span></div>
+                    <ul class="space-y-3 text-gray-700 flex-grow text-sm">
+                        <li class="flex"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-500"></i> Thiết kế theo yêu cầu (1 Layout)</li>
+                        <li class="flex"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-500"></i> Tối ưu tốc độ tải trang</li>
+                        <li class="flex"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-500"></i> 05 trang nội dung tĩnh</li>
+                    </ul>
+                    <div class="mt-6 py-3 px-4 bg-gray-100 text-gray-600 font-bold rounded-xl text-center text-sm group-checked:bg-indigo-600 group-checked:text-white transition-colors">CHỌN GÓI</div>
+                </label>
+                
+                <label for="package_multiple_interface" class="cursor-pointer bg-white p-6 rounded-2xl shadow-xl ring-2 ring-indigo-100 border-2 border-indigo-500 hover:shadow-2xl transition duration-300 flex flex-col relative overflow-hidden transform scale-105 z-10">
+                    <div class="absolute top-0 right-0 bg-indigo-600 text-white text-xs font-bold px-4 py-1 rounded-bl-xl uppercase tracking-wider">Phổ biến nhất</div>
+                    <input type="radio" id="package_multiple_interface" name="package-option" value="10500000" class="hidden">
+                    <h3 class="text-xl font-extrabold text-indigo-600 mb-2">2. Đa Giao Diện</h3>
+                    <p class="text-sm text-gray-500 mb-4">Website chuyên nghiệp, đa dạng module.</p>
+                    <div class="text-3xl sm:text-4xl font-bold text-indigo-700 mb-4">10.500.000 <span class="text-lg font-normal text-gray-500">đ</span></div>
+                    <ul class="space-y-3 text-gray-700 flex-grow text-sm">
+                        <li class="flex"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-500"></i> Đầy đủ Gói Cơ Bản</li>
+                        <li class="flex"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-500"></i> Đóng dấu logo thương hiệu</li>
+                        <li class="flex"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-500"></i> Responsive - Co giãn trên mọi thiết bị</li>
+                    </ul>
+                    <div class="mt-6 py-3 px-4 bg-indigo-600 text-white font-bold rounded-xl text-center text-sm shadow-lg hover:bg-indigo-700">CHỌN GÓI</div>
+                </label>
+
+                <label for="package_full" class="cursor-pointer bg-white p-6 rounded-2xl shadow-md border-2 border-transparent hover:border-cyan-200 hover:shadow-xl transition duration-300 flex flex-col transform hover:-translate-y-1">
+                    <input type="radio" id="package_full" name="package-option" value="13500000" class="hidden">
+                    <h3 class="text-xl font-extrabold text-cyan-600 mb-2">3. Gói Đầy Đủ</h3>
+                    <p class="text-sm text-gray-500 mb-4">Giải pháp toàn diện, tối ưu tương tác.</p>
+                    <div class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">13.500.000 <span class="text-lg font-normal text-gray-500">đ</span></div>
+                    <ul class="space-y-3 text-gray-700 flex-grow text-sm">
+                        <li class="flex"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-500"></i> Đầy đủ Gói Đa Giao Diện</li>
+                        <li class="flex"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-500"></i> Bảo mật SSL, chống DDOS</li>
+                        <li class="flex"><i data-lucide="check" class="w-4 h-4 mr-2 text-green-500"></i> Live Chat AI, Viết bài AI</li>
+                    </ul>
+                    <div class="mt-6 py-3 px-4 bg-cyan-50 text-cyan-700 font-bold rounded-xl text-center text-sm hover:bg-cyan-100">CHỌN GÓI</div>
+                </label>
+            </div>
+        </section>
+
+        <!-- ADD-ON SECTION -->
+        <section class="mb-12 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
+            <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-100 pb-6 mb-6">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <span class="bg-green-500 w-1 h-8 rounded-r-lg mr-4"></span>
+                    <h2 class="text-2xl font-bold text-gray-800">III.A. Tùy Chọn Tính Năng (Add-on)</h2>
+                </div>
+                <div class="w-full md:w-auto relative">
+                    <input type="text" id="feature-search" placeholder="Tìm kiếm tính năng..." 
+                        class="pl-10 pr-4 py-2.5 border border-gray-200 bg-gray-50 rounded-full text-sm focus:ring-2 focus:ring-indigo-500 focus:bg-white w-full md:w-72 transition">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <div id="features-container" class="space-y-4">
+                <p class="text-center text-gray-500 italic">Đang tải danh sách tính năng...</p>
+            </div>
+        </section>
+
+        <!-- Hosting & Domain -->
+        <section class="mb-12">
+            <div class="flex items-center mb-8 mt-12">
+                <span class="bg-purple-600 w-1 h-8 rounded-r-lg mr-4"></span>
+                <h3 class="text-2xl font-bold text-gray-800">III.B. Chọn Gói Hosting & Tên miền (Giá Đã VAT)</h3>
+            </div>
+            
+            <div class="p-6 sm:p-8 bg-white rounded-2xl shadow-sm border border-gray-100">
+                <p class="text-base font-bold text-indigo-900 mb-6 flex items-center">
+                    <i data-lucide="server" class="w-5 h-5 mr-2 text-indigo-500"></i> 1. Chọn Gói Hosting Cao Cấp
+                </p>
+                
+                <!-- Gói Hosting Mặc Định -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-6">
+                    <label for="hosting_5gb" class="cursor-pointer border border-gray-200 rounded-xl p-4 hover:border-indigo-400 hover:shadow-md transition bg-gray-50/50">
+                        <input type="radio" id="hosting_5gb" name="hosting-option" value="5261760" class="hidden">
+                        <p class="text-xl font-extrabold text-indigo-700">5GB</p>
+                        <p class="text-sm font-bold text-gray-800 mt-1">5.261.760 đ<span class="text-xs font-normal text-gray-500">/năm</span></p>
+                        <p class="text-xs text-gray-400 mt-1">~438k/tháng</p>
+                    </label>
+                    <label for="hosting_7gb" class="cursor-pointer border border-gray-200 rounded-xl p-4 hover:border-purple-400 hover:shadow-md transition bg-gray-50/50">
+                        <input type="radio" id="hosting_7gb" name="hosting-option" value="6480000" class="hidden">
+                        <p class="text-xl font-extrabold text-purple-700">7GB</p>
+                        <p class="text-sm font-bold text-gray-800 mt-1">6.480.000 đ<span class="text-xs font-normal text-gray-500">/năm</span></p>
+                        <p class="text-xs text-gray-400 mt-1">~540k/tháng</p>
+                    </label>
+                    <label for="hosting_10gb" class="cursor-pointer border border-gray-200 rounded-xl p-4 hover:border-red-400 hover:shadow-md transition bg-gray-50/50">
+                        <input type="radio" id="hosting_10gb" name="hosting-option" value="7776000" class="hidden">
+                        <p class="text-xl font-extrabold text-red-700">10GB</p>
+                        <p class="text-sm font-bold text-gray-800 mt-1">7.776.000 đ<span class="text-xs font-normal text-gray-500">/năm</span></p>
+                         <p class="text-xs text-gray-400 mt-1">~648k/tháng</p>
+                    </label>
+                    <label for="hosting_20gb_ca_nhan" class="cursor-pointer border border-gray-200 rounded-xl p-4 hover:border-green-400 hover:shadow-md transition bg-gray-50/50">
+                        <input type="radio" id="hosting_20gb_ca_nhan" name="hosting-option" value="12960000" class="hidden">
+                        <p class="text-xl font-extrabold text-green-700">20GB</p>
+                        <p class="text-sm font-bold text-gray-800 mt-1">12.960.000 đ<span class="text-xs font-normal text-gray-500">/năm</span></p>
+                         <p class="text-xs text-gray-400 mt-1">~1.080k/tháng</p>
+                    </label>
+                </div>
+
+                <!-- Gói Hosting Mở Rộng (Cập nhật đủ các gói) -->
+                <div id="extra-hosting-packages" class="hidden-hosting-packages">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-4 pt-4">
+                        
+                        <label for="hosting_16gb" class="cursor-pointer border border-gray-200 rounded-xl p-4 bg-white hover:border-gray-400">
+                            <input type="radio" id="hosting_16gb" name="hosting-option" value="11404800" class="hidden">
+                            <p class="font-bold text-gray-600">16GB</p>
+                            <p class="text-sm font-bold text-gray-800 mt-1">11.404.800 đ</p>
+                            <p class="text-xs text-gray-400">~950k/tháng</p>
+                        </label>
+
+                        <label for="hosting_25gb" class="cursor-pointer border border-gray-200 rounded-xl p-4 bg-white hover:border-gray-400">
+                            <input type="radio" id="hosting_25gb" name="hosting-option" value="15552000" class="hidden">
+                            <p class="font-bold text-gray-600">25GB</p>
+                            <p class="text-sm font-bold text-gray-800 mt-1">15.552.000 đ</p>
+                            <p class="text-xs text-gray-400">~1.296k/tháng</p>
+                        </label>
+
+                        <label for="hosting_30gb" class="cursor-pointer border border-gray-200 rounded-xl p-4 bg-white hover:border-gray-400">
+                            <input type="radio" id="hosting_30gb" name="hosting-option" value="17366400" class="hidden">
+                            <p class="font-bold text-gray-600">30GB</p>
+                            <p class="text-sm font-bold text-gray-800 mt-1">17.366.400 đ</p>
+                            <p class="text-xs text-gray-400">~1.447k/tháng</p>
+                        </label>
+
+                        <label for="hosting_40gb_dn" class="cursor-pointer border border-gray-200 rounded-xl p-4 bg-white hover:border-gray-400">
+                            <input type="radio" id="hosting_40gb_dn" name="hosting-option" value="21686400" class="hidden">
+                            <p class="font-bold text-indigo-600">40GB (DN)</p>
+                            <p class="text-sm font-bold text-gray-800 mt-1">21.686.400 đ</p>
+                            <p class="text-xs text-gray-400">~1.807k/tháng</p>
+                        </label>
+
+                        <label for="hosting_50gb_dn" class="cursor-pointer border border-gray-200 rounded-xl p-4 bg-white hover:border-gray-400">
+                            <input type="radio" id="hosting_50gb_dn" name="hosting-option" value="25920000" class="hidden">
+                            <p class="font-bold text-indigo-600">50GB (DN)</p>
+                            <p class="text-sm font-bold text-gray-800 mt-1">25.920.000 đ</p>
+                            <p class="text-xs text-gray-400">~2.160k/tháng</p>
+                        </label>
+
+						<label for="hosting_70gb_dn" class="cursor-pointer border border-gray-200 rounded-xl p-4 bg-white hover:border-gray-400">
+                            <input type="radio" id="hosting_70gb_dn" name="hosting-option" value="34603200" class="hidden">
+                            <p class="font-bold text-indigo-600">70GB (DN)</p>
+                            <p class="text-sm font-bold text-gray-800 mt-1">34.603.200 đ</p>
+                            <p class="text-xs text-gray-400">~2.883k/tháng</p>
+                        </label>
+
+                        <label for="hosting_100gb_sieu_dn" class="cursor-pointer border border-gray-200 rounded-xl p-4 bg-white hover:border-gray-400">
+                            <input type="radio" id="hosting_100gb_sieu_dn" name="hosting-option" value="46656000" class="hidden">
+                            <p class="font-bold text-red-600">100GB (SDN)</p>
+                            <p class="text-sm font-bold text-gray-800 mt-1">46.656.000 đ</p>
+                            <p class="text-xs text-gray-400">~3.888k/tháng</p>
+                        </label>
+
+                        <label for="hosting_200gb_sieu_dn" class="cursor-pointer border border-gray-200 rounded-xl p-4 bg-white hover:border-gray-400">
+                            <input type="radio" id="hosting_200gb_sieu_dn" name="hosting-option" value="77760000" class="hidden">
+                            <p class="font-bold text-red-600">200GB (SDN)</p>
+                            <p class="text-sm font-bold text-gray-800 mt-1">77.760.000 đ</p>
+                            <p class="text-xs text-gray-400">~6.480k/tháng</p>
+                        </label>
+                        
+                        <label for="hosting_1tb_sieu_dn" class="cursor-pointer border border-gray-200 rounded-xl p-4 bg-white hover:border-gray-400 col-span-2 md:col-span-4">
+                            <input type="radio" id="hosting_1tb_sieu_dn" name="hosting-option" value="192000000" class="hidden">
+                            <p class="font-bold text-red-700 text-lg">1TB (MAX)</p>
+                            <p class="text-base font-bold text-gray-800 mt-1">192.000.000 đ</p>
+                            <p class="text-xs text-gray-400">~16.000k/tháng</p>
+                        </label>
+                    </div>
+                </div>
+                <div class="text-center pt-4">
+                    <button id="toggle-extra-packages-btn" class="py-2.5 px-8 bg-gray-100 text-gray-600 font-semibold rounded-full hover:bg-gray-200 transition duration-300 text-sm flex items-center mx-auto">
+                        <i data-lucide="chevron-down" class="w-4 h-4 mr-2"></i> Xem thêm các gói Hosting khác
+                    </button>
+                </div>
+
+                <p class="text-base font-bold text-indigo-900 mb-6 mt-10 flex items-center pt-8 border-t border-gray-100">
+                    <i data-lucide="globe" class="w-5 h-5 mr-2 text-indigo-500"></i> 2. Chọn Tên miền (Giá Đã VAT)
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-center">
+                    <label for="domain_com" class="cursor-pointer border border-gray-200 rounded-xl p-4 hover:border-blue-400 hover:shadow-md transition bg-gray-50/50">
+                        <input type="radio" id="domain_com" name="domain-option" value="366120" class="hidden">
+                        <p class="text-lg font-extrabold text-blue-600">.COM</p>
+                        <p class="text-sm font-bold text-gray-800 mt-1">366.120 đ</p>
+                    </label>
+                    <label for="domain_vn" class="cursor-pointer border border-gray-200 rounded-xl p-4 hover:border-red-400 hover:shadow-md transition bg-gray-50/50">
+                        <input type="radio" id="domain_vn" name="domain-option" value="820000" class="hidden">
+                        <p class="text-lg font-extrabold text-red-600">.VN</p>
+                        <p class="text-sm font-bold text-gray-800 mt-1">820.000 đ</p>
+                    </label>
+                    <label for="domain_com_vn" class="cursor-pointer border border-gray-200 rounded-xl p-4 hover:border-red-400 hover:shadow-md transition bg-gray-50/50">
+                        <input type="radio" id="domain_com_vn" name="domain-option" value="691000" class="hidden">
+                        <p class="text-lg font-extrabold text-red-600">.COM.VN</p>
+                        <p class="text-sm font-bold text-gray-800 mt-1">691.000 đ</p>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+             <div class="flex items-center mb-8">
+                <span class="bg-gray-800 w-1 h-8 rounded-r-lg mr-4"></span>
+                <h2 class="text-2xl font-bold text-gray-800">IV. Quy Trình & Cam Kết</h2>
+             </div>
+             
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="shield-check" class="w-8 h-8 text-indigo-600"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Bảo Hành Trọn Đời</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Lỗi kỹ thuật được xử lý vĩnh viễn trong suốt thời gian sử dụng dịch vụ.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="clock" class="w-8 h-8 text-cyan-600"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Hỗ Trợ 24/7</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Đội ngũ kỹ thuật trực chiến, xử lý sự cố cấp tốc trong vòng 24h.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="book-open" class="w-8 h-8 text-red-600"></i>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Đào Tạo Quản Trị</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Hướng dẫn sử dụng chi tiết, bàn giao tài liệu và video hướng dẫn.</p>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="text-center p-6 text-gray-400 text-sm">&copy; 2025 Fi.tallest - Giải pháp công nghệ toàn diện</footer>
+    </div>
+
+    <div id="quote-summary-footer" class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-gray-200 shadow-[0_-8px_30px_rgba(0,0,0,0.1)] transition-all duration-500 ease-in-out">
+        <div id="quote-summary-trigger" class="max-w-7xl mx-auto pt-3 pb-4 px-6 cursor-pointer group hover:bg-gray-50/50 transition">
+            <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-3 group-hover:bg-gray-300 transition-colors"></div>
+            <div class="flex justify-between items-center">
+                <div class="text-left">
+                    <p class="text-lg font-bold text-gray-800">TỔNG CHI PHÍ DỰ KIẾN:</p>
+                    <p class="text-xs text-gray-400 font-normal">Chạm để xem chi tiết</p>
+                </div>
+                <div class="flex items-center">
+                    <p class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mr-4" id="total-cost-display-minimal">0 đ</p>
+                    <div id="quote-toggle-icon" class="bg-gray-100 p-2 rounded-full">
+                        <i data-lucide="chevron-up" class="w-5 h-5 text-gray-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="quote-details-panel" class="max-w-7xl mx-auto border-t border-gray-100">
+             <div class="px-6 py-6">
+                <div class="flex flex-col lg:flex-row items-center justify-between gap-8">
+                    <div class="w-full lg:w-3/5">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-4 text-sm border-b border-dashed border-gray-200 pb-4 mb-4">
+                            <div><p class="text-gray-400 text-xs uppercase font-bold mb-1">Gói Thiết Kế</p><p class="font-bold text-gray-800 text-base" id="package-price-display">0 đ</p></div>
+                            <div><p class="text-gray-400 text-xs uppercase font-bold mb-1">Tính Năng</p><p class="font-bold text-gray-800 text-base" id="addon-price-display">0 đ</p></div>
+                            <div><p class="text-gray-400 text-xs uppercase font-bold mb-1">Giảm Giá</p><p class="font-bold text-green-500 text-base" id="discount-price-display">0 đ</p></div>
+                            <div><p class="text-gray-400 text-xs uppercase font-bold mb-1">Hosting</p><p class="font-bold text-gray-800 text-base" id="hosting-price-display">0 đ</p></div>
+                            <div><p class="text-gray-400 text-xs uppercase font-bold mb-1">Tên Miền</p><p class="font-bold text-gray-800 text-base" id="domain-price-display">0 đ</p></div>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <div class="text-xs text-gray-400 bg-gray-50 px-3 py-1 rounded-lg">
+                                VAT Hạ tầng (8%): <span id="vat-display" class="font-bold text-gray-600">0 đ</span>
+                            </div>
+                            <p class="text-3xl font-extrabold text-indigo-700" id="total-cost-display">0 đ</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-4 w-full lg:w-2/5">
+                        <div class="relative">
+                            <input type="text" id="discount-code-input" placeholder="Nhập mã ưu đãi" class="w-full pl-4 pr-24 py-3 text-sm border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 uppercase font-mono tracking-wider">
+                            <button id="apply-discount-btn" class="absolute right-1.5 top-1.5 bottom-1.5 px-4 bg-gray-900 text-white font-bold rounded-lg text-xs hover:bg-gray-700 transition">ÁP DỤNG</button>
+                        </div>
+                        <p id="discount-status" class="text-xs h-4 -mt-3 pl-1 font-medium"></p>
+                        
+                        <div class="flex gap-3 mt-1">
+                            <a href="tel:0909876817" class="flex-1 py-3.5 px-4 bg-white border-2 border-red-500 text-red-500 font-bold rounded-xl text-center hover:bg-red-50 transition shadow-sm flex items-center justify-center">
+                                <i data-lucide="phone-call" class="w-4 h-4 mr-2"></i> TƯ VẤN
+                            </a>
+                            <button id="btn-finalize-quote" class="flex-1 py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-0.5 transition flex items-center justify-center">
+                                XEM QUY TRÌNH THANH TOÁN <i data-lucide="send" class="w-4 h-4 ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[60] p-4 animate-fade-in">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-2xl max-w-lg w-full relative transform transition-all scale-100">
+            <h2 id="alert-title" class="text-2xl font-bold text-indigo-700 mb-4 flex items-center">
+                <i data-lucide="info" class="w-6 h-6 mr-2"></i> Thông báo
+            </h2>
+            <div id="alert-message" class="text-sm text-gray-600 mb-8"></div>
+            <button id="alert-close-btn" class="w-full bg-gray-200 text-gray-800 font-bold py-3.5 px-4 rounded-xl hover:bg-gray-300 transition">Đóng</button>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/page-baogia.js"></script>
+</body>
+</html>

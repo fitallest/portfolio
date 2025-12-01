@@ -1,0 +1,515 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Ngăn chặn lập chỉ mục trang admin -->
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin System - Quản lý Dự án Fi.tallest</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Thêm thư viện SortableJS để kéo thả -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .project-item { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .project-item:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .project-item.active { border-color: #4f46e5; background-color: #eef2ff; }
+
+        /* Style cho kéo thả */
+        .drag-handle { cursor: grab; color: #94a3b8; }
+        .drag-handle:active { cursor: grabbing; color: #4f46e5; }
+        .sortable-ghost { 
+            opacity: 0.4; 
+            background-color: #e2e8f0; 
+            border: 1px dashed #94a3b8;
+        }
+        .sortable-drag { cursor: grabbing; }
+        
+        /* Tab styles */
+        .admin-tab { cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s; }
+        .admin-tab.active { border-bottom-color: #4f46e5; color: #4f46e5; font-weight: 600; }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- LOGIN OVERLAY -->
+    <div id="login-overlay" class="fixed inset-0 z-[100] bg-slate-900 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 text-center">
+            <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="lock" class="w-8 h-8 text-indigo-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">Hệ thống Quản trị</h2>
+            <p class="text-slate-500 mb-6">Vui lòng nhập mật khẩu để truy cập dữ liệu.</p>
+            
+            <form id="login-form" class="space-y-4">
+                <input type="password" id="admin-password" placeholder="Nhập mật khẩu..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition">Đăng Nhập</button>
+            </form>
+            <p id="login-error" class="text-red-500 text-sm mt-3 hidden">Mật khẩu không chính xác!</p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Ẩn mặc định) -->
+    <div id="admin-content" class="flex-1 flex flex-col h-full hidden">
+        
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-lg">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                </div>
+                <h1 class="text-xl font-bold text-slate-800">Admin Center</h1>
+            </div>
+            
+            <!-- Tabs Navigation -->
+            <div class="flex gap-6 text-sm">
+                <div class="admin-tab active px-2 py-1" data-target="tab-projects">Quản lý Dự án</div>
+                <div class="admin-tab px-2 py-1" data-target="tab-ai-config">Cấu hình AI Design</div>
+            </div>
+
+            <div class="flex gap-3">
+                <a href="index.html" target="_blank" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition flex items-center gap-2">
+                    <i data-lucide="external-link" class="w-4 h-4"></i> Xem Website
+                </a>
+            </div>
+        </header>
+
+        <!-- Body Wrapper -->
+        <div class="flex-1 overflow-hidden relative">
+            
+            <!-- TAB 1: PROJECTS MANAGER -->
+            <div id="tab-projects" class="tab-pane w-full h-full flex">
+                <!-- LEFT: Project List -->
+                <div class="w-1/3 min-w-[350px] bg-white border-r border-slate-200 flex flex-col h-full">
+                    <div class="p-4 border-b border-slate-100">
+                        <div class="relative">
+                            <input type="text" id="search-project" placeholder="Tìm kiếm dự án..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+                        </div>
+                        <div class="flex justify-between items-center mt-3">
+                            <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider" id="project-count">0 DỰ ÁN</span>
+                            <button id="btn-new-project" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                                <i data-lucide="plus-circle" class="w-3 h-3"></i> Thêm mới
+                            </button>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1 italic flex items-center gap-1">
+                            <i data-lucide="move-vertical" class="w-3 h-3"></i> Kéo thả biểu tượng bên trái để sắp xếp thứ tự.
+                        </p>
+                    </div>
+                    
+                    <div id="project-list" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
+                        <!-- JS sẽ render list vào đây -->
+                        <p class="text-center text-gray-400 mt-10 text-sm">Đang tải dữ liệu...</p>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Editor Form -->
+                <div class="flex-1 overflow-y-auto bg-slate-100 p-6">
+                    <div class="max-w-3xl mx-auto">
+                        <div class="flex justify-end mb-4">
+                             <button id="generate-code-btn" class="px-4 py-2 text-sm font-bold text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm transition flex items-center gap-2">
+                                <i data-lucide="code" class="w-4 h-4"></i> Xuất File Data
+                            </button>
+                        </div>
+
+                        <!-- Form Card -->
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                                <h2 class="font-bold text-slate-800 flex items-center gap-2" id="form-title">
+                                    <i data-lucide="plus-square" class="w-5 h-5 text-indigo-600"></i> Thêm Dự Án Mới
+                                </h2>
+                                <button id="btn-cancel-edit" class="hidden text-sm text-red-500 hover:text-red-700 font-medium">Hủy sửa</button>
+                            </div>
+                            
+                            <form id="project-form" class="p-6 space-y-5">
+                                <input type="hidden" id="project-id"> <!-- Hidden ID for Edit Mode -->
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div class="col-span-2">
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Tiêu đề dự án <span class="text-red-500">*</span></label>
+                                        <input type="text" id="input-title" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Danh mục/Thể loại <span class="text-red-500">*</span></label>
+                                        <input type="text" id="input-category" required placeholder="VD: Bất động sản, Y tế..." class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Link dự án (Website)</label>
+                                        <input type="text" id="input-link" placeholder="https://..." class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Mô tả ngắn <span class="text-red-500">*</span></label>
+                                    <textarea id="input-description" required rows="3" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm"></textarea>
+                                </div>
+
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                    <label class="block text-sm font-medium text-slate-700 mb-2">Hình ảnh đại diện <span class="text-red-500">*</span></label>
+                                    <div class="flex gap-4 items-start">
+                                        <div class="flex-1">
+                                            <input type="text" id="input-imageUrl" required placeholder="assets/images/ten-anh.jpg hoặc Link Online" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm mb-2">
+                                            <p class="text-xs text-slate-500">
+                                                <i data-lucide="info" class="w-3 h-3 inline"></i> Nếu dùng ảnh trong code, hãy upload ảnh vào thư mục <code>assets/images/</code> rồi điền đường dẫn tương đối.
+                                            </p>
+                                        </div>
+                                        <div class="w-24 h-24 bg-slate-200 rounded-lg border border-slate-300 overflow-hidden flex items-center justify-center shrink-0 relative group">
+                                            <img id="img-preview" src="https://placehold.co/100x100/e2e8f0/94a3b8?text=Preview" class="w-full h-full object-cover">
+                                            <div class="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center text-white text-xs">Preview</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pt-2 border-t border-slate-100 flex justify-end">
+                                    <button type="submit" id="btn-submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-sm transition flex items-center gap-2">
+                                        <i data-lucide="save" class="w-4 h-4"></i> Lưu Dự Án
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: AI CONFIG -->
+            <div id="tab-ai-config" class="tab-pane w-full h-full hidden p-8 bg-slate-100 overflow-y-auto">
+                <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+                     <div class="bg-purple-50 px-6 py-4 border-b border-purple-100 flex items-center">
+                        <div class="bg-purple-600 text-white p-2 rounded-lg mr-3">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        </div>
+                        <h2 class="font-bold text-slate-800 text-lg">Cấu hình Trang AI Design</h2>
+                    </div>
+                    
+                    <div class="p-6 space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Loại giảm giá</label>
+                            <select id="ai-discount-type" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none">
+                                <option value="fixed">Trừ tiền trực tiếp (VNĐ)</option>
+                                <option value="percent">Giảm theo phần trăm (%)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Giá trị giảm (Số tiền hoặc %)</label>
+                            <input type="number" id="ai-discount-value" value="3000000" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none">
+                            <p class="text-xs text-gray-500 mt-1">Ví dụ: 3000000 (3 triệu) hoặc 30 (30%)</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Nhãn hiển thị ưu đãi</label>
+                            <input type="text" id="ai-discount-label" value="Ưu đãi đặc biệt" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none">
+                        </div>
+
+                        <div class="flex items-center">
+                             <input type="checkbox" id="ai-show-original" class="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500">
+                             <label for="ai-show-original" class="ml-2 block text-sm text-gray-900">Hiển thị giá gốc (Gạch ngang)</label>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-100 text-right">
+                             <button id="btn-gen-ai-config" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-sm transition flex items-center gap-2 ml-auto">
+                                <i data-lucide="file-code" class="w-4 h-4"></i> Xuất File Config AI
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Output Modal -->
+    <div id="output-modal" class="fixed inset-0 bg-black/80 z-[200] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col">
+            <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-xl">
+                <h3 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                    <i data-lucide="file-code" class="w-5 h-5 text-green-600"></i> Mã Nguồn Đã Tạo
+                </h3>
+                <button id="btn-close-output" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <div class="p-4 bg-yellow-50 border-b border-yellow-100 text-sm text-yellow-800" id="output-instruction">
+                <!-- JS will fill instruction -->
+            </div>
+            <div class="flex-1 p-0 relative">
+                <textarea id="output-code" readonly class="w-full h-full p-4 font-mono text-xs bg-slate-900 text-green-400 outline-none resize-none"></textarea>
+            </div>
+            <div class="p-4 border-t border-slate-200 flex justify-end bg-white rounded-b-xl">
+                <button id="btn-copy-code" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg flex items-center gap-2">
+                    <i data-lucide="copy" class="w-4 h-4"></i> Copy Tất Cả
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Data Source -->
+    <script src="assets/js/project-data.js"></script>
+    <script src="assets/js/ai-config.js"></script>
+
+    <script>
+        const ADMIN_PASSWORD = "admin"; 
+        let currentProjects = [];
+        let editingId = null;
+        let sortableInstance = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            // 0. Tab Handling
+            const tabs = document.querySelectorAll('.admin-tab');
+            const panes = document.querySelectorAll('.tab-pane');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    panes.forEach(p => p.classList.add('hidden'));
+                    
+                    tab.classList.add('active');
+                    const targetId = tab.getAttribute('data-target');
+                    document.getElementById(targetId).classList.remove('hidden');
+                });
+            });
+
+            // 1. Login Handler
+            const loginForm = document.getElementById('login-form');
+            const loginOverlay = document.getElementById('login-overlay');
+            const adminContent = document.getElementById('admin-content');
+            const passInput = document.getElementById('admin-password');
+            const loginError = document.getElementById('login-error');
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (passInput.value === ADMIN_PASSWORD) {
+                    loginOverlay.classList.add('hidden');
+                    adminContent.classList.remove('hidden');
+                    loadData();
+                    loadAIConfig();
+                } else {
+                    loginError.classList.remove('hidden');
+                    passInput.value = '';
+                    passInput.focus();
+                }
+            });
+
+            // 2. Load Data
+            function loadData() {
+                if (typeof projectsData !== 'undefined') {
+                    currentProjects = JSON.parse(JSON.stringify(projectsData));
+                    renderList();
+                    initSortable();
+                } else {
+                    alert("Lỗi: Không tìm thấy biến projectsData.");
+                }
+            }
+
+            function loadAIConfig() {
+                if (typeof AI_CONFIG !== 'undefined') {
+                    document.getElementById('ai-discount-type').value = AI_CONFIG.discountType;
+                    document.getElementById('ai-discount-value').value = AI_CONFIG.discountValue;
+                    document.getElementById('ai-discount-label').value = AI_CONFIG.discountLabel || "Ưu đãi";
+                    document.getElementById('ai-show-original').checked = AI_CONFIG.showOriginalPrice;
+                }
+            }
+
+            function renderList(filterText = '') {
+                const listEl = document.getElementById('project-list');
+                listEl.innerHTML = '';
+                
+                const filtered = currentProjects.filter(p => p.title.toLowerCase().includes(filterText.toLowerCase()));
+                document.getElementById('project-count').textContent = `${filtered.length} DỰ ÁN`;
+
+                if (filtered.length === 0) {
+                    listEl.innerHTML = `<div class="text-center text-slate-400 py-8 text-sm">Không tìm thấy dự án nào.</div>`;
+                    return;
+                }
+
+                filtered.forEach(p => {
+                    const item = document.createElement('div');
+                    item.setAttribute('data-id', p.id);
+                    item.className = `project-item p-3 rounded-lg border border-slate-200 bg-white cursor-pointer relative group flex gap-3 items-center ${p.id === editingId ? 'active' : ''}`;
+                    
+                    item.innerHTML = `
+                        <div class="drag-handle py-2 px-1 hover:text-indigo-600" title="Kéo để sắp xếp">
+                            <i data-lucide="grip-vertical" class="w-4 h-4"></i>
+                        </div>
+                        <img src="${p.imageUrl}" class="w-12 h-12 rounded object-cover bg-slate-100 shrink-0" onerror="this.src='https://placehold.co/100?text=Error'">
+                        <div class="flex-1 min-w-0" onclick="startEdit(${p.id})"> 
+                            <h4 class="font-bold text-sm text-slate-800 truncate">${p.title}</h4>
+                            <p class="text-xs text-slate-500 truncate">${p.category}</p>
+                        </div>
+                        <div class="absolute top-2 right-2 hidden group-hover:flex gap-1 bg-white shadow-sm rounded p-1">
+                            <button onclick="deleteProject(${p.id}, event)" class="p-1.5 text-red-500 hover:bg-red-50 rounded" title="Xóa"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                        </div>
+                    `;
+                    item.querySelector('.flex-1').onclick = () => startEdit(p);
+                    listEl.appendChild(item);
+                });
+                lucide.createIcons();
+            }
+
+            // 3. Sortable Init
+            function initSortable() {
+                const listEl = document.getElementById('project-list');
+                if(sortableInstance) sortableInstance.destroy();
+
+                sortableInstance = new Sortable(listEl, {
+                    handle: '.drag-handle',
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    onEnd: function (evt) {
+                        const newOrderIds = Array.from(listEl.children).map(el => parseInt(el.getAttribute('data-id')));
+                        const newProjects = [];
+                        newOrderIds.forEach(id => {
+                            const project = currentProjects.find(p => p.id === id);
+                            if (project) newProjects.push(project);
+                        });
+                        if(newProjects.length === currentProjects.length) {
+                            currentProjects = newProjects;
+                        }
+                    }
+                });
+            }
+
+            // Search
+            document.getElementById('search-project').addEventListener('input', (e) => {
+                renderList(e.target.value);
+                if(e.target.value.trim() !== '') {
+                     if(sortableInstance) sortableInstance.option("disabled", true);
+                } else {
+                     if(sortableInstance) sortableInstance.option("disabled", false);
+                }
+            });
+
+            // 4. Form Handling
+            const form = document.getElementById('project-form');
+            const imgInput = document.getElementById('input-imageUrl');
+            const imgPreview = document.getElementById('img-preview');
+            
+            imgInput.addEventListener('input', () => {
+                const val = imgInput.value.trim();
+                imgPreview.src = val || 'https://placehold.co/100x100/e2e8f0/94a3b8?text=Preview';
+            });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const projectData = {
+                    id: editingId ? editingId : Date.now(),
+                    title: document.getElementById('input-title').value.trim(),
+                    category: document.getElementById('input-category').value.trim(),
+                    description: document.getElementById('input-description').value.trim(),
+                    imageUrl: document.getElementById('input-imageUrl').value.trim(),
+                    link: document.getElementById('input-link').value.trim() || '#'
+                };
+
+                if (editingId) {
+                    const index = currentProjects.findIndex(p => p.id === editingId);
+                    if (index !== -1) currentProjects[index] = projectData;
+                } else {
+                    currentProjects.unshift(projectData);
+                }
+
+                resetForm();
+                renderList(document.getElementById('search-project').value);
+                alert(editingId ? "Cập nhật thành công!" : "Thêm mới thành công!");
+            });
+
+            // 5. Edit Logic
+            window.startEdit = (project) => {
+                editingId = project.id;
+                document.getElementById('input-title').value = project.title;
+                document.getElementById('input-category').value = project.category;
+                document.getElementById('input-description').value = project.description;
+                document.getElementById('input-imageUrl').value = project.imageUrl;
+                document.getElementById('input-link').value = project.link;
+                imgPreview.src = project.imageUrl;
+                
+                document.getElementById('form-title').innerHTML = `<i data-lucide="edit" class="w-5 h-5 text-orange-500"></i> Chỉnh Sửa Dự Án`;
+                document.getElementById('btn-submit').className = "bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 px-6 rounded-lg shadow-sm transition flex items-center gap-2";
+                document.getElementById('btn-submit').innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Cập Nhật`;
+                document.getElementById('btn-cancel-edit').classList.remove('hidden');
+                renderList(document.getElementById('search-project').value);
+            };
+
+            window.deleteProject = (id, event) => {
+                event.stopPropagation();
+                if (confirm("Bạn có chắc chắn muốn xóa dự án này không?")) {
+                    currentProjects = currentProjects.filter(p => p.id !== id);
+                    if (editingId === id) resetForm();
+                    renderList(document.getElementById('search-project').value);
+                }
+            };
+
+            function resetForm() {
+                editingId = null;
+                form.reset();
+                imgPreview.src = 'https://placehold.co/100x100/e2e8f0/94a3b8?text=Preview';
+                document.getElementById('form-title').innerHTML = `<i data-lucide="plus-square" class="w-5 h-5 text-indigo-600"></i> Thêm Dự Án Mới`;
+                document.getElementById('btn-submit').className = "bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-6 rounded-lg shadow-sm transition flex items-center gap-2";
+                document.getElementById('btn-submit').innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Lưu Dự Án`;
+                document.getElementById('btn-cancel-edit').classList.add('hidden');
+                renderList(document.getElementById('search-project').value);
+            }
+
+            document.getElementById('btn-new-project').addEventListener('click', resetForm);
+            document.getElementById('btn-cancel-edit').addEventListener('click', (e) => { e.preventDefault(); resetForm(); });
+
+            // 6. Modal & Code Generation
+            const outputModal = document.getElementById('output-modal');
+            const outputCode = document.getElementById('output-code');
+            const outputInstruction = document.getElementById('output-instruction');
+
+            document.getElementById('generate-code-btn').addEventListener('click', () => {
+                const code = `// assets/js/project-data.js\n// File này được tạo tự động từ trang Admin.\n// Dán đè nội dung này vào file gốc.\n\nconst projectsData = ${JSON.stringify(currentProjects, null, 2)};`;
+                outputCode.value = code;
+                outputInstruction.innerHTML = `<strong>Hướng dẫn:</strong> Copy mã bên dưới và dán đè vào file <code>assets/js/project-data.js</code>.`;
+                outputModal.classList.remove('hidden');
+            });
+
+            document.getElementById('btn-gen-ai-config').addEventListener('click', () => {
+                const config = {
+                    discountType: document.getElementById('ai-discount-type').value,
+                    discountValue: parseInt(document.getElementById('ai-discount-value').value) || 0,
+                    discountLabel: document.getElementById('ai-discount-label').value,
+                    showOriginalPrice: document.getElementById('ai-show-original').checked
+                };
+
+                const code = `// assets/js/ai-config.js\n// File cấu hình cho trang AI Design.\n// Bạn có thể thay đổi file này từ trang Admin.\n\nconst AI_CONFIG = ${JSON.stringify(config, null, 2)};`;
+                outputCode.value = code;
+                outputInstruction.innerHTML = `<strong>Hướng dẫn:</strong> Copy mã bên dưới và dán đè vào file <code>assets/js/ai-config.js</code>.`;
+                outputModal.classList.remove('hidden');
+            });
+
+            document.getElementById('btn-close-output').addEventListener('click', () => {
+                outputModal.classList.add('hidden');
+            });
+
+            document.getElementById('btn-copy-code').addEventListener('click', () => {
+                outputCode.select();
+                navigator.clipboard.writeText(outputCode.value).then(() => {
+                    alert("Đã copy vào bộ nhớ tạm!");
+                });
+            });
+        });
+    </script>
+</body>
+</html>
