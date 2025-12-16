@@ -7,7 +7,7 @@ const projectsData = [
     "id": 1765878832888,
     "title": "Website Kiến trúc Cát Việt",
     "category": "Xây dựng",
-    "description": "KIẾN TRÚC CÁT VIỆT: DỊCH VỤ XÂY NHÀ TRỌN GÓI CẦN THƠ UY TÍN - TÂM HUYẾT TỪ KTS TONI\nDịch vụ xây nhà trọn gói khu vực miền nam uy tín - Tâm huyết từ KTS Toni",
+    "description": "Dịch vụ xây nhà trọn gói khu vực miền nam uy tín - Tâm huyết từ KTS Toni",
     "imageUrl": "https://kientruccatviet.vn/thumbs/1920x900x1/upload/photo/catviet-1764059856.webp.webp",
     "link": "https://kientruccatviet.vn/"
   },
@@ -116,3 +116,4 @@ const projectsData = [
     "link": "http://dailongbinhphuoc.com/"
   }
 ];
+
