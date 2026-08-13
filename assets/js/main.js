@@ -16,7 +16,7 @@ const headerHtmlContent = `
             
             <div class="hidden md:flex md:items-center md:space-x-6">
                 <a href="index.html#about" data-page="index.html" data-anchor="#about" class="nav-link text-gray-500 font-medium hover:text-indigo-600 transition duration-150 relative group">Giới thiệu <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span></a>
-                <a href="dichvu.html" data-page="index.html" data-anchor="#services" class="nav-link text-gray-500 font-medium hover:text-indigo-600 transition duration-150 relative group">Dịch vụ <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span></a>
+                <a href="dichvu.html" data-page="dichvu.html" class="nav-link text-gray-500 font-medium hover:text-indigo-600 transition duration-150 relative group">Dịch vụ <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span></a>
                 <a href="projects.html" data-page="projects.html" class="nav-link text-gray-500 font-medium hover:text-indigo-600 transition duration-150 relative group">Dự án <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span></a>
                 <a href="hosting.html" data-page="hosting.html" class="nav-link text-gray-500 font-medium hover:text-indigo-600 transition duration-150 relative group">Hosting <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span></a>
                 <a href="domain.html" data-page="domain.html" class="nav-link text-gray-500 font-medium hover:text-indigo-600 transition duration-150 relative group">Tên miền <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span></a>
@@ -43,7 +43,7 @@ const headerHtmlContent = `
     <div class="hidden md:hidden" id="mobile-menu">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <a href="index.html#about" data-page="index.html" data-anchor="#about" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Giới thiệu</a>
-            <a href="index.html#services" data-page="index.html" data-anchor="#services" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Dịch vụ</a>
+            <a href="dichvu.html" data-page="dichvu.html" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Dịch vụ</a>
             <a href="projects.html" data-page="projects.html" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Dự án</a>
             <a href="hosting.html" data-page="hosting.html" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Hosting</a>
             <a href="domain.html" data-page="domain.html" class="nav-link-mobile block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Tên miền</a>
